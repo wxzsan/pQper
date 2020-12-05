@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -100,7 +100,7 @@ ENV/
 # mypy
 .mypy_cache/
 
-.DS_Store
+*/.DS_Store
 *.sqlite3
 media/
 *.pyc
