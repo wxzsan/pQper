@@ -81,8 +81,8 @@ DATABASES = {
         'NAME': 'pQper_demo',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'wxz',
-        'PASSWORD': '000302',
-        'HOST': '127.0.0.1',
+        'PASSWORD': '123456',
+        'HOST': '39.105.19.68',
         
     }
 }
