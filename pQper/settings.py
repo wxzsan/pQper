@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'pQper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'pQper_demo',
+        'NAME': 'pQper',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'wxz',
         'PASSWORD': '123456',
