@@ -18,7 +18,7 @@ class LongComment(models.Model):
     poster = models.ForeignKey('user.User', on_delete=models.CASCADE)
     post_time = models.DateTimeField(auto_now_add=True)
     abstract = models.CharField(max_length=255)
-    rose_number = models.IntegerField(default=0)
+    star_number = models.IntegerField(default=0)
     comment_address = models.CharField(max_length=255)
     short_comment_list = models.ManyToManyField(ShortComment)
 
