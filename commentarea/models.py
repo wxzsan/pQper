@@ -10,7 +10,9 @@ class ShortComment(models.Model):
     post_time = models.DateTimeField(auto_now_add=True)
     content = models.CharField(max_length=255)
     rose_number = models.IntegerField(default=0)
+    egg_number = models.IntegerField(default=0)
     rose_user_list = models.ManyToManyField('user.User')
+    egg_user_list = models.ManyToManyField('user.User')
 
 class LongComment(models.Model):
     poster = models.ForeignKey('user.User', on_delete=models.CASCADE)
