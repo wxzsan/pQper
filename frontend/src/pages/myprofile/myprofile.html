@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>my profile</title>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <el-header height="50px">
+                <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
+                <el-dropdown style="float: right; width: 50px;">
+                    <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item>个人主页</el-dropdown-item>
+                        <el-dropdown-item>个人信息</el-dropdown-item>
+                        <el-dropdown-item>退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
+                <el-col :span="3" style="float: right; margin-top: 5px;">
+                    <el-input placeholder="论文题目/作者"></el-input>
+                </el-col>
+            </el-header>
+            <el-container>
+                <el-aside width="120px">
+                    <br><br>
+                    <el-button type="primary" icon="el-icon-menu">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on">收藏夹</el-button><br>
+                    <el-button type="primary" icon="el-icon-document">我的论文</el-button><br>
+                    <el-button type="primary" icon="el-icon-info">关于</el-button>
+                </el-aside>
+                <el-main>
+                    <div class="horizontally_vertically_center" style="height:100%">
+                        <div>
+                            <div>
+                                <el-avatar :src="photo"></el-avatar>
+                            </div>
+                            <div>
+                                <p>name:{{name}}</p>
+                            </div>
+                            <div>
+                                <p>email:{{email}}</p>
+                            </div>
+                            <div>
+                                <el-button @click='to_setting_page'>修改</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-main>
+            </el-container>
+            <el-footer height="50px">
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper</p>
+            </el-footer>
+        </el-container>
+    </div>
+</body>
+<style type="text/css">
+    #app {
+        height: 100%;
+    }
+    
+    html {
+        height: 100%;
+    }
+    
+    body {
+        height: 100%;
+    }
+    
+    .el-container {
+        height: 100%;
+        direction: "vertical";
+    }
+    
+    .el-header {
+        background-color: #b361ff;
+    }
+    
+    .el-footer {
+        background-color: #62c48b;
+    }
+    
+    .el-aside {
+        background-color: #DCDFE6;
+    }
+    
+    .el-main {
+        background-color: #EBEEF5;
+    }
+    
+    .el-button {
+        font-family: 'Pingang SC';
+        width: 108px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+    
+    .el-dropdown p {
+        font-family: 'Pingang SC';
+    }
+    
+    .text {
+        font-family: Times;
+    }
+    
+    .comment {
+        background-color: #b3dbc4;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
+    }
+    
+    .horizontally_vertically_center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+</style>
+
+</html>
