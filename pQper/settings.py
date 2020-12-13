@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'commentarea',
     'user',
+    'star',
     'rest_framework'
 ]
 
