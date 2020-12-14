@@ -19,21 +19,35 @@ from haystack.query import SearchQuerySet
 # 会返回可能的 用户的用户名、论文的论文名 用于填入待选框
 @csrf_exempt
 def SearchForPapersAndUsers(request):
-    response = {'return' : "debuging"}
     if request.method == 'GET':
-        searchString = request.GET.get('searchString')
+        try :
+            response = {
+                'code' : 200,
+                'msg' : "search success",
+                'data' : {
+                    'findCommentAreas' : [],
+                    'findUserIds' : []
+                }
+            }
+            searchString = request.GET.get('searchString')
 
-        # 查找相关的论文
-        # 使用全文索引
-        ret = SearchQuerySet().filter(content=searchString)
-        response['findCommentAreas'] = []
-        for i in ret:
-            response['findCommentAreas'].append(i.title)
+            # 查找相关的论文
+            # 使用全文索引
+            ret = SearchQuerySet().filter(content=searchString)
+            for i in ret:
+                response['data']['findCommentAreas'].append(i.title)
 
-        # 查找相关的用户
-        # 直接全字匹配
-        response['findUserIds'] = []
-        ret = User.objects.filter(user_name=searchString)
-        for i in ret:
-            response['findUserIds'].append(i.pk)
-        return JsonResponse(response)
+            # 查找相关的用户
+            # 直接全字匹配
+            ret = User.objects.filter(user_name=searchString)
+            for i in ret:
+                response['data']['findUserIds'].append(i.pk)
+            return JsonResponse(response)
+        except:
+            # 多半是数据库挂了
+            return JsonResponse({"code" : 300})
+    else:
+        # 请用 GET
+        return JsonResponse({"code" : 600})
+        
+
