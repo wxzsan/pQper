@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include 
 import commentarea.urls
 import user.urls
+import star.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include(user.urls)),
+    path('star/', include(star.urls)),
     path('commentarea/', include(commentarea.urls)),
 ]
