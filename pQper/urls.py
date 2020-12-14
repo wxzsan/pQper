@@ -18,10 +18,12 @@ from django.urls import path, include
 import commentarea.urls
 import user.urls
 import star.urls
+import SearchAndResults.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include(user.urls)),
     path('star/', include(star.urls)),
     path('commentarea/', include(commentarea.urls)),
+    path('SearchAndResults/', include(SearchAndResults.urls)),
 ]

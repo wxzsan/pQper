@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from .models import User
 import requests
 import json
+
 #这里王昕兆为了方便调试假的view，暂时不要删
 @csrf_exempt
 def adduser(request):

@@ -5,6 +5,9 @@ class Paper(models.Model):
     title = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
 
+    def __str__(self):
+        return str(self.id) + '--' + self.title
+
 class ShortComment(models.Model):
     poster = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name = 'post_short_comment')
     post_time = models.DateTimeField(auto_now_add=True)

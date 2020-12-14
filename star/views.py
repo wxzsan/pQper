@@ -12,17 +12,19 @@ from star.serializers import *
 import requests
 import json
 
+
 @csrf_exempt
 def Creat_StarPaperListPage(request):
     response = {}
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         email = json.loads(request.body)['email']
-        paper = StarPaperList(email = email,user_id = id)
+        paper = StarPaperList(email=email, user_id=id)
         paper.save()
         response['code'] = 200
-        response['data'] = {'msg':"success"}
+        response['data'] = {'msg': "success"}
         return JsonResponse(response)
+
 
 @csrf_exempt
 def StarPaperListPage(request):
@@ -30,7 +32,7 @@ def StarPaperListPage(request):
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         try:
-            paper = StarPaperList.objects.get(user_id = id)
+            paper = StarPaperList.objects.get(user_id=id)
         except:
             response['code'] = 300
             print('fail')
@@ -38,8 +40,9 @@ def StarPaperListPage(request):
             return JsonResponse(response)
         response['code'] = 200
         serializer = StarPaperListSerializer(paper)
-        response['data'] = {'msg': "success" , 'Star_Paper_List' : serializer.data}
+        response['data'] = {'msg': "success", 'Star_Paper_List': serializer.data}
         return JsonResponse(response)
+
 
 @csrf_exempt
 def Creat_StarCommentListPage(request):
@@ -47,11 +50,12 @@ def Creat_StarCommentListPage(request):
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         email = json.loads(request.body)['email']
-        longcomment = StarCommentList(email = email,user_id = id)
+        longcomment = StarCommentList(email=email, user_id=id)
         longcomment.save()
         response['code'] = 200
-        response['data'] = {'msg':"success"}
+        response['data'] = {'msg': "success"}
         return JsonResponse(response)
+
 
 @csrf_exempt
 def StarCommentListPage(request):
@@ -59,7 +63,7 @@ def StarCommentListPage(request):
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         try:
-            longcomment = StarCommentList.objects.get(user_id = id)
+            longcomment = StarCommentList.objects.get(user_id=id)
         except:
             response['code'] = 300
             print('fail')
@@ -70,17 +74,19 @@ def StarCommentListPage(request):
         response['data'] = {'msg': "success", 'Star_Comment_List': serializer.data}
         return JsonResponse(response)
 
+
 @csrf_exempt
 def Creat_StarUserListPage(request):
     response = {}
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         email = json.loads(request.body)['email']
-        user = StarUserList(email = email,user_id = id)
+        user = StarUserList(email=email, user_id=id)
         user.save()
         response['code'] = 200
-        response['data'] = {'msg':"success"}
+        response['data'] = {'msg': "success"}
         return JsonResponse(response)
+
 
 @csrf_exempt
 def StarUserListPage(request):
@@ -88,7 +94,7 @@ def StarUserListPage(request):
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         try:
-            user = StarUserList.objects.get(user_id = id)
+            user = StarUserList.objects.get(user_id=id)
         except:
             response['code'] = 300
             print('fail')
@@ -99,17 +105,19 @@ def StarUserListPage(request):
         response['data'] = {'msg': "success", 'Star_User_List': serializer.data}
         return JsonResponse(response)
 
+
 @csrf_exempt
 def Creat_MyCommentAreaListPage(request):
     response = {}
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         email = json.loads(request.body)['email']
-        commentarea = MyCommentAreaList(email = email,user_id = id)
+        commentarea = MyCommentAreaList(email=email, user_id=id)
         commentarea.save()
         response['code'] = 200
-        response['data'] = {'msg':"success"}
+        response['data'] = {'msg': "success"}
         return JsonResponse(response)
+
 
 @csrf_exempt
 def MyCommentAreaListPage(request):
@@ -117,7 +125,7 @@ def MyCommentAreaListPage(request):
     if request.method == 'POST':
         id = json.loads(request.body)['id']
         try:
-            commentarea = MyCommentAreaList.objects.get(user_id = id)
+            commentarea = MyCommentAreaList.objects.get(user_id=id)
         except:
             response['code'] = 300
             print('fail')
@@ -127,5 +135,3 @@ def MyCommentAreaListPage(request):
         serializer = MyCommentAreaListSerializer(commentarea)
         response['data'] = {'msg': "success", 'My_CommentArea_List': serializer.data}
         return JsonResponse(response)
-
-
