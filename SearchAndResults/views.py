@@ -32,7 +32,7 @@ def SearchForPapersAndUsers(request):
 
         # 查找相关的用户
         # 直接全字匹配
-        response['findUsers'] = []
+        response['findUserIds'] = []
         ret = User.objects.filter(user_name=searchString)
         for i in ret:
             response['findUserIds'].append(i.pk)
