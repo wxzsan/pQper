@@ -51,9 +51,9 @@
                 </el-main>
                 <!--右边栏-->
                 <el-aside width="350px">
-                    <el-tabs type="card">
+                    <el-tabs type="card" v-model="selectedTab">
                         <!--短评-->
-                        <el-tab-pane label="短评" name="second">
+                        <el-tab-pane label="短评" name="first">
                             <div v-for="count in shortCommentList.length" class="comment">
                                 <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{shortCommentList[count - 1].poster}}{% endverbatim %}</b></p>
                                 <p class="text" style="font-size: 12px;">{% verbatim %}{{shortCommentList[count - 1].post_time}}{% endverbatim %}</p>
@@ -63,7 +63,7 @@
                             </div>
                         </el-tab-pane>
                         <!--发表短评-->
-                        <el-tab-pane label="发表评论" name="third">
+                        <el-tab-pane label="发表评论" name="second">
                             <div class="comment">
                                 <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
                                 <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input>
@@ -90,7 +90,6 @@
             this.initDatas()
         },
         data: {
-            userId: 0,  // 调试时暂时如此假设
             shortCommentList: [{ // 正式版需要删除这三组测试数据
                 id: 1,
                 poster: "年轻人",
@@ -128,6 +127,7 @@
                 star_number: 100,
                 has_star: false,
             },
+            selectedTab: "first",
             searchInput: "",
             shortCommentInput: "",
             shortCommentButtonType: "info",
@@ -144,10 +144,9 @@
             },
             // 页面初始化，填入所有评论数据
             initDatas(){
-                this.userId = 0  // 调试时暂时如此假设
                 this.longComment.id = parseInt(this.getParams("id"))
                 //! 需要修改，等待API
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?longCommentId=' + this.longComment.id + '&userId=' + this.userId)
+                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?longCommentId=' + this.longComment.id)
                     .then(
                         (res) => {
                             res = res.data
@@ -168,8 +167,8 @@
                                     content: element.content,
                                     rose_number: element.rose_number,
                                     egg_number: element.egg_number,
-                                    has_rose: (this.userId in element.rose_user_list),
-                                    has_egg: (this.userId in element.egg_user_list),
+                                    has_rose: false,
+                                    has_egg: false,
                                 })
                             })
                         }
@@ -178,14 +177,15 @@
             // 搜索框事件处理
             //! 尚未完成
             handleSearch(){
-                if(this.input.length > 0){
-                    console.log(this.searchInput) // 理应转到SearchResultPage，参数？？？
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
             handleRose(count){
                 if(!this.shortCommentList[count - 1].has_egg){
                     if(!this.shortCommentList[count - 1].has_rose){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
@@ -202,7 +202,7 @@
                     }
                     else{
                         // 取消点赞！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
@@ -223,7 +223,7 @@
             handleEgg(count){
                 if(!this.shortCommentList[count - 1].has_rose){
                     if(!this.shortCommentList[count - 1].has_egg){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
@@ -240,7 +240,7 @@
                     }
                     else{
                         // 取消点踩！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
@@ -260,7 +260,7 @@
             // 收藏长评事件处理
             handleStar(count){
                 if(!this.longComment.has_star){
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id)
                         .then(
                             (res) => {
                                 res = res.data
@@ -277,7 +277,7 @@
                 }
                 else{
                     //! 取消收藏，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id)
                         .then(
                             (res) => {
                                 res = res.data
@@ -298,7 +298,6 @@
                 if(this.shortCommentInput.length > 0){
                     let data = {
                         "longCommentId": this.longComment.id,
-  	                    "userId": this.userId,
   	                    "shortComment": this.shortCommentInput,
                     }
                     let config = {

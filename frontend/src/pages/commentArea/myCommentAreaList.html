@@ -66,7 +66,6 @@
             this.initDatas()
         },
         data: {
-            userId: 0,  // 调试时暂时如此假设
             commentAreaInfoList: [{
                 title: "我的讨论区1",
                 id: 123,
@@ -97,8 +96,7 @@
             },
             // 页面初始化，填入所有评论数据
             initDatas(){
-                this.userId = 0  // 调试时暂时如此假设
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_comment_area_list?userId=' + this.userId)
+                this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_comment_area_list')
                     .then(
                         (res) => {
                             res = res.data
@@ -120,13 +118,14 @@
             // 搜索框事件处理
             //! 尚未完成
             handleSearch(){
-                if(this.input.length > 0){
-                    console.log(this.searchInput) // 理应转到SearchResultPage，参数？？？
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
             handleStarArea(count){
                 if(!this.commentAreaInfoList[count - 1].area_has_star){
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                         .then(
                             (res) => {
                                 res = res.data
@@ -143,7 +142,7 @@
                 }
                 else{
                     //！！！需要修改，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                         .then(
                             (res) => {
                                 res = res.data

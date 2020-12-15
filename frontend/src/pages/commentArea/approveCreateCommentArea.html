@@ -69,8 +69,8 @@
             this.initDatas()
         },
         data: {
-            userId: 0,  // 调试时暂时如此假设
             paperDir: "",
+            searchInput: "",
             createRequestList: [{
                 requestId: 1,
                 title: "paper1",
@@ -97,7 +97,6 @@
             },
             // 页面初始化，填入所有数据
             initDatas(){
-                this.userId = 0  // 调试时暂时如此假设
                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
                     .then(
                         (res) => {
@@ -117,8 +116,9 @@
             // 搜索框事件处理
             //! 尚未完成
             handleSearch(){
-                if(this.input.length > 0){
-                    console.log(this.searchInput) // 理应转到SearchResultPage，参数？？？
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
             // 选中申请时间处理
