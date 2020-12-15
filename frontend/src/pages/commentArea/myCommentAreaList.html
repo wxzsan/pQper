@@ -99,18 +99,28 @@
                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_comment_area_list')
                     .then(
                         (res) => {
-                            res = res.data
                             if(res.code != 200){
                                 console.log('failed to initialize')
                                 return
                             }
-                            res.commentAreaList.forEach(element => {
-                                this.commentAreaInfoList.push({
-                                    id: element.comment_area.id,
-                                    title: element.comment_area.title,
-                                    area_star_number: element.comment_area.star_number,
-                                    area_has_star: element.star,
-                                })
+                            res = res.data
+                            res.commentAreaList.forEach((commentAreaId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + commentAreaId)
+                                    .then(
+                                        (response) => {
+                                            if(response.code != 200){
+                                                console.log('failed to initialize')
+                                                return
+                                            }
+                                            response = response.data
+                                            this.commentAreaInfoList.push({
+                                                id: response.comment_area.id,
+                                                title: response.comment_area.name,
+                                                area_star_number: response.comment_area.star_number,
+                                                area_has_star: true,
+                                            })
+                                        }
+                                    )
                             })
                         }
                     )
@@ -128,8 +138,6 @@
                     this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.commentAreaInfoList[count - 1].area_has_star = true
                                     this.commentAreaInfoList[count - 1].area_star_number += 1
@@ -141,12 +149,9 @@
                         )
                 }
                 else{
-                    //！！！需要修改，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.commentAreaInfoList[count - 1].area_has_star = false
                                     this.commentAreaInfoList[count - 1].area_star_number -= 1

@@ -127,28 +127,32 @@
             },
             // 页面初始化，填入所有数据
             initDatas(){
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_comment_list')
+                this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment')
                     .then(
                         (res) => {
-                            res = res.data
-                            if(res.code != 200)
+                            if(res.code != 200){
+                                console.log('failed to initialize')
                                 return
-                            res.long_comment_list.forEach((longCommentId) => {
-                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?longCommentId=' + longCommentId)
+                            }
+                            res = res.data
+                            res.longCommentList.forEach((longCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + longCommentId)
                                     .then(
-                                        (res) => {
-                                            res = res.data
-                                            if(res.code != 200)
+                                        (response) => {
+                                            if(response.code != 200){
+                                                console.log('failed to initialize')
                                                 return
+                                            }
+                                            response = response.data
                                             this.longCommentList.push({
-                                                id: longCommentId,
-                                                poster: res.comment.poster,
-                                                title: res.comment.title,
-                                                post_time: res.comment.post_time,
-                                                content: res.comment.content,
-                                                star_number: res.comment.star_number,
-                                                has_star: res.star,
-                                                is_owner: res.owner,
+                                                id: response.comment.id,
+                                                poster: response.comment.poster,
+                                                title: response.comment.title,
+                                                post_time: response.comment.post_time,
+                                                content: response.comment.content,
+                                                star_number: response.comment.star_number,
+                                                has_star: response.comment.star,
+                                                is_owner: response.comment.create,
                                             })
                                         }
                                     )
@@ -176,8 +180,6 @@
                     this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentList[count - 1].has_star = true
                                     this.longCommentList[count - 1].star_number += 1
@@ -189,12 +191,9 @@
                         )
                 }
                 else{
-                    //！！！需要修改，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentList[count - 1].has_star = false
                                     this.longCommentList[count - 1].star_number -= 1
@@ -208,12 +207,9 @@
             },
             handleDelete(count){
                 if(this.longCommentList[count - 1].is_owner){
-                //！！！需要修改，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/delete_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/delete_long_comment?longCommentId=' + this.longCommentList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentList.splice(count - 1, 1);
                                     this.$message("删除成功")

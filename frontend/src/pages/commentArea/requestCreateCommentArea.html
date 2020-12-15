@@ -123,8 +123,6 @@
                     this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', JSON.stringify(data), config)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.$message("上传成功，等待审核")
                                 }

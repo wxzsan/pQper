@@ -100,12 +100,14 @@
                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
                     .then(
                         (res) => {
-                            res = res.data
-                            if(res.code != 200)
+                            if(res.code != 200){
+                                console.log('failed to initialize')
                                 return
-                            res.createRequestList.forEach(element => {
+                            }
+                            res = res.data
+                            res.createRequestList.forEach((element) => {
                                 this.createRequestList.push({
-                                    requestId: element.requestId,
+                                    requestId: element.id,
                                     title: element.paper.title,
                                     path: element.paper.path,
                                 })
@@ -132,8 +134,6 @@
                 this.$axios.get('http://127.0.0.1:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
                     .then(
                         (res) => {
-                            res = res.data
-                            console.log(res)
                             if(res.code === 200){
                                 this.createRequestList.splice(count - 1, 1);
                                 this.$message("操作成功")
@@ -149,8 +149,6 @@
                 this.$axios.get('http://127.0.0.1:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
                     .then(
                         (res) => {
-                            res = res.data
-                            console.log(res)
                             if(res.code === 200){
                                 this.createRequestList.splice(count - 1, 1);
                                 this.$message("操作成功")

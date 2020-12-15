@@ -149,35 +149,35 @@
                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + this.longComment.id)
                     .then(
                         (res) => {
-                            res = res.data
                             if(res.code != 200){
                                 console.log('failed to initialize')
                                 return
                             }
+                            res = res.data
                             this.longComment.poster = res.comment.poster
                             this.longComment.post_time = res.comment.post_time
                             this.longComment.title = res.comment.title
                             this.longComment.star_number = res.comment.star_number
                             this.longComment.content = res.comment.content
-                            this.longComment.has_star = res.star
+                            this.longComment.has_star = res.comment.star
                             res.comment.short_comment_list.forEach((shortCommentId) => {
                                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                     .then(
-                                        (res) => {
-                                            res = res.data
-                                            if(res.code != 200){
+                                        (response) => {
+                                            if(response.code != 200){
                                                 console.log('failed to initialize')
-                                                return          
+                                                return
                                             }
+                                            response = response.data
                                             this.shortCommentList.push({
-                                                id: shortCommentId,
-                                                poster: res.poster,
-                                                post_time: res.post_time,
-                                                content: res.content,
-                                                rose_number: res.rose_number,
-                                                egg_number: res.egg_number,
-                                                has_rose: res.rose,
-                                                has_egg: res.egg,
+                                                id: response.comment.id,
+                                                poster: response.comment.poster,
+                                                post_time: response.comment.post_time,
+                                                content: response.comment.content,
+                                                rose_number: response.comment.rose_number,
+                                                egg_number: response.comment.egg_number,
+                                                has_rose: response.comment.rose,
+                                                has_egg: response.comment.egg,
                                             })
                                         }
                                     )
@@ -199,8 +199,6 @@
                         this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_rose = true
                                         this.shortCommentList[count - 1].rose_number += 1
@@ -212,12 +210,9 @@
                             )
                     }
                     else{
-                        // 取消点赞！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_rose = false
                                         this.shortCommentList[count - 1].rose_number -= 1
@@ -237,8 +232,6 @@
                         this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_egg = true
                                         this.shortCommentList[count - 1].egg_number += 1
@@ -250,12 +243,9 @@
                             )
                     }
                     else{
-                        // 取消点踩！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_egg = false
                                         this.shortCommentList[count - 1].egg_number -= 1
@@ -274,8 +264,6 @@
                     this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longComment.has_star = true
                                     this.longComment.star_number += 1
@@ -287,12 +275,9 @@
                         )
                 }
                 else{
-                    //! 取消收藏，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment?longCommentId=' + this.longComment.id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longComment.has_star = false
                                     this.longComment.star_number -= 1
@@ -319,8 +304,6 @@
                     this.$axios.post('http://127.0.0.1:8000/commentarea/post_short_comment_for_long_comment', JSON.stringify(data), config)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.shortCommentInput = ""
                                     this.$message("发送成功")
