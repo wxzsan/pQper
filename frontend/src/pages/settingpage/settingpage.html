@@ -11,12 +11,12 @@
         <el-container>
             <el-header height="50px">
                 <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
-                <el-dropdown style="float: right; width: 50px;">
+                <el-dropdown style="float: right; width: 50px;" @command="handle_command">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>个人主页</el-dropdown-item>
-                        <el-dropdown-item>个人信息</el-dropdown-item>
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item command="a">个人主页</el-dropdown-item>
+                        <el-dropdown-item command="b">个人信息</el-dropdown-item>
+                        <el-dropdown-item command="c">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
@@ -42,21 +42,21 @@
                                 </el-upload>
                             </div>
                             <br>
-                            <div>
+                            <div class="margin16">
                                 <el-input v-model="name" placeholder="用户名" style="width:250px;"></el-input>
                             </div>
-                            <div>
+                            <div class="margin16">
                                 <el-input v-model="password" placeholder="密码" @input="check" show-password style="width:250px;"></el-input>
                             </div>
-                            <div>
+                            <div class="margin16">
                                 <el-input v-model="repeat_password" placeholder="重复密码" @input="check" show-password style="width:250px;"></el-input>
                             </div>
-                            <div>
+                            <div class="margin16">
                                 <p style="color:#F56C6C">
                                     {% verbatim %}{{message}}{% endverbatim %}
                                 </p>
                             </div>
-                            <div>
+                            <div class="margin16">
                                 <el-button @click="change">修改</el-button>
                             </div>
                         </div>
@@ -97,15 +97,10 @@
         display: block;
     }
     
+    html,
+    body,
     #app {
-        height: 100%;
-    }
-    
-    html {
-        height: 100%;
-    }
-    
-    body {
+        margin: 0;
         height: 100%;
     }
     
@@ -159,6 +154,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    
+    .margin16 {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
 </style>
