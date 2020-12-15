@@ -351,7 +351,45 @@ def approve_create_comment_area_request(request):
             response['code'] = 300
             response['data'] = {'msg': form.errors}
             return JsonResponse(response)
+@csrf_exempt
+def reject_create_comment_area_request(request):
+    response = {}
 
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = ApproveCreateCommentAreaRequestForm(request.GET)
+        if form.is_valid():
+            request_id = form.cleaned_data['requestId']
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "user id does not exist"}
+                return JsonResponse(response)
+            # 判断是否有管理员权限
+            if user.privilege == False:
+                response['code'] = 300
+                response['data'] = {'msg': "not administrator"}
+                return JsonResponse(response)
+            try:
+                create_request = CreateRequest.objects.get(id=request_id)
+            except CreateRequest.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "request id does not exist"}
+                return JsonResponse(response)
+            create_request.delete()
+            response['code'] = 200
+            response['data'] = {'msg': "success"}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
 
 @csrf_exempt
 def get_create_comment_area_request(request):
@@ -564,7 +602,8 @@ def get_long_comment(request):
             star = long_comment.star_user_list.filter(id=user_id).exists()
             data = serializer.data
             data['star'] = star
-           # print(in_comment_area)
+            #判断当前用户是否发布了该评论
+            data['create'] = (user_id == long_comment.poster.id)
             if in_comment_area:
                 data['content'] = long_comment.content[:50]
             response['code'] = 200
@@ -793,3 +832,4 @@ def cancel_star_comment_area(request):
             response['code'] = 300
             response['data'] = {'msg': form.errors}
             return JsonResponse(response)
+# 拒绝创建讨论区
