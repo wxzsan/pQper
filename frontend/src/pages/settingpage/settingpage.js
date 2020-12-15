@@ -84,6 +84,25 @@ var vm = new Vue({
       if (command === 'a') this.to_home_page()
       else if (command === 'b') this.to_my_profile_page()
       else if (command === 'c') this.quit()
+    },
+    get_user_information: function () {
+      this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+        .then((res) => {
+          res = res.data
+          if (res.data.msg === 'cookie out of date') {
+            alert('登录超时')
+            window.location.href = 'http://127.0.0.1:8000/user/login.html'
+          } else if (res.code === 200) {
+            this.name = res.data.name
+            this.email = res.data.email
+            if (res.data.photo !== '')
+              this.photo = '/static' + res.data.photo
+            else
+              this.photo = ''
+          } else {
+            alert('用户不存在')
+          }
+        })
     }
   }
 })

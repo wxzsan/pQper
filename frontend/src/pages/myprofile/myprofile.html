@@ -39,10 +39,10 @@
                                 <el-avatar :src="photo" :size="200"></el-avatar>
                             </div>
                             <div>
-                                <p>name:{{name}}</p>
+                                <p>name: {% verbatim %}{{name}}{% endverbatim %}</p>
                             </div>
                             <div>
-                                <p>email:{{email}}</p>
+                                <p>email: {% verbatim %}{{email}}{% endverbatim %}</p>
                             </div>
                             <div>
                                 <el-button @click='to_setting_page'>修改</el-button>
