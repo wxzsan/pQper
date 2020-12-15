@@ -55,8 +55,9 @@
                             :on-change="handleChange"
                             :auto-upload="false"
                             action="#">
-                            点击上传文件或拖动文件到此处
+                            点击选择文件或拖动文件到此处
                         </el-upload>
+                        <br>
                         <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-upload2" @click="handleUpload()">上传</el-button>
                     </div>
                 </el-main>
@@ -75,14 +76,13 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            userId: 0,  // 调试时暂时如此假设
             paperTitle: "",
             paperStr: "",
             searchInput: "",
             fileList: new Array()
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -94,8 +94,9 @@
             // 搜索框事件处理
             //! 尚未完成
             handleSearch(){
-                if(this.input.length > 0){
-                    console.log(this.searchInput) // 理应转到SearchResultPage，参数？？？
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
             handleChange(file, fileList){
@@ -111,7 +112,6 @@
             handleUpload(file){
                 if(this.paperTitle.length > 0 && this.paperStr.length > 0){
                     let data = {
-                        "userId": this.userId,
                         "paperPdfInStr": this.paperStr,
   	                    "paperTitle": this.paperTitle,
                     }
