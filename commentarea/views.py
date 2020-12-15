@@ -38,8 +38,12 @@ def get_comment_area(request):
             serializer = CommentAreaSerializer(comment_area)
             # print(serializer.data)
             # print(model_to_dict(comment_area))
+            star = comment_area.star_user_list.filter(id=user_id).exists()
+            data = serializer.data
+            data['path'] = comment_area.paper.path
+            data['star'] = star
             response['code'] = 200
-            response['data'] = {'msg': "success", 'comment_area': serializer.data}
+            response['data'] = {'msg': "success", 'comment_area': data}
             return JsonResponse(response)
         else:
             response['code'] = 300
@@ -208,6 +212,7 @@ def star_comment_area(request):
                 return JsonResponse(response)
             # 收藏用户列表加入收藏用户
             comment_area.star_user_list.add(user)
+            comment_area.star_number  = comment_area.star_number + 1
             # 更新数据库
             comment_area.save()
             response['code'] = 200
@@ -387,23 +392,18 @@ def get_star_comment_area_list(request):
         response['data'] = {'msg': "cookie out of date"}
         return JsonResponse(response)
     if request.method == 'GET':
-        form = UserForm(request.GET)
-        if form.is_valid():
-            # id = form.cleaned_data['userId']
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                response['code'] = 300
-                response['data'] = {'msg': "user id does not exist"}
-                return JsonResponse(response)
-            response['code'] = 200
-            serializer = CommentAreaSerializer(user.star_comment_area.all(), many=True)
-            response['data'] = {'msg': "success", "commentAreaList": serializer.data}
-            return JsonResponse(response)
-        else:
+        # id = form.cleaned_data['userId']
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
             response['code'] = 300
-            response['data'] = {'msg': form.errors}
+            response['data'] = {'msg': "user id does not exist"}
             return JsonResponse(response)
+        response['code'] = 200
+        #这里用的serializer和之前的不一样，只会发送id and name
+        serializer = CommentAreaInListSerializer(user.star_comment_area.all(), many=True)
+        response['data'] = {'msg': "success", "commentAreaList": serializer.data}
+        return JsonResponse(response)
 
 
 @csrf_exempt
@@ -519,8 +519,11 @@ def get_short_comment(request):
             # 查询是否赞过或者踩过
             rose = short_comment.rose_user_list.filter(id=user.id).exists()
             egg = short_comment.egg_user_list.filter(id=user.id).exists()
+            data = serializer.data
+            data['egg'] = egg
+            data['rose'] = rose
             response['code'] = 200
-            response['data'] = {'msg': "success", 'comment': serializer.data, "rose": rose, "egg": egg}
+            response['data'] = {'msg': "success", 'comment': data}
             return JsonResponse(response)
         else:
             response['code'] = 300
@@ -530,6 +533,50 @@ def get_short_comment(request):
 
 @csrf_exempt
 def get_long_comment(request):
+    response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+    if request.method == 'GET':
+        form = GetLongCommentForm(request.GET)
+        if form.is_valid():
+            long_comment_id = form.cleaned_data['longCommentId']
+            in_comment_area = form.cleaned_data['inCommentArea']
+            # user_id = form.cleaned_data['userId']
+            try:
+                long_comment = LongComment.objects.get(id=long_comment_id)
+            except LongComment.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "long comment id does not exist"}
+                return JsonResponse(response)
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "user id does not exist"}
+                return JsonResponse(response)
+            if in_comment_area:
+                serializer = LongCommentInCommentAreaSerializer(long_comment)
+            else:
+                serializer = LongCommentSerializer(long_comment)
+            star = long_comment.star_user_list.filter(id=user_id).exists()
+            data = serializer.data
+            data['star'] = star
+           # print(in_comment_area)
+            if in_comment_area:
+                data['content'] = long_comment.content[:50]
+            response['code'] = 200
+            response['data'] = {'msg': "success", 'comment': data}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
+
+@csrf_exempt
+def delete_long_comment(request):
     response = {}
     user_id = check_cookie(request)
     if user_id == -1:
@@ -553,10 +600,194 @@ def get_long_comment(request):
                 response['code'] = 300
                 response['data'] = {'msg': "user id does not exist"}
                 return JsonResponse(response)
-            serializer = LongCommentSerializer(long_comment)
-            star = long_comment.star_user_list.filter(id=user.id).exists()
+            if long_comment.poster.id == user_id:
+                long_comment.delete()
+                response['code'] = 200
+                response['data'] = {'msg': "success"}
+                return JsonResponse(response)
+            else:
+                response['code'] = 300
+                response['data'] = {'msg': "you can't delete others' comment"}
+                return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
+
+@csrf_exempt
+def get_star_long_comment_list(request):
+    response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+    if request.method == 'GET':
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            response['code'] = 300
+            response['data'] = {'msg': "user id does not exist"}
+            return JsonResponse(response)
+        response['code'] = 200
+        serializer = LongCommentInListSerializer(user.star_long_comment.all(), many=True)
+        response['data'] = {'msg': "success", "longCommentList": serializer.data}
+        return JsonResponse(response)
+
+@csrf_exempt
+def cancel_star_comment(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = OpLongCommentForm(request.GET)
+        if form.is_valid():
+            long_comment_id = form.cleaned_data['longCommentId']
+            # user_id = form.cleaned_data['userId']
+            # 根据id获取长评
+            try:
+                long_comment = LongComment.objects.get(id=long_comment_id)
+            except LongComment.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "long comment id does not exist"}
+                return JsonResponse(response)
+            # 查询是否已经收藏
+            star = long_comment.star_user_list.filter(id=user_id).exists()
+            if not star:
+                response['code'] = 300
+                response['data'] = {'msg': "you have not starred this comment"}
+                return JsonResponse(response)
+            long_comment.star_number = long_comment.star_number - 1
+            long_comment.star_user_list.remove(user_id)
+            # 更新数据库
+            long_comment.save()
             response['code'] = 200
-            response['data'] = {'msg': "success", 'comment': serializer.data, "star": star}
+            response['data'] = {'msg': "success"}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
+
+@csrf_exempt
+def cancel_egg_comment(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = OpShortCommentForm(request.GET)
+        if form.is_valid():
+            short_comment_id = form.cleaned_data['shortCommentId']
+            # user_id = form.cleaned_data['userId']
+            # 根据id获取短评
+            try:
+                short_comment = ShortComment.objects.get(id=short_comment_id)
+            except ShortComment.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "short comment id does not exist"}
+                return JsonResponse(response)
+            # 查询是否已经点踩
+            egg = short_comment.egg_user_list.filter(id=user_id).exists()
+            if not egg:
+                response['code'] = 300
+                response['data'] = {'msg': "you have not egged this comment"}
+                return JsonResponse(response)
+
+            short_comment.egg_number = short_comment.egg_number - 1
+            short_comment.egg_user_list.remove(user_id)
+            # 更新数据库
+            short_comment.save()
+            response['code'] = 200
+            response['data'] = {'msg': "success"}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
+
+@csrf_exempt
+def cancel_rose_comment(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = OpShortCommentForm(request.GET)
+        if form.is_valid():
+            short_comment_id = form.cleaned_data['shortCommentId']
+            # user_id = form.cleaned_data['userId']
+            # 根据id获取短评
+            try:
+                short_comment = ShortComment.objects.get(id=short_comment_id)
+            except ShortComment.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "short comment id does not exist"}
+                return JsonResponse(response)
+            # 查询是否已经点赞
+            rose = short_comment.rose_user_list.filter(id=user_id).exists()
+            if not rose:
+                response['code'] = 300
+                response['data'] = {'msg': "you have not rosed this comment"}
+                return JsonResponse(response)
+
+            short_comment.rose_number = short_comment.rose_number - 1
+            short_comment.rose_user_list.remove(user_id)
+            # 更新数据库
+            short_comment.save()
+            response['code'] = 200
+            response['data'] = {'msg': "success"}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
+@csrf_exempt
+def cancel_star_comment_area(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = OpCommentAreaForm(request.GET)
+        if form.is_valid():
+            comment_area_id = form.cleaned_data['commentAreaId']
+            # user_id = form.cleaned_data['userId']
+            # 根据id获取讨论区
+            try:
+                comment_area = CommentArea.objects.get(id=comment_area_id)
+            except CommentArea.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "comment area id does not exist"}
+                return JsonResponse(response)
+            star = comment_area.star_user_list.filter(id=user_id).exists()
+            if not star:
+                response['code'] = 300
+                response['data'] = {'msg': "you have not starred this comment area"}
+                return JsonResponse(response)
+            comment_area.star_user_list.remove(user_id)
+            comment_area.star_number  = comment_area.star_number - 1
+            # 更新数据库
+            comment_area.save()
+            response['code'] = 200
+            response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
             response['code'] = 300

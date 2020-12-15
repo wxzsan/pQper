@@ -36,4 +36,5 @@ class CommentArea(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     long_comment_list = models.ManyToManyField(LongComment)
     short_comment_list = models.ManyToManyField(ShortComment)
+    star_number = models.IntegerField(default = 0)
     star_user_list = models.ManyToManyField('user.User', related_name='star_comment_area')
