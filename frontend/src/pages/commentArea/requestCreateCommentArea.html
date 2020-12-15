@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <!--顶栏-->
+            <el-header height="50px">
+                <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
+                <!--我的下拉菜单-->
+                <el-dropdown style="float: right; width: 50px;">
+                    <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--搜索框-->
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;" @click="handleSearch()">搜索</el-button>
+                <el-col :span="3" style="float: right; margin-top: 5px;">
+                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                </el-col>
+            </el-header>
+            <el-container>
+                <!--左边栏-->
+                <el-aside width="120px">
+                    <br><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='#'">收藏夹</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                </el-aside>
+                <!--上传文件区域-->
+                <el-main>
+                    <div class="comment" style="background-color: #62c48b;">
+                        <p class="text" style="font-size: 20px;"><b>创建讨论区</b></p>
+                    </div>
+                    <div class="comment">
+                        <p class="text" style="font-size: 17px;">论文标题</p>
+                        <el-input v-model="paperTitle" style="width: 360px;"></el-input>
+                        <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
+                        <el-upload
+                            class="upload-file"
+                            drag
+                            accept=".pdf"
+                            :multiple="false"
+                            :file-list="fileList"
+                            :on-change="handleChange"
+                            :auto-upload="false"
+                            action="#">
+                            点击选择文件或拖动文件到此处
+                        </el-upload>
+                        <br>
+                        <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-upload2" @click="handleUpload()">上传</el-button>
+                    </div>
+                </el-main>
+            </el-container>
+            <!--底栏-->
+            <el-footer height="50px">
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper</p>
+            </el-footer>
+        </el-container>
+    </div>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script>
+    Vue.prototype.$axios = axios
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            paperTitle: "",
+            paperStr: "",
+            searchInput: "",
+            fileList: new Array()
+        },
+        methods: {
+            // 正则表达式匹配
+            getParams(key){
+                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                var r = window.location.search.substr(1).match(reg)
+                if (r != null) {
+                    return unescape(r[2])
+                }
+                return null
+            },
+            // 搜索框事件处理
+            //! 尚未完成
+            handleSearch(){
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                }
+            },
+            handleChange(file, fileList){
+                if(fileList.length > 0){
+                    this.fileList = [fileList[fileList.length - 1]]
+                }
+                var reader = new FileReader()
+                reader.readAsDataURL(fileList[0].raw)
+                reader.onload = (e) => {
+                    this.paperStr = reader.result
+                }
+            },
+            handleUpload(file){
+                if(this.paperTitle.length > 0 && this.paperStr.length > 0){
+                    let data = {
+                        "paperPdfInStr": this.paperStr,
+  	                    "paperTitle": this.paperTitle,
+                    }
+                    let config = {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        },
+                    }
+                    this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', JSON.stringify(data), config)
+                        .then(
+                            (res) => {
+                                if(res.code === 200){
+                                    this.$message("上传成功，等待审核")
+                                }
+                                else
+                                    this.$message("上传失败")
+                            }
+                        )
+                }
+            }
+        }
+    })
+    </script>
+</body>
+
+<style type="text/css">
+    #app {
+        height: 100%;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+        height: 100%;
+    }
+    .el-container {
+        height: 100%;
+        direction: "vertical";
+    }
+    .el-header {
+        background-color: #b361ff;
+    }
+    .el-footer {
+        background-color: #62c48b;
+    }
+    .el-aside {
+        background-color: #DCDFE6;
+    }
+    .el-main {
+        background-color: #EBEEF5;
+    }
+    .el-button {
+        font-family: 'Pingang SC';
+        width: 108px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+    .el-dropdown p {
+        font-family: 'Pingang SC';
+    }
+    .text {
+        font-family: Times;
+    }
+    .comment {
+        background-color: #b3dbc4;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
+    }
+</style>
+
+</html>

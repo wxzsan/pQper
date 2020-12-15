@@ -5,19 +5,25 @@ class Paper(models.Model):
     title = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
 
+    def __str__(self):
+        return str(self.id) + '--' + self.title
+
 class ShortComment(models.Model):
-    poster = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    poster = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name = 'post_short_comment')
     post_time = models.DateTimeField(auto_now_add=True)
     content = models.CharField(max_length=255)
     rose_number = models.IntegerField(default=0)
-    rose_user_list = models.ManyToManyField('user.User')
+    egg_number = models.IntegerField(default=0)
+    rose_user_list = models.ManyToManyField('user.User', related_name='rose_short_comment')
+    egg_user_list = models.ManyToManyField('user.User', related_name='egg_short_comment')
 
 class LongComment(models.Model):
-    poster = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    poster = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='post_long_comment')
     post_time = models.DateTimeField(auto_now_add=True)
-    abstract = models.CharField(max_length=255)
-    rose_number = models.IntegerField(default=0)
-    comment_address = models.CharField(max_length=255)
+    title = models.CharField(max_length = 255)
+    star_number = models.IntegerField(default=0)
+    star_user_list = models.ManyToManyField('user.User', related_name='star_long_comment')
+    content = models.TextField()
     short_comment_list = models.ManyToManyField(ShortComment)
 
 class CreateRequest(models.Model):
@@ -30,3 +36,5 @@ class CommentArea(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     long_comment_list = models.ManyToManyField(LongComment)
     short_comment_list = models.ManyToManyField(ShortComment)
+    star_number = models.IntegerField(default = 0)
+    star_user_list = models.ManyToManyField('user.User', related_name='star_comment_area')
