@@ -82,7 +82,7 @@
             fileList: new Array()
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)

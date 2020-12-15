@@ -86,7 +86,7 @@
             }],
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -112,6 +112,8 @@
                             })
                         }
                     )
+                if(this.createRequestList.length > 0)
+                    this.paperDir = this.createRequestList[0].path
             },
             // 搜索框事件处理
             //! 尚未完成
@@ -121,7 +123,7 @@
                     window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
-            // 选中申请时间处理
+            // 选中申请事件处理
             handleClick(count){
                 this.paperDir = this.createRequestList[count - 1].path
             },

@@ -133,7 +133,7 @@
             shortCommentButtonType: "info",
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -146,7 +146,7 @@
             initDatas(){
                 this.longComment.id = parseInt(this.getParams("id"))
                 //! 需要修改，等待API
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?longCommentId=' + this.longComment.id)
+                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + this.longComment.id)
                     .then(
                         (res) => {
                             res = res.data
@@ -158,18 +158,29 @@
                             this.longComment.post_time = res.comment.post_time
                             this.longComment.title = res.comment.title
                             this.longComment.star_number = res.comment.star_number
+                            this.longComment.content = res.comment.content
                             this.longComment.has_star = res.star
-                            res.comment.short_comment_list.forEach(element => {
-                                this.shortCommentList.push({
-                                    id: element.id,
-                                    poster: element.poster,
-                                    post_time: element.post_time,
-                                    content: element.content,
-                                    rose_number: element.rose_number,
-                                    egg_number: element.egg_number,
-                                    has_rose: false,
-                                    has_egg: false,
-                                })
+                            res.comment.short_comment_list.forEach((shortCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
+                                    .then(
+                                        (res) => {
+                                            res = res.data
+                                            if(res.code != 200){
+                                                console.log('failed to initialize')
+                                                return          
+                                            }
+                                            this.shortCommentList.push({
+                                                id: shortCommentId,
+                                                poster: res.poster,
+                                                post_time: res.post_time,
+                                                content: res.content,
+                                                rose_number: res.rose_number,
+                                                egg_number: res.egg_number,
+                                                has_rose: res.rose,
+                                                has_egg: res.egg,
+                                            })
+                                        }
+                                    )
                             })
                         }
                     )

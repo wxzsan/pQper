@@ -87,7 +87,7 @@
                         <el-tab-pane label="发表评论" name="fourth">
                             <div class="comment">
                                 <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
-                                <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="shortCommentInput"></el-input><br><br>
                                 <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check" @click="handlePostShortComment()">发送</el-button>
                             </div>
                             <div class="comment">
@@ -95,7 +95,7 @@
                                 <p class="text" style="font-size: 15px;">标题</p>
                                 <el-input v-model="longCommentInput.title"></el-input>
                                 <p class="text" style="font-size: 15px;">正文</p>
-                                <el-input type="textarea" :rows="8" v-model="longCommentInput.content"></el-input>
+                                <el-input type="textarea" :rows="7" v-model="longCommentInput.content"></el-input><br><br>
                                 <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check" @click="handlePostLongComment()">发送</el-button>
                             </div>
                         </el-tab-pane>
@@ -192,7 +192,7 @@
             longCommentButtonType: "info",
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -212,30 +212,50 @@
                                 return
                             this.paperInfo.title = res.comment_area.name
                             this.paperDir = res.comment_area.paper.path
-                            this.area_star_number = res.comment_area.star_user_list.length
-                            this.area_has_star = false
-                            res.comment_area.short_comment_list.forEach(element => {
-                                this.shortCommentList.push({
-                                    id: element.id,
-                                    poster: element.poster,
-                                    post_time: element.post_time,
-                                    content: element.content,
-                                    rose_number: element.rose_number,
-                                    egg_number: element.egg_number,
-                                    has_rose: false,
-                                    has_egg: false,
-                                })
+                            this.area_star_number = res.comment_area.star_number
+                            this.area_has_star = res.comment_area.star
+                            res.comment_area.short_comment_list.forEach((shortCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
+                                    .then(
+                                        (res) => {
+                                            res = res.data
+                                            if(res.code != 200){
+                                                console.log('failed to initialize')
+                                                return          
+                                            }
+                                            this.shortCommentList.push({
+                                                id: shortCommentId,
+                                                poster: res.comment.poster,
+                                                post_time: res.comment.post_time,
+                                                content: res.comment.content,
+                                                rose_number: res.comment.rose_number,
+                                                egg_number: res.comment.egg_number,
+                                                has_rose: res.rose,
+                                                has_egg: res.egg,
+                                            })
+                                        }
+                                    )
                             })
-                            res.comment_area.long_comment_list.forEach(element => {
-                                this.longCommentList.push({
-                                    id: element.id,
-                                    poster: element.poster,
-                                    post_time: element.post_time,
-                                    title: element.title,
-                                    content: element.content,
-                                    star_number: element.star_number,
-                                    has_star: false,
-                                })
+                            res.comment_area.long_comment_list.forEach((longCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
+                                    .then(
+                                        (res) => {
+                                            res = res.data
+                                            if(res.code != 200){
+                                                console.log('failed to initialize')
+                                                return          
+                                            }
+                                            this.longCommentList.push({
+                                                id: longCommentId,
+                                                poster: res.comment.poster,
+                                                post_time: res.comment.post_time,
+                                                title: res.comment.title,
+                                                content: res.comment.content,
+                                                star_number: res.comment.star_number,
+                                                has_star: res.star,
+                                            })
+                                        }
+                                    )
                             })
                         }
                     )

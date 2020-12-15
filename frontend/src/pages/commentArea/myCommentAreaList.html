@@ -85,7 +85,7 @@
             searchInput: "",
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -106,10 +106,10 @@
                             }
                             res.commentAreaList.forEach(element => {
                                 this.commentAreaInfoList.push({
-                                    id: element.id,
-                                    title: element.title,
-                                    area_star_number: element.star_number,
-                                    area_has_star: true,
+                                    id: element.comment_area.id,
+                                    title: element.comment_area.title,
+                                    area_star_number: element.comment_area.star_number,
+                                    area_has_star: element.star,
                                 })
                             })
                         }
