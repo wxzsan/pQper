@@ -23,9 +23,9 @@ var vm = new Vue({
   methods: {
     check: function () {
       if (this.password === this.repeat_password) {
-        this.message = '密码不一致'
-      } else {
         this.message = ''
+      } else {
+        this.message = '密码不一致'
       }
     },
     change: function () {
@@ -67,6 +67,23 @@ var vm = new Vue({
         alert('上传头像图片大小不能超过 2MB!')
       }
       return isLt2M
+    },
+    to_home_page: function () {
+      window.location.href = 'http://127.0.0.1:8000/home.html'
+    },
+    to_my_profile_page: function () {
+      window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
+    },
+    quit: function () {
+      this.$axios.post('http://127.0.0.1:8000/user/logout')
+        .then((res) => {
+          window.location.href = 'http://127.0.0.1:8000/user/login.html'
+        })
+    },
+    handle_command: function (command) {
+      if (command === 'a') this.to_home_page()
+      else if (command === 'b') this.to_my_profile_page()
+      else if (command === 'c') this.quit()
     }
   }
 })
