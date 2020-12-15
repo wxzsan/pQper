@@ -7,9 +7,9 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .models import User
+from .serializers import information_serializer, star_serializer
 import requests
 import json
-
 #这里王昕兆为了方便调试假的view，暂时不要删
 @csrf_exempt
 def adduser(request):
@@ -20,24 +20,6 @@ def adduser(request):
         email = request.GET.get('email')
         user = User(user_name = name, user_password = password, user_email = email)
         user.save()
-        response['code'] = 200
-        response['data'] = {'msg':"success"}
-        return JsonResponse(response)
-
-@csrf_exempt
-def set_admin(request):
-    response = {}
-    if request.method == 'GET':
-        id = request.GET.get('userId')
-        try:
-            user = User.objects.get(id = id)
-        except User.DoesNotExist:
-            response['code'] = 300
-            response['data'] = {'msg': "user id does not exist"}
-            return JsonResponse(response)
-        user.privilege = True
-        user.save()
-        print(user.user_email, user.user_password, user.privilege)
         response['code'] = 200
         response['data'] = {'msg':"success"}
         return JsonResponse(response)
@@ -111,9 +93,11 @@ def register(request):
 def get_user_information(request):
     response = {}
     if request.method == 'POST':
-        #email_test = json.loads(request.body)['email']
-        #先检查cookie
-        userid=check_cookie(request)
+        try:
+            userid = json.loads(request.body)['id']
+        except:
+            #先检查cookie
+            userid=check_cookie(request)
         if userid == -1:
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}
@@ -122,7 +106,8 @@ def get_user_information(request):
             try:
                 user = User.objects.get(id=userid)
                 response['code'] = 200
-                response['data'] = {'msg':"success", 'name':user.user_name, 'email':user.user_email,'photo':str(user.user_photo)}
+                serializer=information_serializer(user)
+                response['data'] = {'msg':"success", 'information':serializer.data}
                 return JsonResponse(response)
             except:
                 response['code'] = 300
@@ -185,18 +170,137 @@ def upload_avatar(request):
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}
             return JsonResponse(response)
-        photo = json.loads(request.body)['photo']
+        try:
+            avatar = request.FILES.get('avatar')
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "can't get photo"}
+            return JsonResponse(response)
         try:
             user = User.objects.get(id=userid)
             response['code'] = 200
-            user.user_photo = photo
+            user.user_photo = avatar
             user.save()
-            response['data'] = {'msg':"success",'photo':str(user.user_photo)}
+            response['data'] = {'msg':"success"}
             return JsonResponse(response)
         except:
             response['code'] = 300
             response['data'] = {'msg': "User does not exist"}
             return JsonResponse(response)
-        
-    
-    
+
+@csrf_exempt
+def get_star_user_list(request):
+    response = {}
+    if request.method == 'POST':
+        #先检查cookie
+        userid=check_cookie(request)
+        if userid == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        try:
+            user = User.objects.get(id=userid)
+            serializer = star_serializer(user)
+            response['code'] = 200
+            response['data'] = {'msg': "success",'star_user_list':serializer.data}
+            return JsonResponse(response)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "User does not exist"}
+            return JsonResponse(response)
+
+
+@csrf_exempt
+def add_star_user(request):
+    response = {}
+    if request.method == 'POST':
+        #先检查cookie
+        userid=check_cookie(request)
+        starid = json.loads(request.body)['id']
+        if userid == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+
+        try:
+            user = User.objects.get(id=userid)
+            star_user=User.objects.get(id=starid)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "User does not exist"}
+            return JsonResponse(response)
+
+        try:
+            star_user=User.objects.get(id=starid)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "Star User does not exist"}
+            return JsonResponse(response)
+
+        try:
+            user.star_user_list.add(star_user)
+            response['code'] = 200
+            response['data'] = {'msg': "success"}
+            return JsonResponse(response)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "User has been stared"}
+            return JsonResponse(response)
+
+@csrf_exempt
+def remove_star_user(request):
+    response = {}
+    if request.method == 'POST':
+        #先检查cookie
+        userid=check_cookie(request)
+        starid = json.loads(request.body)['id']
+        if userid == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        try:
+            user = User.objects.get(id=userid)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "User does not exist"}
+            return JsonResponse(response)
+
+        try:
+            star_user=User.objects.get(id=starid)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg': "User does not exist"}
+            return JsonResponse(response)
+            
+        user.star_user_list.remove(star_user)
+        response['code'] = 200
+        response['data'] = {'msg': "success"}
+        return JsonResponse(response)
+
+@csrf_exempt
+def logout(request):
+    response = {}
+    if request.method == 'POST':
+        #email_test = json.loads(request.body)['email']
+        #先检查cookie
+        userid=check_cookie(request)
+        if userid == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        else:
+            try:
+                User.objects.get(id=userid)
+                response['code'] = 200
+                response['data'] = {'msg': "success"}
+                jsonresponse = JsonResponse(response)
+                jsonresponse.set_signed_cookie(key='userid', value=userid, salt='yyh',max_age=1)
+                print(userid)
+                return jsonresponse
+            except:
+                response['code'] = 300
+                #if email == email_test:
+                    #response['data'] = {'msg': "unkown wrong"}
+                #else:
+                response['data'] = {'msg': "User does not exist"}
+                return JsonResponse(response)
