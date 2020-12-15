@@ -5,15 +5,15 @@ class GetCommentAreaForm(forms.Form):
 
 class OpShortCommentForm(forms.Form):
     shortCommentId = forms.IntegerField()
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
 
 class OpCommentAreaForm(forms.Form):
     commentAreaId = forms.IntegerField()
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
 
 class OpLongCommentForm(forms.Form):
     longCommentId = forms.IntegerField()
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
 
 class PostLongCommentForm(forms.Form):
     commentAreaId = forms.IntegerField()
@@ -28,7 +28,7 @@ class PostLongCommentForm(forms.Form):
 
 class PostShortCommentForm(forms.Form):
     commentAreaId = forms.IntegerField()
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
     content = forms.CharField(
         max_length = 255,
         error_messages = {
@@ -38,7 +38,7 @@ class PostShortCommentForm(forms.Form):
 
 class PostShortCommentForLongCommentForm(forms.Form):
     longCommentId = forms.IntegerField()
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
     shortComment = forms.CharField(
         max_length = 255,
         error_messages = {
@@ -48,7 +48,7 @@ class PostShortCommentForLongCommentForm(forms.Form):
 
 
 class CreateCommentAreaForm(forms.Form):
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
     paperPdfInStr = forms.CharField(
         max_length = 255,
         error_messages = {

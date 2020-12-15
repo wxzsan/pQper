@@ -23,6 +23,24 @@ def adduser(request):
         response['code'] = 200
         response['data'] = {'msg':"success"}
         return JsonResponse(response)
+
+@csrf_exempt
+def set_admin(request):
+    response = {}
+    if request.method == 'GET':
+        id = request.GET.get('userId')
+        try:
+            user = User.objects.get(id = id)
+        except User.DoesNotExist:
+            response['code'] = 300
+            response['data'] = {'msg': "user id does not exist"}
+            return JsonResponse(response)
+        user.privilege = True
+        user.save()
+        print(user.user_email, user.user_password, user.privilege)
+        response['code'] = 200
+        response['data'] = {'msg':"success"}
+        return JsonResponse(response)
         
 
 

@@ -13,5 +13,6 @@ urlpatterns = [
     path('login.html', TemplateView.as_view(template_name = 'login.html')),
     path('myprofile.html', TemplateView.as_view(template_name = 'myprofile.html')),
     path('settingpage.html', TemplateView.as_view(template_name = 'settingpage.html')),
-    path('upload_avatar.html', TemplateView.as_view(template_name = 'upload_avatar.html'))
+    path('upload_avatar.html', TemplateView.as_view(template_name = 'upload_avatar.html')),
+    path('set_admin', views.set_admin),
 ]

@@ -11,6 +11,7 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 from commentarea.serializers import *
 from .forms import *
+from user.views import check_cookie
 
 
 # Create your views here.
@@ -18,10 +19,16 @@ from .forms import *
 def get_comment_area(request):
     response = {}
     if request.method == 'GET':
+
+        user_id = check_cookie(request)
+        if user_id == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        print(user_id)
         form = GetCommentAreaForm(request.GET)
         if form.is_valid():
             id = form.cleaned_data['commentAreaId']
-            print('hello')
             try:
                 comment_area = CommentArea.objects.get(id=id)
             except CommentArea.DoesNotExist:
@@ -44,11 +51,18 @@ def get_comment_area(request):
 @csrf_exempt
 def rose_comment(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'GET':
         form = OpShortCommentForm(request.GET)
         if form.is_valid():
             short_comment_id = form.cleaned_data['shortCommentId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId'] 现在使用cookie了
             # 根据id获取短评
             try:
                 short_comment = ShortComment.objects.get(id=short_comment_id)
@@ -80,11 +94,18 @@ def rose_comment(request):
 @csrf_exempt
 def egg_comment(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'GET':
         form = OpShortCommentForm(request.GET)
         if form.is_valid():
             short_comment_id = form.cleaned_data['shortCommentId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             # 根据id获取短评
             try:
                 short_comment = ShortComment.objects.get(id=short_comment_id)
@@ -116,11 +137,18 @@ def egg_comment(request):
 @csrf_exempt
 def star_comment(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'GET':
         form = OpLongCommentForm(request.GET)
         if form.is_valid():
             long_comment_id = form.cleaned_data['longCommentId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             # 根据id获取长评
             try:
                 long_comment = LongComment.objects.get(id=long_comment_id)
@@ -152,11 +180,18 @@ def star_comment(request):
 @csrf_exempt
 def star_comment_area(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'GET':
         form = OpCommentAreaForm(request.GET)
         if form.is_valid():
             comment_area_id = form.cleaned_data['commentAreaId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             # 根据id获取讨论区
             try:
                 comment_area = CommentArea.objects.get(id=comment_area_id)
@@ -187,12 +222,19 @@ def star_comment_area(request):
 @csrf_exempt
 def post_short_comment_for_long_comment(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'POST':
         form = PostShortCommentForLongCommentForm(json.loads(request.body))
         if form.is_valid():
             long_comment_id = form.cleaned_data['longCommentId']
             short_comment_content = form.cleaned_data['shortComment']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             try:
                 long_comment = LongComment.objects.get(id=long_comment_id)
             except LongComment.DoesNotExist:
@@ -222,12 +264,19 @@ def post_short_comment_for_long_comment(request):
 @csrf_exempt
 def request_create_comment_area(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'POST':
         form = CreateCommentAreaForm(json.loads(request.body))
         if form.is_valid():
             # 这里调试阶段先使用paper_info代替path，之后需要加上一个把paper_info 存储到静态文件目录中，
             # 然后把对应的路径填到paper_path中
-            user_id = form.cleaned_data["userId"]
+            # user_id = form.cleaned_data["userId"]
             paper_info = form.cleaned_data["paperPdfInStr"]
             paper_title = form.cleaned_data["paperTitle"]
             try:
@@ -252,10 +301,28 @@ def request_create_comment_area(request):
 @csrf_exempt
 def approve_create_comment_area_request(request):
     response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
     if request.method == 'GET':
         form = ApproveCreateCommentAreaRequestForm(request.GET)
         if form.is_valid():
             request_id = form.cleaned_data['requestId']
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "user id does not exist"}
+                return JsonResponse(response)
+            # 判断是否有管理员权限
+            if user.privilege == False:
+                response['code'] = 300
+                response['data'] = {'msg': "not administrator"}
+                return JsonResponse(response)
             try:
                 create_request = CreateRequest.objects.get(id=request_id)
             except CreateRequest.DoesNotExist:
@@ -285,6 +352,26 @@ def approve_create_comment_area_request(request):
 def get_create_comment_area_request(request):
     response = {}
     # 这里应该需要使用cookie判断权限
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+    # print(user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        response['code'] = 300
+        response['data'] = {'msg': "user id does not exist"}
+        return JsonResponse(response)
+    # print(user.user_email, user.user_password, user.privilege)
+
+    if user.privilege == False:
+        response['code'] = 300
+        response['data'] = {'msg': "not administrator"}
+        return JsonResponse(response)
+
     response['code'] = 200
     serializer = CreateRequestSerializer(CreateRequest.objects.all(), many=True)
     response['data'] = {'msg': "success", "createRequestList": serializer.data}
@@ -294,12 +381,17 @@ def get_create_comment_area_request(request):
 @csrf_exempt
 def get_star_comment_area_list(request):
     response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
     if request.method == 'GET':
         form = UserForm(request.GET)
         if form.is_valid():
-            id = form.cleaned_data['userId']
+            # id = form.cleaned_data['userId']
             try:
-                user = User.objects.get(id=id)
+                user = User.objects.get(id=user_id)
             except User.DoesNotExist:
                 response['code'] = 300
                 response['data'] = {'msg': "user id does not exist"}
@@ -317,12 +409,17 @@ def get_star_comment_area_list(request):
 @csrf_exempt
 def post_short_comment(request):
     response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
     if request.method == 'POST':
         form = PostShortCommentForm(json.loads(request.body))
         if form.is_valid():
             comment_area_id = form.cleaned_data['commentAreaId']
             content = form.cleaned_data['content']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             try:
                 comment_area = CommentArea.objects.get(id=comment_area_id)
             except CommentArea.DoesNotExist:
@@ -355,13 +452,18 @@ def post_short_comment(request):
 @csrf_exempt
 def post_long_comment(request):
     response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
     if request.method == 'POST':
         form = PostLongCommentForm(json.loads(request.body))
         if form.is_valid():
             comment_area_id = form.cleaned_data['commentAreaId']
             content = form.cleaned_data['content']
             title = form.cleaned_data['title']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             try:
                 comment_area = CommentArea.objects.get(id=comment_area_id)
             except CommentArea.DoesNotExist:
@@ -391,11 +493,16 @@ def post_long_comment(request):
 @csrf_exempt
 def get_short_comment(request):
     response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
     if request.method == 'GET':
         form = OpShortCommentForm(request.GET)
         if form.is_valid():
             short_comment_id = form.cleaned_data['shortCommentId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             try:
                 short_comment = ShortComment.objects.get(id=short_comment_id)
             except ShortComment.DoesNotExist:
@@ -424,11 +531,16 @@ def get_short_comment(request):
 @csrf_exempt
 def get_long_comment(request):
     response = {}
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
     if request.method == 'GET':
         form = OpLongCommentForm(request.GET)
         if form.is_valid():
             long_comment_id = form.cleaned_data['longCommentId']
-            user_id = form.cleaned_data['userId']
+            # user_id = form.cleaned_data['userId']
             try:
                 long_comment = LongComment.objects.get(id=long_comment_id)
             except LongComment.DoesNotExist:
