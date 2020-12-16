@@ -34,7 +34,7 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/user/login', JSON.stringify(data), config)
+      this.$axios.post('http://39.105.19.68:8000/user/login', JSON.stringify(data), config)
         .then(
           (res) => {
             res = res.data
@@ -50,7 +50,7 @@ var vm = new Vue({
     },
     to_register: function () {
       console.log('跳至注册')
-      window.location.href = "http://127.0.0.1:8000/user/register.html";
+      window.location.href = "http://39.105.19.68:8000/user/register.html";
     },
     check_email: function () {
       if (this.email.length === 0 || this.email.indexOf("@") === -1) {

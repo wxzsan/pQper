@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -46,15 +46,7 @@
                         <p class="text" style="font-size: 17px;">论文标题</p>
                         <el-input v-model="paperTitle" style="width: 360px;"></el-input>
                         <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
-                        <el-upload
-                            class="upload-file"
-                            drag
-                            accept=".pdf"
-                            :multiple="false"
-                            :file-list="fileList"
-                            :on-change="handleChange"
-                            :auto-upload="false"
-                            action="#">
+                        <el-upload class="upload-file" drag accept=".pdf" :multiple="false" :file-list="fileList" :on-change="handleChange" :auto-upload="false" action="#">
                             点击选择文件或拖动文件到此处
                         </el-upload>
                         <br>
@@ -70,70 +62,73 @@
     </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        data: {
-            paperTitle: "",
-            paperStr: "",
-            searchInput: "",
-            fileList: new Array()
-        },
-        methods: {
-            // 正则表达式匹配
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                paperTitle: "",
+                paperStr: "",
+                searchInput: "",
+                fileList: new Array()
             },
-            // 搜索框事件处理
-            //! 尚未完成
-            handleSearch(){
-                if(this.searchInput.length > 0){
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
-                }
-            },
-            handleChange(file, fileList){
-                if(fileList.length > 0){
-                    this.fileList = [fileList[fileList.length - 1]]
-                }
-                var reader = new FileReader()
-                reader.readAsDataURL(fileList[0].raw)
-                reader.onload = (e) => {
-                    this.paperStr = reader.result
-                }
-            },
-            handleUpload(file){
-                if(this.paperTitle.length > 0 && this.paperStr.length > 0){
-                    let data = {
-                        "paperPdfInStr": this.paperStr,
-  	                    "paperTitle": this.paperTitle,
+            methods: {
+                // 正则表达式匹配
+                getParams(key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
                     }
-                    let config = {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                        },
+                    return null
+                },
+                // 搜索框事件处理
+                //! 尚未完成
+                handleSearch() {
+                    if (this.searchInput.length > 0) {
+                        var searchContent = btoa(encodeURI(this.searchInput))
+                        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                     }
-                    this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', JSON.stringify(data), config)
-                        .then(
-                            (res) => {
-                                if(res.code === 200){
-                                    this.$message("上传成功，等待审核")
+                },
+                handleChange(file, fileList) {
+                    if (fileList.length > 0) {
+                        this.fileList = [fileList[fileList.length - 1]]
+                    }
+                    var reader = new FileReader()
+                    reader.readAsDataURL(fileList[0].raw)
+                    reader.onload = (e) => {
+                        this.paperStr = reader.result
+                    }
+                },
+                handleUpload(file) {
+                    if (this.paperTitle.length > 0 && this.paperStr.length > 0) {
+                        let data = {
+                            "paperPdfInStr": this.paperStr,
+                            "paperTitle": this.paperTitle,
+                        }
+                        let config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                        }
+                        this.$axios.post('http://39.105.19.68:8000/commentarea/request_create_comment_area', JSON.stringify(data), config)
+                            .then(
+                                (res) => {
+                                    if (res.code === 200) {
+                                        this.$message("上传成功，等待审核")
+                                    } else
+                                        this.$message("上传失败")
                                 }
-                                else
-                                    this.$message("上传失败")
-                            }
-                        )
+                            )
+                    }
                 }
             }
-        }
-    })
+        })
+
     </script>
 </body>
 
@@ -141,28 +136,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -171,12 +174,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .text {
         font-family: Times;
     }
+    
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -184,6 +190,7 @@
         direction: vertical;
         padding: 10px;
     }
+
 </style>
 
 </html>

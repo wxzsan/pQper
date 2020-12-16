@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -57,120 +57,121 @@
     </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-            commentAreaInfoList: [{
-                title: "我的讨论区1",
-                id: 123,
-                star_number: 100,
-                area_has_star: true,
-            },{
-                title: "我的讨论区2",
-                id: 124,
-                star_number: 100,
-                area_has_star: true,
-            },{
-                title: "我的讨论区3",
-                id: 125,
-                area_star_number: 100,
-                area_has_star: true,
-            }],
-            searchInput: "",
-        },
-        methods: {
-            // 正则表达式匹配
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            created: function() {
+                this.initDatas()
             },
-            // 页面初始化，填入所有评论数据
-            initDatas(){
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_comment_area_list')
-                    .then(
-                        (res) => {
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            res = res.data
-                            res.commentAreaList.forEach((commentAreaId) => {
-                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + commentAreaId)
-                                    .then(
-                                        (response) => {
-                                            if(response.code != 200){
-                                                console.log('failed to initialize')
-                                                return
+            data: {
+                commentAreaInfoList: [{
+                    title: "我的讨论区1",
+                    id: 123,
+                    star_number: 100,
+                    area_has_star: true,
+                }, {
+                    title: "我的讨论区2",
+                    id: 124,
+                    star_number: 100,
+                    area_has_star: true,
+                }, {
+                    title: "我的讨论区3",
+                    id: 125,
+                    area_star_number: 100,
+                    area_has_star: true,
+                }],
+                searchInput: "",
+            },
+            methods: {
+                // 正则表达式匹配
+                getParams(key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
+                    }
+                    return null
+                },
+                // 页面初始化，填入所有评论数据
+                initDatas() {
+                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_star_comment_area_list')
+                        .then(
+                            (res) => {
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                                res = res.data
+                                res.commentAreaList.forEach((commentAreaId) => {
+                                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_comment_area?commentAreaId=' + commentAreaId)
+                                        .then(
+                                            (response) => {
+                                                if (response.code != 200) {
+                                                    console.log('failed to initialize')
+                                                    return
+                                                }
+                                                response = response.data
+                                                this.commentAreaInfoList.push({
+                                                    id: response.comment_area.id,
+                                                    title: response.comment_area.name,
+                                                    area_star_number: response.comment_area.star_number,
+                                                    area_has_star: true,
+                                                })
                                             }
-                                            response = response.data
-                                            this.commentAreaInfoList.push({
-                                                id: response.comment_area.id,
-                                                title: response.comment_area.name,
-                                                area_star_number: response.comment_area.star_number,
-                                                area_has_star: true,
-                                            })
-                                        }
-                                    )
-                            })
-                        }
-                    )
-            },
-            // 搜索框事件处理
-            //! 尚未完成
-            handleSearch(){
-                if(this.searchInput.length > 0){
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
-                }
-            },
-            handleStarArea(count){
-                if(!this.commentAreaInfoList[count - 1].area_has_star){
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
-                        .then(
-                            (res) => {
-                                if(res.code === 200){
-                                    this.commentAreaInfoList[count - 1].area_has_star = true
-                                    this.commentAreaInfoList[count - 1].area_star_number += 1
-                                    this.$message("收藏成功")
-                                }
-                                else
-                                    this.$message("收藏失败")
+                                        )
+                                })
                             }
                         )
-                }
-                else{
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
-                        .then(
-                            (res) => {
-                                if(res.code === 200){
-                                    this.commentAreaInfoList[count - 1].area_has_star = false
-                                    this.commentAreaInfoList[count - 1].area_star_number -= 1
-                                    this.$message("取消收藏成功")
+                },
+                // 搜索框事件处理
+                //! 尚未完成
+                handleSearch() {
+                    if (this.searchInput.length > 0) {
+                        var searchContent = btoa(encodeURI(this.searchInput))
+                        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                    }
+                },
+                handleStarArea(count) {
+                    if (!this.commentAreaInfoList[count - 1].area_has_star) {
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
+                            .then(
+                                (res) => {
+                                    if (res.code === 200) {
+                                        this.commentAreaInfoList[count - 1].area_has_star = true
+                                        this.commentAreaInfoList[count - 1].area_star_number += 1
+                                        this.$message("收藏成功")
+                                    } else
+                                        this.$message("收藏失败")
                                 }
-                                else
-                                    this.$message("取消收藏失败")
-                            }
-                        )
-                }
-            },
-            getStarAreaButtonType(count){
-                if(this.commentAreaInfoList[count - 1].area_has_star)
-                    return "info"
-                else
-                    return "primary"
-            },
-        }
-    })
+                            )
+                    } else {
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/cancel_star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
+                            .then(
+                                (res) => {
+                                    if (res.code === 200) {
+                                        this.commentAreaInfoList[count - 1].area_has_star = false
+                                        this.commentAreaInfoList[count - 1].area_star_number -= 1
+                                        this.$message("取消收藏成功")
+                                    } else
+                                        this.$message("取消收藏失败")
+                                }
+                            )
+                    }
+                },
+                getStarAreaButtonType(count) {
+                    if (this.commentAreaInfoList[count - 1].area_has_star)
+                        return "info"
+                    else
+                        return "primary"
+                },
+            }
+        })
+
     </script>
 </body>
 
@@ -178,28 +179,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -208,12 +217,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .text {
         font-family: Times;
     }
+    
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -221,6 +233,7 @@
         direction: vertical;
         padding: 10px;
     }
+
 </style>
 
 </html>

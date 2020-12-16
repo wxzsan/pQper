@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -60,106 +60,108 @@
     </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-            paperDir: "",
-            searchInput: "",
-            createRequestList: [{
-                requestId: 1,
-                title: "paper1",
-                path: "1.pdf",
-            },{
-                requestId: 2,
-                title: "paper2",
-                path: "2.pdf",
-            },{
-                requestId: 3,
-                title: "paper3",
-                path: "3.pdf", 
-            }],
-        },
-        methods: {
-            // 正则表达式匹配
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            created: function() {
+                this.initDatas()
             },
-            // 页面初始化，填入所有数据
-            initDatas(){
-                this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
-                    .then(
-                        (res) => {
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            res = res.data
-                            res.createRequestList.forEach((element) => {
-                                this.createRequestList.push({
-                                    requestId: element.id,
-                                    title: element.paper.title,
-                                    path: element.paper.path,
+            data: {
+                paperDir: "",
+                searchInput: "",
+                createRequestList: [{
+                    requestId: 1,
+                    title: "paper1",
+                    path: "1.pdf",
+                }, {
+                    requestId: 2,
+                    title: "paper2",
+                    path: "2.pdf",
+                }, {
+                    requestId: 3,
+                    title: "paper3",
+                    path: "3.pdf",
+                }],
+            },
+            methods: {
+                // 正则表达式匹配
+                getParams(key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
+                    }
+                    return null
+                },
+                // 页面初始化，填入所有数据
+                initDatas() {
+                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_create_comment_area_request')
+                        .then(
+                            (res) => {
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                                res = res.data
+                                res.createRequestList.forEach((element) => {
+                                    this.createRequestList.push({
+                                        requestId: element.id,
+                                        title: element.paper.title,
+                                        path: element.paper.path,
+                                    })
                                 })
-                            })
-                        }
-                    )
-                if(this.createRequestList.length > 0)
-                    this.paperDir = this.createRequestList[0].path
-            },
-            // 搜索框事件处理
-            //! 尚未完成
-            handleSearch(){
-                if(this.searchInput.length > 0){
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
-                }
-            },
-            // 选中申请事件处理
-            handleClick(count){
-                this.paperDir = this.createRequestList[count - 1].path
-            },
-            // 通过申请事件处理
-            handleAccept(count){
-                this.$axios.get('http://127.0.0.1:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
-                    .then(
-                        (res) => {
-                            if(res.code === 200){
-                                this.createRequestList.splice(count - 1, 1);
-                                this.$message("操作成功")
                             }
-                            else
-                                this.$message("操作失败")
-                        }
-                    )
-            },
-            // 拒绝申请事件处理
-            handleRefuse(count){
-                //! 待修改，应当有拒绝批准的选项
-                this.$axios.get('http://127.0.0.1:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
-                    .then(
-                        (res) => {
-                            if(res.code === 200){
-                                this.createRequestList.splice(count - 1, 1);
-                                this.$message("操作成功")
+                        )
+                    if (this.createRequestList.length > 0)
+                        this.paperDir = this.createRequestList[0].path
+                },
+                // 搜索框事件处理
+                //! 尚未完成
+                handleSearch() {
+                    if (this.searchInput.length > 0) {
+                        var searchContent = btoa(encodeURI(this.searchInput))
+                        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                    }
+                },
+                // 选中申请事件处理
+                handleClick(count) {
+                    this.paperDir = this.createRequestList[count - 1].path
+                },
+                // 通过申请事件处理
+                handleAccept(count) {
+                    this.$axios.get('http://39.105.19.68:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
+                        .then(
+                            (res) => {
+                                if (res.code === 200) {
+                                    this.createRequestList.splice(count - 1, 1);
+                                    this.$message("操作成功")
+                                } else
+                                    this.$message("操作失败")
                             }
-                            else
-                                this.$message("操作失败")
-                        }
-                    )
-            },
-        }
-    })
+                        )
+                },
+                // 拒绝申请事件处理
+                handleRefuse(count) {
+                    //! 待修改，应当有拒绝批准的选项
+                    this.$axios.get('http://39.105.19.68:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
+                        .then(
+                            (res) => {
+                                if (res.code === 200) {
+                                    this.createRequestList.splice(count - 1, 1);
+                                    this.$message("操作成功")
+                                } else
+                                    this.$message("操作失败")
+                            }
+                        )
+                },
+            }
+        })
+
     </script>
 </body>
 
@@ -167,28 +169,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -197,12 +207,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .text {
         font-family: Times;
     }
+    
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -210,6 +223,7 @@
         direction: vertical;
         padding: 10px;
     }
+
 </style>
 
 </html>
