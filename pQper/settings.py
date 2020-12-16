@@ -62,7 +62,7 @@ ROOT_URLCONF = 'pQper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist'],
+        'DIRS': ['frontend/dist', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
