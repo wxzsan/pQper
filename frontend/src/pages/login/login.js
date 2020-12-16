@@ -33,7 +33,7 @@ var vm = new Vue({
       }
       let data = {
         "email": this.email,
-        "password": this.encrypt(this.password)
+        "password": this.password
       }
       let config = {
         headers: {

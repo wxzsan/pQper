@@ -41,7 +41,7 @@ var vm = new Vue({
         return
       let data = {
         "name": this.name,
-        "password": this.encrypt(this.password)
+        "password": this.password
       }
       let config = {
         headers: {

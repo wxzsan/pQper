@@ -35,7 +35,7 @@ var vm = new Vue({
       }
       let data = {
         "email": this.email,
-        "password": this.encrypt(this.password),
+        "password": this.password,
         'name': this.name
       }
       let config = {
