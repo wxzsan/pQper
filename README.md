@@ -1,12 +1,30 @@
-# pQper
-pQper is an online collaborative paper reading webapp
+# frontend
 
-我把demo上传到了dev分支中
-1. git clone -b dev https://github.com/wxzsan/pQper.git
-2. 在front目录下运行 npm install npm
-3. 在front目录下运行 npm run build
-4. 在项目根目录下运行 python manage.py runserver
-5. 浏览器中访问 localhost:8000
+> A Vue.js project
 
-# 关于搜索引擎
-* clone 下来之后要执行 python manage.py rebuild_index 重新建立索引
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
