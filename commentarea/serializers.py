@@ -39,3 +39,8 @@ class ShortCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShortComment
         fields = ['id', 'poster', 'post_time', 'content', 'rose_number', 'egg_number', 'rose_user_list', 'egg_user_list']
+
+class PaperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Paper
+        fields = ['path', 'title']

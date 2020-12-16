@@ -76,3 +76,6 @@ class PaperForm(ModelForm):
     class Meta:
         model = PaperFile
         fields = ['title', 'paper']
+
+class PaperIdForm(forms.Form):
+    paperId = forms.IntegerField()
