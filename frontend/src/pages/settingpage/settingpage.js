@@ -4,6 +4,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import CryptoJS from 'crypto-js'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -22,6 +23,11 @@ var vm = new Vue({
     }
   },
   methods: {
+    encrypt: function (data) {
+      var passphrase = "passphrase"
+      var encrypted = CryptoJS.AES.encrypt(data, passphrase).toString()
+      return encrypted
+    },
     check: function () {
       if (this.password === this.repeat_password) {
         this.message = ''
@@ -35,7 +41,7 @@ var vm = new Vue({
         return
       let data = {
         "name": this.name,
-        "password": this.password
+        "password": this.encrypt(this.password)
       }
       let config = {
         headers: {
