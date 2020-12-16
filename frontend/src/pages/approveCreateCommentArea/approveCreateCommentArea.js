@@ -35,17 +35,30 @@ var vm = new Vue({
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
                 .then(
                     (res) => {
+                        console.log(res)
                         res = res.data
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
                         }
                         res.data.createRequestList.forEach((element) => {
-                            this.createRequestList.push({
-                                requestId: element.id,
-                                title: element.paper.title,
-                                path: element.paper.path,
-                            })
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + element.paper)
+                                .then(
+                                    (response) => {
+                                        console.log(response)
+                                        response = response.data
+                                        if (response.code != 200) {
+                                            console.log('failed to initialize')
+                                            return
+                                        }
+                                        response = response.data
+                                        this.createRequestList.push({
+                                            requestId: element.id,
+                                            title: response.paper.title,
+                                            path: response.paper.path,
+                                        })
+                                    }
+                                )
                         })
                     }
                 )
