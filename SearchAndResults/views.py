@@ -102,8 +102,12 @@ def GetMomments(request):
                     User.objects.get(id=friends_id).
                     post_long_comment.
                     filter(post_time__gte = start_time).
-                    values("pk", "title", "content", "post_time", "poster")
-                    ) # pk 是长评的主键
+                    values("id", "title", "content", "post_time", "poster")
+                    ) 
+
+                friend_name = User.objects.get(id=friends_id).user_name
+                for i in friends_recent_long_comment:
+                    i['poster_name'] = friend_name
                 friends_long_comment_list.extend(friends_recent_long_comment)
 
             response['code'] = 200
