@@ -126,3 +126,41 @@ def GetMomments(request):
     else:
         # 请用 POST
         return JsonResponse({"code" : 600})
+
+# 获得个人的所有动态
+@csrf_exempt
+def GetSelfMomments(request):
+    response = {}
+    if request.method == 'POST':
+        # 不使用 cookie 测试的话，就将 debugflag = TRUE
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            userid = check_cookie(request)
+            if userid == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+        else:
+            userid = json.loads(request.body)['userid']
+        
+
+        try:
+            user = User.objects.get(id=userid)
+            long_comment_list = list(user.post_long_comment.values("id", "title", "content", "post_time"))
+            long_comment_list.sort(key=lambda x : x["post_time"])
+
+            response['code'] = 200
+            response['data'] = {
+                'msg': "success",
+                'LongComments': long_comment_list
+                }
+            return JsonResponse(response)
+
+        except:
+            # 多半是数据库挂了
+            return JsonResponse({{"code" : 300}, {"code", "db corrupted"}})
+
+    else:
+        # 请用 POST
+        return JsonResponse({"code" : 600})
