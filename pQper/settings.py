@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pQper.middleware.open_access_middleware'
+    'pQper.middleware.open_access_middleware',
 ]
 
 ROOT_URLCONF = 'pQper.urls'
@@ -70,6 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #addition place
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -145,3 +147,6 @@ HAYSTACK_CONNECTIONS = {
 
 #自动更新索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL="/media/" 

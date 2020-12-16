@@ -93,10 +93,11 @@ var vm = new Vue({
             alert('登录超时')
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
-            this.name = res.data.name
-            this.email = res.data.email
-            if (res.data.photo !== '')
-              this.photo = '/static' + res.data.photo
+            this.name = res.data.information.user_name
+            this.email = res.data.information.user_email
+            console.log(res.data.information)
+            if (res.data.information.user_photo !== '')
+              this.photo = res.data.information.user_photo
             else
               this.photo = ''
           } else {

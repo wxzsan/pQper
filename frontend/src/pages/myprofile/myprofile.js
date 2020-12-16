@@ -22,16 +22,27 @@ var vm = new Vue({
       this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
         .then((res) => {
           res = res.data
+<<<<<<< HEAD
           console.log(res)
+=======
+>>>>>>> branch_yyh
           if (res.data.msg === 'cookie out of date') {
             alert('登录超时')
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
+<<<<<<< HEAD
             this.name = res.data.name
             this.email = res.data.email
             console.log(this.name)
             if (res.data.photo !== '')
               this.photo = '/static' + res.data.photo
+=======
+            this.name = res.data.information.user_name
+            this.email = res.data.information.user_email
+            console.log(res.data.information)
+            if (res.data.information.user_photo !== '')
+              this.photo = res.data.information.user_photo
+>>>>>>> branch_yyh
             else
               this.photo = ''
           } else {
