@@ -43,10 +43,10 @@
                 </el-main>
                 <!--右边栏-->
                 <el-aside width="350px">
-                    <el-tabs type="card">
+                    <el-tabs type="card" v-model="selectedTab">
                         <!--论文信息-->
                         <el-tab-pane label="论文信息" name="first">
-                            <div class="comment" style="background-color: #62c48b;">
+                            <div class="comment">
                                 <p class="text" style="font-size: 25px;"><b>{% verbatim %}{{paperInfo.title}}{% endverbatim %}</b></p>
                                 <el-button style="width: 120px; height: 40px;" v-bind:type="getStarAreaButtonType()" icon="el-icon-star-off" @click="handleStarArea()">收藏 {% verbatim %}{{area_star_number}}{% endverbatim %}</el-button>
                             </div>
@@ -87,7 +87,7 @@
                         <el-tab-pane label="发表评论" name="fourth">
                             <div class="comment">
                                 <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
-                                <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="shortCommentInput"></el-input><br><br>
                                 <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check" @click="handlePostShortComment()">发送</el-button>
                             </div>
                             <div class="comment">
@@ -95,7 +95,7 @@
                                 <p class="text" style="font-size: 15px;">标题</p>
                                 <el-input v-model="longCommentInput.title"></el-input>
                                 <p class="text" style="font-size: 15px;">正文</p>
-                                <el-input type="textarea" :rows="8" v-model="longCommentInput.content"></el-input>
+                                <el-input type="textarea" :rows="7" v-model="longCommentInput.content"></el-input><br><br>
                                 <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check" @click="handlePostLongComment()">发送</el-button>
                             </div>
                         </el-tab-pane>
@@ -119,11 +119,11 @@
             this.initDatas()
         },
         data: {
-            userId: 0,  // 调试时暂时如此假设
             paperDir: "2015_ResNet.pdf",
             area_star_number: 0,
             area_has_star: false,
             commentAreaId: 0,
+            selectedTab: "first",
             paperInfo: {
                 title: "闪电五连鞭在深度学习中的应用",
                 authors: "暂无",
@@ -192,7 +192,7 @@
             longCommentButtonType: "info",
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -203,40 +203,61 @@
             },
             // 页面初始化，填入所有评论数据
             initDatas(){
-                this.userId = 0  // 调试时暂时如此假设
                 this.commentAreaId = parseInt(this.getParams("id"))
                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + this.commentAreaId)
                     .then(
                         (res) => {
-                            res = res.data
-                            if(res.code != 200)
+                            if(res.code != 200){
+                                console.log('failed to initialize')
                                 return
+                            }
+                            res = res.data
                             this.paperInfo.title = res.comment_area.name
-                            this.paperDir = res.comment_area.paper.path
-                            this.area_star_number = res.comment_area.star_user_list.length
-                            this.area_has_star = (this.userId in res.comment_area.star_user_list)
-                            res.comment_area.short_comment_list.forEach(element => {
-                                this.shortCommentList.push({
-                                    id: element.id,
-                                    poster: element.poster,
-                                    post_time: element.post_time,
-                                    content: element.content,
-                                    rose_number: element.rose_number,
-                                    egg_number: element.egg_number,
-                                    has_rose: (this.userId in element.rose_user_list),
-                                    has_egg: (this.userId in element.egg_user_list),
-                                })
+                            this.paperDir = res.comment_area.path
+                            this.area_star_number = res.comment_area.star_number
+                            this.area_has_star = res.comment_area.star
+                            res.comment_area.short_comment_list.forEach((shortCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
+                                    .then(
+                                        (response) => {
+                                            if(response.code != 200){
+                                                console.log('failed to initialize')
+                                                return
+                                            }
+                                            response = response.data
+                                            this.shortCommentList.push({
+                                                id: response.comment.id,
+                                                poster: response.comment.poster,
+                                                post_time: response.comment.post_time,
+                                                content: response.comment.content,
+                                                rose_number: response.comment.rose_number,
+                                                egg_number: response.comment.egg_number,
+                                                has_rose: response.comment.rose,
+                                                has_egg: response.comment.egg,
+                                            })
+                                        }
+                                    )
                             })
-                            res.comment_area.long_comment_list.forEach(element => {
-                                this.longCommentList.push({
-                                    id: element.id,
-                                    poster: element.poster,
-                                    post_time: element.post_time,
-                                    title: element.title,
-                                    content: element.content,
-                                    star_number: element.star_number,
-                                    has_star: (this.userId in element.star_user_list),
-                                })
+                            res.comment_area.long_comment_list.forEach((longCommentId) => {
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
+                                    .then(
+                                        (response) => {
+                                            if(response.code != 200){
+                                                console.log('failed to initialize')
+                                                return          
+                                            }
+                                            response = response.data
+                                            this.longCommentList.push({
+                                                id: response.comment.id,
+                                                poster: response.comment.poster,
+                                                post_time: response.comment.post_time,
+                                                title: response.comment.title,
+                                                content: response.comment.content,
+                                                star_number: response.comment.star_number,
+                                                has_star: response.comment.star,
+                                            })
+                                        }
+                                    )
                             })
                         }
                     )
@@ -244,19 +265,18 @@
             // 搜索框事件处理
             //! 尚未完成
             handleSearch(){
-                if(this.input.length > 0){
-                    console.log(this.searchInput) // 理应转到SearchResultPage，参数？？？
+                if(this.searchInput.length > 0){
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                 }
             },
             // 点赞短评事件处理
             handleRose(count){
                 if(!this.shortCommentList[count - 1].has_egg){
                     if(!this.shortCommentList[count - 1].has_rose){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_rose = true
                                         this.shortCommentList[count - 1].rose_number += 1
@@ -268,12 +288,9 @@
                             )
                     }
                     else{
-                        // 取消点赞！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_rose = false
                                         this.shortCommentList[count - 1].rose_number -= 1
@@ -290,11 +307,9 @@
             handleEgg(count){
                 if(!this.shortCommentList[count - 1].has_rose){
                     if(!this.shortCommentList[count - 1].has_egg){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_egg = true
                                         this.shortCommentList[count - 1].egg_number += 1
@@ -306,12 +321,9 @@
                             )
                     }
                     else{
-                        // 取消点踩！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id + '&userId=' + this.userId)
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                             .then(
                                 (res) => {
-                                    res = res.data
-                                    console.log(res)
                                     if(res.code === 200){
                                         this.shortCommentList[count - 1].has_egg = false
                                         this.shortCommentList[count - 1].egg_number -= 1
@@ -327,11 +339,9 @@
             // 收藏长评事件处理
             handleStar(count){
                 if(!this.longCommentList[count - 1].has_star){
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentList[count - 1].has_star = true
                                     this.longCommentList[count - 1].star_number += 1
@@ -343,12 +353,9 @@
                         )
                 }
                 else{
-                    // 取消收藏！！！等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentList[count - 1].has_star = false
                                     this.longCommentList[count - 1].star_number -= 1
@@ -365,7 +372,6 @@
                 if(this.shortCommentInput.length > 0){
                     let data = {
                         "commentAreaId": this.commentAreaId,
-  	                    "userId": this.userId,
   	                    "content": this.shortCommentInput,
                     }
                     let config = {
@@ -376,8 +382,6 @@
                     this.$axios.post('http://127.0.0.1:8000/commentarea/post_short_comment', JSON.stringify(data), config)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.shortCommentInput = ""
                                     this.$message("发送成功")
@@ -393,7 +397,6 @@
                 if(this.longCommentInput.title.length > 0 && this.longCommentInput.content.length > 0){
                     let data = {
                         "commentAreaId": this.commentAreaId,
-  	                    "userId": this.userId,
                         "content": this.longCommentInput.content,
                         "title": this.longCommentInput.title,
                     }
@@ -405,8 +408,6 @@
                     this.$axios.post('http://127.0.0.1:8000/commentarea/post_long_comment', JSON.stringify(data), config)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.longCommentInput.title = ""
                                     this.longCommentInput.content = ""
@@ -420,11 +421,9 @@
             },
             handleStarArea(){
                 if(!this.area_has_star){
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.area_has_star = true
                                     this.area_star_number += 1
@@ -437,11 +436,9 @@
                 }
                 else{
                     //！！！需要修改，等待API
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId + '&userId=' + this.userId)
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                         .then(
                             (res) => {
-                                res = res.data
-                                console.log(res)
                                 if(res.code === 200){
                                     this.area_has_star = false
                                     this.area_star_number -= 1

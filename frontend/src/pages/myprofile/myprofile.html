@@ -11,12 +11,12 @@
         <el-container>
             <el-header height="50px">
                 <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
-                <el-dropdown style="float: right; width: 50px;">
+                <el-dropdown style="float: right; width: 50px;" @command="handle_command">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>个人主页</el-dropdown-item>
-                        <el-dropdown-item>个人信息</el-dropdown-item>
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item command="a">个人主页</el-dropdown-item>
+                        <el-dropdown-item command="b">个人信息</el-dropdown-item>
+                        <el-dropdown-item command="c">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
@@ -33,16 +33,16 @@
                     <el-button type="primary" icon="el-icon-info">关于</el-button>
                 </el-aside>
                 <el-main>
-                    <div class="horizontally_vertically_center" style="height:100%">
+                    <div class="horizontally_vertically_center" style="height:100%;font-size: xx-large;">
                         <div>
                             <div>
-                                <el-avatar :src="photo"></el-avatar>
+                                <el-avatar :src="photo" :size="200"></el-avatar>
                             </div>
                             <div>
-                                <p>name:{{name}}</p>
+                                <p>name: {% verbatim %}{{name}}{% endverbatim %}</p>
                             </div>
                             <div>
-                                <p>email:{{email}}</p>
+                                <p>email: {% verbatim %}{{email}}{% endverbatim %}</p>
                             </div>
                             <div>
                                 <el-button @click='to_setting_page'>修改</el-button>
@@ -58,15 +58,10 @@
     </div>
 </body>
 <style type="text/css">
+    html,
+    body,
     #app {
-        height: 100%;
-    }
-    
-    html {
-        height: 100%;
-    }
-    
-    body {
+        margin: 0;
         height: 100%;
     }
     

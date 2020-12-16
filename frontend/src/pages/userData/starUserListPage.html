@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <!--顶栏-->
+            <el-header height="50px">
+                <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
+                <!--我的下拉菜单-->
+                <el-dropdown style="float: right; width: 50px;">
+                    <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--搜索框-->
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;" @click="handleSearch()">搜索</el-button>
+                <el-col :span="3" style="float: right; margin-top: 5px;">
+                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                </el-col>
+            </el-header>
+            <el-container>
+                <!--左边栏-->
+                <el-aside width="120px">
+                    <br><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='#'">收藏夹</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                </el-aside>
+
+                <!--关注用户列表区域-->
+                <el-main>
+                    <div class="comment" style="background-color: #62c48b;">
+                        <p class="text" style="font-size: 20px;"><b>我关注的用户</b></p>
+                    </div>
+                    <div class="comment" v-for="count in userList.length">
+                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{userList[count - 1].name}}{% endverbatim %}</b></p>
+                        <p class="text" style="font-size: 17px;">{% verbatim %}{{userList[count - 1].profile}}{% endverbatim %}</p>
+
+                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='#'">进入主页</el-button>
+                    </div>
+                </el-main>
+
+            </el-container>
+
+            <!--底栏-->
+            <el-footer height="50px">
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper</p>
+            </el-footer>
+        </el-container>
+    </div>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script>
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            created: function(){
+                this.initDatas()
+            },
+            data: {
+                userList: [{ // 正式版需要删除这三组测试数据
+                    id: 1,
+                    name: "Harris",
+                    profile: "我的理想：摘星星",
+                    star_number: 100,
+                    has_star: false,
+                },{
+                    id: 2,
+                    name: "Harris",
+                    profile: "我的理想：摘星星",
+                    star_number: 100,
+                    has_star: false,
+                },{
+                    id: 3,
+                    name: "Harris",
+                    profile: "我的理想：摘星星",
+                    star_number: 100,
+                    has_star: false,
+                }],
+                searchInput: "",
+            },
+            methods: {
+                // 正则表达式匹配
+                getParams(key){
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
+                    }
+                    return null
+                },
+                // 页面初始化，填入所有评论数据
+                initDatas(){
+                    this.commentAreaId = parseInt(this.getParams("id"))
+                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + this.commentAreaId)
+                        .then(
+                            (res) => {
+                                res = res.data
+                                if(res.code != 200)
+                                    return
+                                this.paperInfo.title = res.comment_area.name
+                                this.paperDir = res.comment_area.paper.path
+                                this.area_star_number = res.comment_area.star_number
+                                this.area_has_star = res.comment_area.star
+                                res.comment_area.short_comment_list.forEach((shortCommentId) => {
+                                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
+                                        .then(
+                                            (res) => {
+                                                res = res.data
+                                                if(res.code != 200){
+                                                    console.log('failed to initialize')
+                                                    return          
+                                                }
+                                                this.shortCommentList.push({
+                                                    id: shortCommentId,
+                                                    poster: res.comment.poster,
+                                                    post_time: res.comment.post_time,
+                                                    content: res.comment.content,
+                                                    rose_number: res.comment.rose_number,
+                                                    egg_number: res.comment.egg_number,
+                                                    has_rose: res.rose,
+                                                    has_egg: res.egg,
+                                                })
+                                            }
+                                        )
+                                })
+                                res.comment_area.long_comment_list.forEach((longCommentId) => {
+                                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
+                                        .then(
+                                            (res) => {
+                                                res = res.data
+                                                if(res.code != 200){
+                                                    console.log('failed to initialize')
+                                                    return          
+                                                }
+                                                this.longCommentList.push({
+                                                    id: longCommentId,
+                                                    poster: res.comment.poster,
+                                                    post_time: res.comment.post_time,
+                                                    title: res.comment.title,
+                                                    content: res.comment.content,
+                                                    star_number: res.comment.star_number,
+                                                    has_star: res.star,
+                                                })
+                                            }
+                                        )
+                                })
+                            }
+                        )
+                },
+                // 搜索框事件处理
+                //! 尚未完成
+                handleSearch(){
+                    if(this.searchInput.length > 0){
+                        var searchContent = btoa(encodeURI(this.searchInput))
+                        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                    }
+                },
+                // 收藏长评事件处理
+                handleStar(count){
+                    if(!this.longCommentList[count - 1].has_star){
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.longCommentList[count - 1].has_star = true
+                                        this.longCommentList[count - 1].star_number += 1
+                                        this.$message("收藏成功")
+                                    }
+                                    else
+                                        this.$message("收藏失败")
+                                }
+                            )
+                    }
+                    else{
+                        // 取消收藏！！！等待API
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.longCommentList[count - 1].has_star = false
+                                        this.longCommentList[count - 1].star_number -= 1
+                                        this.$message("取消收藏成功")
+                                    }
+                                    else
+                                        this.$message("取消收藏失败")
+                                }
+                            )
+                    }
+                },
+                // 发送短评事件处理
+                handlePostShortComment(){
+                    if(this.shortCommentInput.length > 0){
+                        let data = {
+                            "commentAreaId": this.commentAreaId,
+                            "content": this.shortCommentInput,
+                        }
+                        let config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                        }
+                        this.$axios.post('http://127.0.0.1:8000/commentarea/post_short_comment', JSON.stringify(data), config)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.shortCommentInput = ""
+                                        this.$message("发送成功")
+                                    }
+                                    else
+                                        this.$message("发送失败")
+                                }
+                            )
+                    }
+                },
+                // 发送长评事件处理
+                handlePostLongComment(){
+                    if(this.longCommentInput.title.length > 0 && this.longCommentInput.content.length > 0){
+                        let data = {
+                            "commentAreaId": this.commentAreaId,
+                            "content": this.longCommentInput.content,
+                            "title": this.longCommentInput.title,
+                        }
+                        let config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                        }
+                        this.$axios.post('http://127.0.0.1:8000/commentarea/post_long_comment', JSON.stringify(data), config)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.longCommentInput.title = ""
+                                        this.longCommentInput.content = ""
+                                        this.$message("发送成功")
+                                    }
+                                    else
+                                        this.$message("发送失败")
+                                }
+                            )
+                    }
+                },
+                handleStarArea(){
+                    if(!this.area_has_star){
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.area_has_star = true
+                                        this.area_star_number += 1
+                                        this.$message("收藏成功")
+                                    }
+                                    else
+                                        this.$message("收藏失败")
+                                }
+                            )
+                    }
+                    else{
+                        //！！！需要修改，等待API
+                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
+                            .then(
+                                (res) => {
+                                    res = res.data
+                                    console.log(res)
+                                    if(res.code === 200){
+                                        this.area_has_star = false
+                                        this.area_star_number -= 1
+                                        this.$message("取消收藏成功")
+                                    }
+                                    else
+                                        this.$message("取消收藏失败")
+                                }
+                            )
+                    }
+                },
+                getRoseButtonType(count){
+                    if(this.shortCommentList[count - 1].has_rose)
+                        return "info"
+                    else
+                        return "success"
+                },
+                getEggButtonType(count){
+                    if(this.shortCommentList[count - 1].has_egg)
+                        return "info"
+                    else
+                        return "warning"
+                },
+                getStarButtonType(count){
+                    if(this.longCommentList[count - 1].has_star)
+                        return "info"
+                    else
+                        return "primary"
+                },
+                getStarAreaButtonType(){
+                    if(this.area_has_star)
+                        return "info"
+                    else
+                        return "primary"
+                },
+            }
+        })
+    </script>
+</body>
+
+<style type="text/css">
+    #app {
+        height: 100%;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+        height: 100%;
+    }
+    .el-container {
+        height: 100%;
+        direction: "vertical";
+    }
+    .el-header {
+        background-color: #b361ff;
+    }
+    .el-footer {
+        background-color: #62c48b;
+    }
+    .el-aside {
+        background-color: #DCDFE6;
+    }
+    .el-main {
+        background-color: #EBEEF5;
+    }
+    .el-button {
+        font-family: 'Pingang SC';
+        width: 108px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+    .el-dropdown p {
+        font-family: 'Pingang SC';
+    }
+    .text {
+        font-family: Times;
+    }
+    .comment {
+        background-color: #b3dbc4;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
+    }
+</style>
+
+</html>

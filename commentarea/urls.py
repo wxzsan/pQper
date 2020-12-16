@@ -16,4 +16,10 @@ urlpatterns = {
     path('get_short_comment', views.get_short_comment),
     path('get_long_comment', views.get_long_comment),
     path('post_short_comment', views.post_short_comment),
+    path('get_star_long_comment_list', views.get_star_long_comment_list),
+    path('delete_long_comment', views.delete_long_comment),
+    path('cancel_egg_comment', views.cancel_egg_comment),
+    path('cancel_star_comment',views.cancel_star_comment),
+    path('cancel_rose_comment', views.cancel_rose_comment),
+    path('cancel_star_comment_area', views.cancel_star_comment_area),
 }

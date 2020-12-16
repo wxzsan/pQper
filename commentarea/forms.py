@@ -15,6 +15,10 @@ class OpLongCommentForm(forms.Form):
     longCommentId = forms.IntegerField()
     # userId = forms.IntegerField()
 
+class GetLongCommentForm(forms.Form):
+    longCommentId = forms.IntegerField()
+    inCommentArea = forms.IntegerField()
+
 class PostLongCommentForm(forms.Form):
     commentAreaId = forms.IntegerField()
     content = forms.CharField()
@@ -24,7 +28,7 @@ class PostLongCommentForm(forms.Form):
             'max_length': "Title of a long comment can't exceed 255 characters"
         }
     )
-    userId = forms.IntegerField()
+    # userId = forms.IntegerField()
 
 class PostShortCommentForm(forms.Form):
     commentAreaId = forms.IntegerField()
@@ -65,5 +69,3 @@ class CreateCommentAreaForm(forms.Form):
 class ApproveCreateCommentAreaRequestForm(forms.Form):
     requestId = forms.IntegerField()
 
-class UserForm(forms.Form):
-    userId = forms.IntegerField()

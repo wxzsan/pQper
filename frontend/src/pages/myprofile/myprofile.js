@@ -19,16 +19,21 @@ var vm = new Vue({
   },
   methods: {
     get_user_information: function () {
-      this.$axios.get('http://127.0.0.1:8000/user/get_user_information')
+      this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
         .then((res) => {
           res = res.data
+          console.log(res)
           if (res.data.msg === 'cookie out of date') {
             alert('登录超时')
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
             this.name = res.data.name
             this.email = res.data.email
-            this.photo = '/static' + res.data.photo;
+            console.log(this.name)
+            if (res.data.photo !== '')
+              this.photo = '/static' + res.data.photo
+            else
+              this.photo = ''
           } else {
             alert('用户不存在')
           }
@@ -36,6 +41,23 @@ var vm = new Vue({
     },
     to_setting_page: function () {
       window.location.href = 'http://127.0.0.1:8000/user/settingpage.html'
+    },
+    to_home_page: function () {
+      window.location.href = 'http://127.0.0.1:8000/home.html'
+    },
+    to_my_profile_page: function () {
+      window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
+    },
+    quit: function () {
+      this.$axios.post('http://127.0.0.1:8000/user/logout')
+        .then((res) => {
+          window.location.href = 'http://127.0.0.1:8000/user/login.html'
+        })
+    },
+    handle_command: function (command) {
+      if (command === 'a') this.to_home_page()
+      else if (command === 'b') this.to_my_profile_page()
+      else if (command === 'c') this.quit()
     }
   }
 })
