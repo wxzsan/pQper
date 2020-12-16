@@ -59,7 +59,7 @@ var vm = new Vue({
                         }
                         res = res.data
                         this.paperInfo.title = res.comment_area.name
-                        this.paperDir = "/static/" + res.comment_area.path
+                        this.paperDir = "//media/" + res.comment_area.path
                         this.area_star_number = res.comment_area.star_number
                         this.area_has_star = res.comment_area.star
                         res.comment_area.short_comment_list.forEach((shortCommentId) => {

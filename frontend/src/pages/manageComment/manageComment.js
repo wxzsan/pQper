@@ -40,7 +40,7 @@ var vm = new Vue({
         },
         // 页面初始化，填入所有数据
         initDatas() {
-            this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment')
+            this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment_list')
                 .then(
                     (res) => {
                         res = res.data

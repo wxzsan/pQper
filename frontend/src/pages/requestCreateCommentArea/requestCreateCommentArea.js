@@ -10,12 +10,10 @@ import axios from 'axios'
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
 
-Vue.prototype.$axios = axios
 var vm = new Vue({
     el: '#app',
     data: {
         paperTitle: "",
-        paperStr: "",
         searchInput: "",
         fileList: new Array()
     },
@@ -38,29 +36,17 @@ var vm = new Vue({
             }
         },
         handleChange(file, fileList) {
-            if (fileList.length > 0) {
+            if (fileList.length > 0)
                 this.fileList = [fileList[fileList.length - 1]]
-            }
-            var reader = new FileReader()
-            reader.readAsDataURL(fileList[0].raw)
-            reader.onload = (e) => {
-                this.paperStr = reader.result
-            }
         },
-        handleUpload(file) {
-            if (this.paperTitle.length > 0 && this.paperStr.length > 0) {
-                let data = {
-                    "paperPdfInStr": this.paperStr,
-                    "paperTitle": this.paperTitle,
-                }
-                let config = {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                }
-                this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', JSON.stringify(data), config)
+        uploadHttpRequest(param) {
+            if (this.paperTitle.length > 0 && this.fileList.length > 0) {
+                let formData = new FormData()
+                formData.append('file', param.file)
+                this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', formData)
                     .then(
                         (res) => {
+                            console.log(res)
                             res = res.data
                             if (res.code === 200)
                                 this.$message("上传成功，等待审核")
@@ -68,6 +54,12 @@ var vm = new Vue({
                                 this.$message("上传失败")
                         }
                     )
+            }
+        },
+        handleUpload() {
+            if (this.paperTitle.length > 0 && this.fileList.length > 0) {
+                this.$refs.upload.submit()
+                this.$refs.upload.clearFiles()
             }
         }
     }
