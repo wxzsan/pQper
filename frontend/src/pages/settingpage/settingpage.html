@@ -19,9 +19,9 @@
                         <el-dropdown-item command="c">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
+                <el-button @click="search" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 5px;">
-                    <el-input placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="search_content" placeholder="论文题目/作者"></el-input>
                 </el-col>
             </el-header>
             <el-container>

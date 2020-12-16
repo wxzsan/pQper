@@ -14,7 +14,8 @@ var vm = new Vue({
     return {
       email: '',
       name: '',
-      photo: ''
+      photo: '',
+      search_content: ''
     }
   },
   methods: {
@@ -28,7 +29,6 @@ var vm = new Vue({
           } else if (res.code === 200) {
             this.name = res.data.information.user_name
             this.email = res.data.information.user_email
-            console.log(res.data.information)
             if (res.data.information.user_photo !== '')
               this.photo = res.data.information.user_photo
             else
@@ -57,6 +57,9 @@ var vm = new Vue({
       if (command === 'a') this.to_home_page()
       else if (command === 'b') this.to_my_profile_page()
       else if (command === 'c') this.quit()
+    },
+    search: function () {
+      window.location.href = 'http://39.105.19.68:8000/SearchAndResults/searchResultPage.html?searchContent=' + this.search_content
     }
   }
 })
