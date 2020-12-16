@@ -34,9 +34,11 @@
                 <el-aside width="120px">
                     <br><br>
                     <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
+                    <el-button type="primary" icon="el-icon-star-on"
+                        onclick="window.location.href='manageComment.html'">管理长评</el-button>
                     <br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文
+                    <el-button type="primary" icon="el-icon-document"
+                        onclick="window.location.href='myCommentAreaList.html'">我的论文
                     </el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
                 </el-aside>
@@ -49,8 +51,9 @@
                         <p class="text" style="font-size: 17px;">论文标题</p>
                         <el-input v-model="paperTitle" style="width: 360px;"></el-input>
                         <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
-                        <el-upload class="upload-file" drag accept=".pdf" :multiple="false" :file-list="fileList"
-                            :on-change="handleChange" :auto-upload="false" action="#">
+                        <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
+                            :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
+                            :auto-upload="false" action="#">
                             点击选择文件或拖动文件到此处
                         </el-upload>
                         <br>

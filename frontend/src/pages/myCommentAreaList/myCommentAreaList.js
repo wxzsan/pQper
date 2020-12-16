@@ -10,7 +10,6 @@ import axios from 'axios'
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
 
-Vue.prototype.$axios = axios
 var vm = new Vue({
     el: '#app',
     created: function () {

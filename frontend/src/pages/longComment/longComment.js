@@ -164,7 +164,7 @@ var vm = new Vue({
             }
         },
         // 收藏长评事件处理
-        handleStar(count) {
+        handleStar() {
             if (!this.longComment.has_star) {
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longComment.id)
                     .then(
@@ -234,7 +234,7 @@ var vm = new Vue({
             else
                 return "warning"
         },
-        getStarButtonType(count) {
+        getStarButtonType() {
             if (this.longComment.has_star)
                 return "info"
             else
