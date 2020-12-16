@@ -277,12 +277,12 @@ def request_create_comment_area(request):
         return JsonResponse(response)
 
     if request.method == 'POST':
+        # 注意这里paperform不是paper对应的form一个是Path一个是File
         form = PaperForm(request.POST, request.FILES)
         if form.is_valid():
-            # 这里调试阶段先使用paper_info代替path，之后需要加上一个把paper_info 存储到静态文件目录中，
-            # 然后把对应的路径填到paper_path中
-            # user_id = form.cleaned_data["userId"]
-            paper = Paper(title = form.cleaned_data["title"],paper = request.FILES['paper'])
+            paper_file = PaperFile(title = form.cleaned_data["title"],paper = request.FILES['paper'])
+            paper_file.save()
+            paper = Paper(title = paper_file.title, path = paper_file.paper.path)
             paper.save()
             user = User.objects.get(id = user_id)
             create_request = CreateRequest(requestor=user, paper=paper)

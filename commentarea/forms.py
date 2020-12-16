@@ -74,5 +74,5 @@ class ApproveCreateCommentAreaRequestForm(forms.Form):
 
 class PaperForm(ModelForm):
     class Meta:
-        model = Paper
+        model = PaperFile
         fields = ['title', 'paper']
