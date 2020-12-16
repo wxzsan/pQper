@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.views.generic.base import TemplateView
 
 urlpatterns = {
     path('get_comment_area', views.get_comment_area),
@@ -22,4 +23,10 @@ urlpatterns = {
     path('cancel_star_comment',views.cancel_star_comment),
     path('cancel_rose_comment', views.cancel_rose_comment),
     path('cancel_star_comment_area', views.cancel_star_comment_area),
+    path('approveCreateCommentArea.html', TemplateView.as_view(template_name = 'approveCreateCommentArea.html')),
+    path('commentArea.html', TemplateView.as_view(template_name = 'commentArea.html')),
+    path('longComment.html', TemplateView.as_view(template_name = 'longComment.html')),
+    path('manageComment.html', TemplateView.as_view(template_name = 'manageComment.html')),
+    path('requestCreateCommentArea.html', TemplateView.as_view(template_name = 'requestCreateCommentArea.html')),
+    path('myCommentAreaList.html', TemplateView.as_view(template_name = 'myCommentAreaList.html')),
 }
