@@ -35,6 +35,7 @@ var vm = new Vue({
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
                 .then(
                     (res) => {
+                        console.log(res)
                         res = res.data
                         if (res.code != 200) {
                             console.log('failed to initialize')
