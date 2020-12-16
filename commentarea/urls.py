@@ -26,6 +26,7 @@ urlpatterns = {
     path('approveCreateCommentArea.html', TemplateView.as_view(template_name = 'approveCreateCommentArea.html')),
     path('commentArea.html', TemplateView.as_view(template_name = 'commentArea.html')),
     path('longComment.html', TemplateView.as_view(template_name = 'longComment.html')),
-    path('manageComments.html', TemplateView.as_view(template_name = 'manageComments.html')),
-    path('requestCreateCommentArea', TemplateView.as_view(template_name = 'requestCreateCommentArea')),
+    path('manageComment.html', TemplateView.as_view(template_name = 'manageComment.html')),
+    path('requestCreateCommentArea.html', TemplateView.as_view(template_name = 'requestCreateCommentArea.html')),
+    path('myCommentAreaList.html', TemplateView.as_view(template_name = 'myCommentAreaList.html')),
 }

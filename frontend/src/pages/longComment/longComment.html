@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <title>Long Comment</title>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <!--顶栏-->
+            <el-header height="50px">
+                <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
+                <!--我的下拉菜单-->
+                <el-dropdown style="float: right; width: 50px;">
+                    <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--搜索框-->
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;"
+                    @click="handleSearch()">搜索</el-button>
+                <el-col :span="3" style="float: right; margin-top: 5px;">
+                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                </el-col>
+            </el-header>
+            <el-container>
+                <!--左边栏-->
+                <el-aside width="120px">
+                    <br><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
+                    <br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文
+                    </el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                </el-aside>
+                <!--长评区域-->
+                <el-main>
+                    <div class="comment" style="background-color: #62c48b;">
+                        <p class="text" style="font-size: 20px;">{% verbatim %}{{longComment.title}}{% endverbatim %}
+                        </p>
+                        <p class="text" style="font-size: 17px;">{% verbatim %}{{longComment.poster}}{% endverbatim %}
+                        </p>
+                        <p class="text" style="font-size: 12px;">{% verbatim %}{{longComment.post_time}}{% endverbatim
+                            %}</p>
+                        <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)"
+                            icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim
+                            %}{{longComment.star_number}}{% endverbatim %}</el-button>
+                    </div>
+                    <div class="comment">
+                        <p class="text" style="font-size: 15px;">{% verbatim %}{{longComment.content}}{% endverbatim %}
+                        </p>
+                    </div>
+                </el-main>
+                <!--右边栏-->
+                <el-aside width="350px">
+                    <el-tabs type="card" v-model="selectedTab">
+                        <!--短评-->
+                        <el-tab-pane label="短评" name="first">
+                            <div v-for="count in shortCommentList.length" class="comment">
+                                <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{shortCommentList[count -
+                                        1].poster}}{% endverbatim %}</b></p>
+                                <p class="text" style="font-size: 12px;">{% verbatim %}{{shortCommentList[count -
+                                    1].post_time}}{% endverbatim %}</p>
+                                <p class="text" style="font-size: 15px;">{% verbatim %}{{shortCommentList[count -
+                                    1].content}}{% endverbatim %}</p>
+                                <el-button style="width: 100px; height: 40px;" v-bind:type="getRoseButtonType(count)"
+                                    icon="el-icon-caret-top" @click="handleRose(count)">赞 {% verbatim
+                                    %}{{shortCommentList[count - 1].rose_number}}{% endverbatim %}</el-button>
+                                <el-button style="width: 100px; height: 40px;" v-bind:type="getEggButtonType(count)"
+                                    icon="el-icon-caret-bottom" @click="handleEgg(count)">踩 {% verbatim
+                                    %}{{shortCommentList[count - 1].egg_number}}{% endverbatim %}</el-button>
+                            </div>
+                        </el-tab-pane>
+                        <!--发表短评-->
+                        <el-tab-pane label="发表评论" name="second">
+                            <div class="comment">
+                                <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
+                                <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input>
+                                <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check"
+                                    @click="handlePostShortComment()">发送</el-button>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-aside>
+            </el-container>
+            <!--底栏-->
+            <el-footer height="50px">
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper
+                </p>
+            </el-footer>
+        </el-container>
+    </div>
+</body>
+
+<style type="text/css">
+    #app {
+        height: 100%;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+    }
+
+    .el-container {
+        height: 100%;
+        direction: "vertical";
+    }
+
+    .el-header {
+        background-color: #b361ff;
+    }
+
+    .el-footer {
+        background-color: #62c48b;
+    }
+
+    .el-aside {
+        background-color: #DCDFE6;
+    }
+
+    .el-main {
+        background-color: #EBEEF5;
+    }
+
+    .el-button {
+        font-family: 'Pingang SC';
+        width: 108px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    .el-dropdown p {
+        font-family: 'Pingang SC';
+    }
+
+    .text {
+        font-family: Times;
+    }
+
+    .comment {
+        background-color: #b3dbc4;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
+    }
+</style>
+
+</html>
