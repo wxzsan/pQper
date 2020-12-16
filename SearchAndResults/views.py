@@ -110,6 +110,8 @@ def GetMomments(request):
                     i['poster_name'] = friend_name
                 friends_long_comment_list.extend(friends_recent_long_comment)
 
+                friends_long_comment_list.sort(key= lambda x : x["post_time"])
+
             response['code'] = 200
             response['data'] = {
                 'msg': "success",
