@@ -42,23 +42,24 @@ var vm = new Vue({
                             console.log('failed to initialize')
                             return
                         }
-                        res = res.data
-                        res.starUserList.forEach((UserId) => {
+                        res = res.data.star_user_list
+                        res.star_user_list.forEach((UserId) => {
                             let userdata = {
                                 "id": UserId,
                             }
-                            this.$axios.post('http://127.0.0.1:8000/user/get_user_imformation', JSON.stringify(userdata))
+                            this.$axios.post('http://127.0.0.1:8000/user/get_user_information', JSON.stringify(userdata))
                                 .then(
                                     (response) => {
-                                        response = response.userdata
+                                        console.log(response)
+                                        response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
                                         }
-                                        response = response.data
+                                        response = response.data.information
                                         this.starUserInfoList.push({
-                                            id: response.star_user.id,
-                                            title: response.star_user.name,
+                                            name:response.user_name,
+                                            email:response.user_email,
                                             //star_number: 100,
                                             //has_star: true,
                                         })
