@@ -277,21 +277,14 @@ def request_create_comment_area(request):
         return JsonResponse(response)
 
     if request.method == 'POST':
-        form = CreateCommentAreaForm(json.loads(request.body))
+        form = PaperForm(request.POST, request.FILES)
         if form.is_valid():
             # 这里调试阶段先使用paper_info代替path，之后需要加上一个把paper_info 存储到静态文件目录中，
             # 然后把对应的路径填到paper_path中
             # user_id = form.cleaned_data["userId"]
-            paper_info = form.cleaned_data["paperPdfInStr"]
-            paper_title = form.cleaned_data["paperTitle"]
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                response['code'] = 300
-                response['data'] = {'msg': "user id does not exist"}
-                return JsonResponse(response)
-            paper = Paper(title=paper_title, path=paper_info)
+            paper = Paper(title = form.cleaned_data["title"],paper = request.FILES['paper'])
             paper.save()
+            user = User.objects.get(id = user_id)
             create_request = CreateRequest(requestor=user, paper=paper)
             create_request.save()
             response['code'] = 200

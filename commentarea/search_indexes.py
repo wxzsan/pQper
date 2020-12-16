@@ -8,6 +8,7 @@ class PaperIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)  
     # 创建一个author字段
     title = indexes.CharField(model_attr='title')   
+    paper = indexes.FileField(model_attr='paper')
 
     # 重载get_model方法，必须要有！
     def get_model(self):          

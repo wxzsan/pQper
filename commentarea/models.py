@@ -3,10 +3,12 @@ from django.db import models
 # Create your models here.
 class Paper(models.Model):
     title = models.CharField(max_length=255)
-    path = models.CharField(max_length=255)
+    # path = models.CharField(max_length=255)
+    paper = models.FileField(upload_to = 'papers')
 
     def __str__(self):
         return str(self.id) + '--' + self.title
+
 
 class ShortComment(models.Model):
     poster = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name = 'post_short_comment')

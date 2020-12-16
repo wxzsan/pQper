@@ -145,3 +145,10 @@ HAYSTACK_CONNECTIONS = {
 
 #自动更新索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+# 文件存储路径和url
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL="/media/"
+
+PICKLEFIELD_DEFAULT_PROTOCOL = 4

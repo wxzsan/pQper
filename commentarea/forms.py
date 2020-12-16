@@ -1,4 +1,7 @@
 from django import forms
+from django.forms import ModelForm
+
+from .models import *
 
 class GetCommentAreaForm(forms.Form):
     commentAreaId = forms.IntegerField()
@@ -69,3 +72,7 @@ class CreateCommentAreaForm(forms.Form):
 class ApproveCreateCommentAreaRequestForm(forms.Form):
     requestId = forms.IntegerField()
 
+class PaperForm(ModelForm):
+    class Meta:
+        model = Paper
+        fields = ['title', 'paper']
