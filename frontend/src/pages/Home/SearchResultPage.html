@@ -35,10 +35,10 @@
                       <el-avatar :size="100" :src="userAvatar">user</el-avatar>
                       <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='#'">关注/粉丝</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='#'">收藏夹</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文</el-button><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='../userData/starUserListPage.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='../userData/starCommentListPage.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='../myCommentAreaList/myCommentAreaList.html'">讨论区</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
                 </el-aside>
 
@@ -50,8 +50,8 @@
                   </el-row>
 
                   <el-button-group style = "width : 100%">
-                    <el-button style = "width: 48%" type="primary" @click="{searchMode=0}">相关用户</el-button>
-                    <el-button style = "width: 48%" type="primary" @click="{searchMode=1}">相关论文讨论区</el-button>
+                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=0}">相关用户</el-button>
+                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=1}">相关论文讨论区</el-button>
                   </el-button-group>
 
                   <div v-if="searchMode==0">
@@ -138,6 +138,7 @@
             searchInput: "",
         },
         methods: {
+            // 正则表达式匹配，从上个界面的url得到searchInput
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -148,6 +149,7 @@
             },
             // 页面初始化，填入数据
             initDatas(){
+                this.searchInput = atob(decodeURI(this.getParams('searchContent')));
                 this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                     .then(
                         (res) => {
@@ -156,12 +158,14 @@
                                 console.log('failed to initialize')
                                 return
                             }
-                            this.data.userName = res.name
-                            this.data.userAvatar = res.photo
-                            this.data.searchMode = -1
+                            this.userName = res.name
+                            this.userAvatar = res.photo
+                            this.searchMode = -1
                         }
                     )
-                console.log(userAvatar)
+                if(this.searchInput.length>0)
+                  this.handleSearch()
+                this.searchInput = ''
             },
 
 
@@ -193,7 +197,7 @@
                             )
 
                             resCA = result.data.findCommentAreas
-                            console.log(resCA)
+                            //console.log(resCA)
                             resCA.forEach(
                               (key)=>{
                                 this.searchCommmentAreaList.push(
@@ -214,17 +218,20 @@
                         )
                 }
             },
-
+            
+            //页面跳转处理
             handleBack(){
               window.location.href = "HomePage.html"
             },
 
             handleUserDetail(id){
-              window.location.href = "UserProfilePage.html?id="+id
+              window.location.href = "UserProfilePage.html?userid="+id
+              //console.log(window.location.href)
             },
 
             handleCommentAreaDetail(id){
               window.location.href = "../commentArea/commentArea.html?id="+id
+              //console.log(window.location.href)
             },
         }
     })

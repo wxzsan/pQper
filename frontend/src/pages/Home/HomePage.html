@@ -36,9 +36,9 @@
                       <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                     </div>
                     <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='../userData/starUserListPage.html'">关注/粉丝</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='../userData/starCommentListPage.html'">收藏夹</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='../myCommentAreaList/myCommentAreaList.html'">我的论文</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='../userData/starUserListPage.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='../userData/starCommentListPage.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='../myCommentAreaList/myCommentAreaList.html'">讨论区</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
                 </el-aside>
 
@@ -88,29 +88,29 @@
             userId: 2,  // 调试时暂时如此假设
             userName: "张三",
             userAvatar: "",
-            updateInfoList: [{
-                title: "这里要改成关注用户的新动态",
+            updateInfoList: [/*{
+                title: "关注用户的新动态",
                 id: 1,
                 poster: "李四",
                 posttime: "2020/12/16 12:00",
                 content: "",
             },{
-                title: "这里要改成关注用户的新动态",
+                title: "关注用户的新动态",
                 id: 1,
                 poster: "李四",
                 posttime: "2020/12/16 12:00",
                 content: "",
             },{
-                title: "这里要改成关注用户的新动态",
+                title: "关注用户的新动态",
                 id: 1,
                 poster: "李四",
                 posttime: "2020/12/16 12:00",
                 content: "",
-            }],
+            }*/],
             searchInput: "",
         },
         methods: {
-            // 正则表达式匹配，从url中获取讨论区id
+            // 正则表达式匹配
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -121,6 +121,7 @@
             },
             // 页面初始化，填入数据
             initDatas(){
+
                 this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                     .then(
                         (res) => {
@@ -129,8 +130,8 @@
                                 console.log('failed to initialize')
                                 return
                             }
-                            this.data.userName = res.name
-                            this.data.userAvatar = res.photo
+                            this.userName = res.name
+                            this.userAvatar = res.photo
                         }
                     )
             },
@@ -145,12 +146,12 @@
 
             handleFresh(){
                 this.updateInfoList = []
-                let timestamp = Date.parse(new Date())
+                let timestamp = Number(Date.parse(new Date()))
                 let timespan = 1000*3600*24*30
                 let data = {
                   'userid': this.userId,
-                  //'time': timestamp,
-                  'time': 100000
+                  //'time': timestamp - timespan,
+                  'time': 100000  //暂时设置成这样，时间戳的数据类型还是不太明白
                 }
                 //console.log(data.time, data.userid)
                 /*let config = {
