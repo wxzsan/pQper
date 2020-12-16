@@ -105,6 +105,7 @@ def get_user_information(request):
         else:
             try:
                 user = User.objects.get(id=userid)
+                print(user.user_photo)
                 response['code'] = 200
                 serializer=information_serializer(user)
                 response['data'] = {'msg':"success", 'information':serializer.data}
@@ -172,6 +173,7 @@ def upload_avatar(request):
             return JsonResponse(response)
         try:
             avatar= request.FILES.get('image',None)
+            print(avatar)
         except:
             response['code'] = 300
             response['data'] = {'msg': "can't get photo"}
@@ -180,6 +182,7 @@ def upload_avatar(request):
             user = User.objects.get(id=userid)
             response['code'] = 200
             user.user_photo = avatar
+            print(user.user_photo)
             user.save()
             response['data'] = {'msg':"success"}
             return JsonResponse(response)
