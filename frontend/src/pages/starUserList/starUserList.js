@@ -31,7 +31,10 @@ var vm = new Vue({
         },
         // 页面初始化，填入所有用户数据
         initDatas() {
-            this.$axios.get('http://127.0.0.1:8000/user/get_star_user_list')
+            let data = {
+                "id": 1,
+            }
+            this.$axios.post('http://127.0.0.1:8000/user/get_star_user_list', JSON.stringify(data))
                 .then(
                     (res) => {
                         res = res.data
@@ -40,10 +43,14 @@ var vm = new Vue({
                             return
                         }
                         res = res.data
-                        res.starUserList.forEach((starUserId) => {
-                            this.$axios.get('http://127.0.0.1:8000/user/get_star_user?starUserId=' + starUserId)
+                        res.starUserList.forEach((UserId) => {
+                            let userdata = {
+                                "id": UserId,
+                            }
+                            this.$axios.post('http://127.0.0.1:8000/user/get_user_imformation', JSON.stringify(userdata))
                                 .then(
                                     (response) => {
+                                        response = response.userdata
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
@@ -52,8 +59,8 @@ var vm = new Vue({
                                         this.starUserInfoList.push({
                                             id: response.star_user.id,
                                             title: response.star_user.name,
-                                            star_number: response.star_user.star_number,
-                                            has_star: true,
+                                            //star_number: 100,
+                                            //has_star: true,
                                         })
                                     }
                                 )
@@ -70,41 +77,41 @@ var vm = new Vue({
             }
         },
         // 关注用户事件处理
-        handleStar(count) {
-            if (!this.starUserInfoList[count - 1].has_star) {
-                this.$axios.get('http://127.0.0.1:8000/user/star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-                    .then(
-                        (res) => {
-                            if (res.code === 200) {
-                                this.starUserInfoList[count - 1].has_star = true
-                                this.starUserInfoList[count - 1].star_number += 1
-                                this.$message("收藏成功")
-                            }
-                            else
-                                this.$message("收藏失败")
-                        }
-                    )
-            }
-            else {
-                this.$axios.get('http://127.0.0.1:8000/user/cancel_star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-                    .then(
-                        (res) => {
-                            if (res.code === 200) {
-                                this.starUserInfoList[count - 1].has_star = false
-                                this.starUserInfoList[count - 1].star_number -= 1
-                                this.$message("取消收藏成功")
-                            }
-                            else
-                                this.$message("取消收藏失败")
-                        }
-                    )
-            }
-        },
-        getStarButtonType(count) {
-            if (this.starUserInfoList[count - 1].has_star)
-                return "info"
-            else
-                return "primary"
-        },
+        // handleStar(count) {
+        //     if (!this.starUserInfoList[count - 1].has_star) {
+        //         this.$axios.get('http://127.0.0.1:8000/user/star_user?starUserId=' + this.starUserInfoList[count - 1].id)
+        //             .then(
+        //                 (res) => {
+        //                     if (res.code === 200) {
+        //                         this.starUserInfoList[count - 1].has_star = true
+        //                         this.starUserInfoList[count - 1].star_number += 1
+        //                         this.$message("收藏成功")
+        //                     }
+        //                     else
+        //                         this.$message("收藏失败")
+        //                 }
+        //             )
+        //     }
+        //     else {
+        //         this.$axios.get('http://127.0.0.1:8000/user/cancel_star_user?starUserId=' + this.starUserInfoList[count - 1].id)
+        //             .then(
+        //                 (res) => {
+        //                     if (res.code === 200) {
+        //                         this.starUserInfoList[count - 1].has_star = false
+        //                         this.starUserInfoList[count - 1].star_number -= 1
+        //                         this.$message("取消收藏成功")
+        //                     }
+        //                     else
+        //                         this.$message("取消收藏失败")
+        //                 }
+        //             )
+        //     }
+        // },
+        // getStarButtonType(count) {
+        //     if (this.starUserInfoList[count - 1].has_star)
+        //         return "info"
+        //     else
+        //         return "primary"
+        // },
     }
 })
