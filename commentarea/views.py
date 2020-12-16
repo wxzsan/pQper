@@ -282,7 +282,7 @@ def request_create_comment_area(request):
         if form.is_valid():
             paper_file = PaperFile(title = form.cleaned_data["title"],paper = request.FILES['paper'])
             paper_file.save()
-            paper = Paper(title = paper_file.title, path = paper_file.paper.path)
+            paper = Paper(title = paper_file.title, path = paper_file.paper.name)
             paper.save()
             user = User.objects.get(id = user_id)
             create_request = CreateRequest(requestor=user, paper=paper)

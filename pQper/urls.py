@@ -19,6 +19,9 @@ import commentarea.urls
 import user.urls
 import star.urls
 import SearchAndResults.urls
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +29,4 @@ urlpatterns = [
     path('star/', include(star.urls)),
     path('commentarea/', include(commentarea.urls)),
     path('SearchAndResults/', include(SearchAndResults.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
