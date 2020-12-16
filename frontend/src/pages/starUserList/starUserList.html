@@ -47,7 +47,7 @@
                         <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starUserList[count - 1].name}}{% endverbatim %}</b></p>
                         <p class="text" style="font-size: 17px;">{% verbatim %}{{starUserList[count - 1].email}}{% endverbatim %}</p>
 
-                        <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">关注 {% verbatim %}{{starUserList[count - 1].star_number}}{% endverbatim %}</el-button>
+                        <!--el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">关注 {% verbatim %}{{starUserList[count - 1].star_number}}{% endverbatim %}</el-button-->
                         <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='#'">进入主页</el-button>
                     </div>
                 </el-main>
