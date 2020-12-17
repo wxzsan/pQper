@@ -20,12 +20,12 @@ var vm = new Vue({
   },
   methods: {
     get_user_information: function () {
-      this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+      this.$axios.post('http://39.105.19.68:8000/user/get_user_information')
         .then((res) => {
           res = res.data
           if (res.data.msg === 'cookie out of date') {
             alert('登录超时')
-            window.location.href = 'http://127.0.0.1:8000/user/login.html'
+            window.location.href = 'http://39.105.19.68:8000/user/login.html'
           } else if (res.code === 200) {
             this.name = res.data.information.user_name
             this.email = res.data.information.user_email
@@ -40,18 +40,18 @@ var vm = new Vue({
         })
     },
     to_setting_page: function () {
-      window.location.href = 'http://127.0.0.1:8000/user/settingpage.html'
+      window.location.href = 'http://39.105.19.68:8000/user/settingpage.html'
     },
     to_home_page: function () {
-      window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
+      window.location.href = "http://39.105.19.68:8000/SearchAndResults/HomePage.html"
     },
     to_my_profile_page: function () {
-      window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
+      window.location.href = 'http://39.105.19.68:8000/user/myprofile.html'
     },
     quit: function () {
-      this.$axios.post('http://127.0.0.1:8000/user/logout')
+      this.$axios.post('http://39.105.19.68:8000/user/logout')
         .then((res) => {
-          window.location.href = 'http://127.0.0.1:8000/user/login.html'
+          window.location.href = 'http://39.105.19.68:8000/user/login.html'
         })
     },
     handle_command: function (command) {

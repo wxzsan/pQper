@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -31,48 +31,48 @@
             <el-container>
                 <!--左边栏-->
                 <el-aside width="120px">
-                    <div class = "mySimpleInfo">
-                      <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                      <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
+                    <div class="mySimpleInfo">
+                        <el-avatar :size="100" :src="userAvatar">user</el-avatar>
+                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://39.105.19.68:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://39.105.19.68:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://39.105.19.68:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://39.105.19.68:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
                 <!--搜索结果区域-->
                 <el-main>
-                  <el-row>
-                    <p class="title" style="font-size: 20px; text-align: center;"><b>搜索结果</b></p>
-                    <el-button type="primary" icon="el-icon-arrow-left" style="width: 120px; float: right; margin-top: 16px;" @click="handleBack()">返回主页</el-button>
-                  </el-row>
+                    <el-row>
+                        <p class="title" style="font-size: 20px; text-align: center;"><b>搜索结果</b></p>
+                        <el-button type="primary" icon="el-icon-arrow-left" style="width: 120px; float: right; margin-top: 16px;" @click="handleBack()">返回主页</el-button>
+                    </el-row>
 
-                  <el-button-group style = "width : 100%">
-                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=0}">相关用户</el-button>
-                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=1}">相关论文讨论区</el-button>
-                  </el-button-group>
+                    <el-button-group style="width : 100%">
+                        <el-button style="width: 48%" type="primary" @click="()=>{searchMode=0}">相关用户</el-button>
+                        <el-button style="width: 48%" type="primary" @click="()=>{searchMode=1}">相关论文讨论区</el-button>
+                    </el-button-group>
 
-                  <div v-if="searchMode==0">
-                    <el-container class ="relatedUserList" v-for="count in searchUserList.length" >
-                        <el-container width = 80%>
-                          <el-avatar :size="40" :src="searchUserList[count-1].userAvatar">user</el-avatar>
-                          <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{searchUserList[count - 1].userName}}{% endverbatim %}</span>
+                    <div v-if="searchMode==0">
+                        <el-container class="relatedUserList" v-for="count in searchUserList.length">
+                            <el-container width=8 0%>
+                                <el-avatar :size="40" :src="searchUserList[count-1].userAvatar">user</el-avatar>
+                                <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{searchUserList[count - 1].userName}}{% endverbatim %}</span>
+                            </el-container>
+                            <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(searchUserList[count - 1].userId)">详情</el-button>
                         </el-container>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(searchUserList[count - 1].userId)">详情</el-button>
-                    </el-container>
-                  </div>
-                  <div v-else-if="searchMode==1">
-                    <el-container class ="relatedCommentAreaList" v-for="count in searchCommmentAreaList.length" >
-                        <el-container width = 80%>
-                          <p class="text" style="font-size: 20px; float: center;">Title：{% verbatim %}{{searchCommmentAreaList[count - 1].title}}{% endverbatim %}</p>
+                    </div>
+                    <div v-else-if="searchMode==1">
+                        <el-container class="relatedCommentAreaList" v-for="count in searchCommmentAreaList.length">
+                            <el-container width=8 0%>
+                                <p class="text" style="font-size: 20px; float: center;">Title：{% verbatim %}{{searchCommmentAreaList[count - 1].title}}{% endverbatim %}</p>
 
+                            </el-container>
+                            <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleCommentAreaDetail(searchCommmentAreaList[count - 1].id)">详情</el-button>
                         </el-container>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleCommentAreaDetail(searchCommmentAreaList[count - 1].id)">详情</el-button>
-                    </el-container>
-                  </div>
-                  <div v-else></div>
+                    </div>
+                    <div v-else></div>
 
 
 
@@ -89,152 +89,158 @@
 
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-            //userId: 1,  // 调试时暂时如此假设
-            userName: "张三",
-            userAvatar: "",
-            searchMode: 0, //searchMode=1时，显示相关讨论区，为0时显示用户
-            searchUserList: [/*{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            }*/],
-
-            searchCommmentAreaList: [/*{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
-                address: "",
-            },{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
-                address: "",
-            },{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
-                address: ""
-            }*/],
-            searchInput: "",
-        },
-        methods: {
-            // 正则表达式匹配，从上个界面的url得到searchInput
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            created: function() {
+                this.initDatas()
             },
-            // 页面初始化，填入数据
-            initDatas(){
-                this.searchInput = atob(decodeURI(this.getParams('searchContent')));
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                    .then(
-                        (res) => {
-                            res = res.data
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            this.userName = res.name
-                            this.userAvatar = res.photo
-                            this.searchMode = -1
-                        }
-                    )
-                if(this.searchInput.length>0)
-                  this.handleSearch()
-                this.searchInput = ''
+            data: {
+                //userId: 1,  // 调试时暂时如此假设
+                userName: "张三",
+                userAvatar: "",
+                searchMode: 0, //searchMode=1时，显示相关讨论区，为0时显示用户
+                searchUserList: [
+                    /*{
+                                    userId: 1,
+                                    userName: "李四",
+                                    userAvatar: "",
+                                    address: "",
+                                },{
+                                    userId: 1,
+                                    userName: "李四",
+                                    userAvatar: "",
+                                    address: "",
+                                },{
+                                    userId: 1,
+                                    userName: "李四",
+                                    userAvatar: "",
+                                    address: "",
+                                }*/
+                ],
+
+                searchCommmentAreaList: [
+                    /*{
+                                    id: 1
+                                    title: "闪电五连鞭的探讨",
+                                    //createUserName: "Baoguo Ma",
+                                    address: "",
+                                },{
+                                    id: 1
+                                    title: "闪电五连鞭的探讨",
+                                    //createUserName: "Baoguo Ma",
+                                    address: "",
+                                },{
+                                    id: 1
+                                    title: "闪电五连鞭的探讨",
+                                    //createUserName: "Baoguo Ma",
+                                    address: ""
+                                }*/
+                ],
+                searchInput: "",
             },
-
-
-            // 搜索处理
-            handleSearch(){
-                this.searchUserList = []
-                this.searchCommmentAreaLis = []
-                if(this.searchInput.length > 0){
-                      //console.log(this.searchInput)
-                      let data = {
-                        "searchString": this.searchInput,
-                      }
-                      this.$axios.get('http://127.0.0.1:8000/SearchAndResults/SearchForPapersAndUsers', {params:data})
+            methods: {
+                // 正则表达式匹配，从上个界面的url得到searchInput
+                getParams(key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
+                    }
+                    return null
+                },
+                // 页面初始化，填入数据
+                initDatas() {
+                    this.searchInput = atob(decodeURI(this.getParams('searchContent')));
+                    this.$axios.post('http://39.105.19.68:8000/user/get_user_information')
                         .then(
-                          (res) => {
-                            result = res.data
-
-                            resUser = result.data.findUsers
-                            //console.log(resUser)
-                            resUser.forEach(
-                              (key)=>{
-                                this.searchUserList.push(
-                                  {
-                                    userId: key.id,
-                                    userName: key.user_name
-                                  }
-                                )
-                              }
-                            )
-
-                            resCA = result.data.findCommentAreas
-                            //console.log(resCA)
-                            resCA.forEach(
-                              (key)=>{
-                                this.searchCommmentAreaList.push(
-                                  {
-                                    id: key.id,
-                                    title: key.title,
-                                    address: key.path
-                                  }
-                                )
-                              }
-                            )
-                            if (result.code === 200) {
-                              console.log("请求成功")
-                            } else {
-                              console.log("请求失败")
+                            (res) => {
+                                res = res.data
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                                this.userName = res.name
+                                this.userAvatar = res.photo
+                                this.searchMode = -1
                             }
-                          }
                         )
-                }
-            },
+                    if (this.searchInput.length > 0)
+                        this.handleSearch()
+                    this.searchInput = ''
+                },
 
-            //页面跳转处理
-            handleBack(){
-              window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
-            },
 
-            handleUserDetail(id){
-              window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid="+id
-              //console.log(window.location.href)
-            },
+                // 搜索处理
+                handleSearch() {
+                    this.searchUserList = []
+                    this.searchCommmentAreaLis = []
+                    if (this.searchInput.length > 0) {
+                        //console.log(this.searchInput)
+                        let data = {
+                            "searchString": this.searchInput,
+                        }
+                        this.$axios.get('http://39.105.19.68:8000/SearchAndResults/SearchForPapersAndUsers', {
+                                params: data
+                            })
+                            .then(
+                                (res) => {
+                                    result = res.data
 
-            handleCommentAreaDetail(id){
-              window.location.href = "http://127.0.0.1:8000/user/commentarea/commentArea.html?id="+id
-              //console.log(window.location.href)
-            },
-        }
-    })
+                                    resUser = result.data.findUsers
+                                        //console.log(resUser)
+                                    resUser.forEach(
+                                        (key) => {
+                                            this.searchUserList.push({
+                                                userId: key.id,
+                                                userName: key.user_name
+                                            })
+                                        }
+                                    )
+
+                                    resCA = result.data.findCommentAreas
+                                        //console.log(resCA)
+                                    resCA.forEach(
+                                        (key) => {
+                                            this.searchCommmentAreaList.push({
+                                                id: key.id,
+                                                title: key.title,
+                                                address: key.path
+                                            })
+                                        }
+                                    )
+                                    if (result.code === 200) {
+                                        console.log("请求成功")
+                                    } else {
+                                        console.log("请求失败")
+                                    }
+                                }
+                            )
+                    }
+                },
+
+                //页面跳转处理
+                handleBack() {
+                    window.location.href = "http://39.105.19.68:8000/SearchAndResults/HomePage.html"
+                },
+
+                handleUserDetail(id) {
+                    window.location.href = "http://39.105.19.68:8000/SearchAndResults/UserProfilePage.html?userid=" + id
+                        //console.log(window.location.href)
+                },
+
+                handleCommentAreaDetail(id) {
+                    window.location.href = "http://39.105.19.68:8000/user/commentarea/commentArea.html?id=" + id
+                        //console.log(window.location.href)
+                },
+            }
+        })
+
     </script>
 </body>
 
@@ -242,28 +248,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -272,22 +286,27 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .mySimpleInfo {
-      margin: 10px;
+        margin: 10px;
     }
+    
     .title {
         font-family: Times;
-        float:left;
+        float: left;
         width: 80%;
         align-self: center;
     }
+    
     .text {
         font-family: Times;
         margin: 6px;
     }
+    
     .relatedUserList {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -295,7 +314,7 @@
         padding: 10px;
         margin-bottom: 10px;
     }
-
+    
     .relatedCommentAreaList {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -303,6 +322,7 @@
         padding: 10px;
         margin-bottom: 10px;
     }
+
 </style>
 
 </html>

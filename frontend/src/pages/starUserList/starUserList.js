@@ -11,108 +11,108 @@ Vue.use(ElementUI)
 Vue.prototype.$axios = axios
 
 var vm = new Vue({
-    el: '#app',
-    created: function () {
-        this.initDatas()
+  el: '#app',
+  created: function () {
+    this.initDatas()
+  },
+  data: {
+    starUserInfoList: new Array(),
+    searchInput: "",
+  },
+  methods: {
+    // 正则表达式匹配
+    getParams(key) {
+      var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+      var r = window.location.search.substr(1).match(reg)
+      if (r != null) {
+        return unescape(r[2])
+      }
+      return null
     },
-    data: {
-        starUserInfoList: new Array(),
-        searchInput: "",
-    },
-    methods: {
-        // 正则表达式匹配
-        getParams(key) {
-            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-            var r = window.location.search.substr(1).match(reg)
-            if (r != null) {
-                return unescape(r[2])
+    // 页面初始化，填入所有用户数据
+    initDatas() {
+      let data = {
+        "id": 1,
+      }
+      this.$axios.post('http://39.105.19.68:8000/user/get_star_user_list', JSON.stringify(data))
+        .then(
+          (res) => {
+            res = res.data
+            if (res.code != 200) {
+              console.log('failed to initialize')
+              return
             }
-            return null
-        },
-        // 页面初始化，填入所有用户数据
-        initDatas() {
-            let data = {
-                "id": 1,
-            }
-            this.$axios.post('http://127.0.0.1:8000/user/get_star_user_list', JSON.stringify(data))
+            res = res.data.star_user_list
+            res.star_user_list.forEach((UserId) => {
+              let userdata = {
+                "id": UserId,
+              }
+              this.$axios.post('http://39.105.19.68:8000/user/get_user_information', JSON.stringify(userdata))
                 .then(
-                    (res) => {
-                        res = res.data
-                        if (res.code != 200) {
-                            console.log('failed to initialize')
-                            return
-                        }
-                        res = res.data.star_user_list
-                        res.star_user_list.forEach((UserId) => {
-                            let userdata = {
-                                "id": UserId,
-                            }
-                            this.$axios.post('http://127.0.0.1:8000/user/get_user_information', JSON.stringify(userdata))
-                                .then(
-                                    (response) => {
-                                        console.log(response)
-                                        response = response.data
-                                        if (response.code != 200) {
-                                            console.log('failed to initialize')
-                                            return
-                                        }
-                                        response = response.data.information
-                                        this.starUserInfoList.push({
-                                            name:response.user_name,
-                                            email:response.user_email,
-                                            //star_number: 100,
-                                            //has_star: true,
-                                        })
-                                    }
-                                )
-                        })
+                  (response) => {
+                    console.log(response)
+                    response = response.data
+                    if (response.code != 200) {
+                      console.log('failed to initialize')
+                      return
                     }
+                    response = response.data.information
+                    this.starUserInfoList.push({
+                      name: response.user_name,
+                      email: response.user_email,
+                      //star_number: 100,
+                      //has_star: true,
+                    })
+                  }
                 )
-        },
-        // 搜索框事件处理
-        //! 尚未完成
-        handleSearch() {
-            if (this.searchInput.length > 0) {
-                var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
-            }
-        },
-        // 关注用户事件处理
-        // handleStar(count) {
-        //     if (!this.starUserInfoList[count - 1].has_star) {
-        //         this.$axios.get('http://127.0.0.1:8000/user/star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-        //             .then(
-        //                 (res) => {
-        //                     if (res.code === 200) {
-        //                         this.starUserInfoList[count - 1].has_star = true
-        //                         this.starUserInfoList[count - 1].star_number += 1
-        //                         this.$message("收藏成功")
-        //                     }
-        //                     else
-        //                         this.$message("收藏失败")
-        //                 }
-        //             )
-        //     }
-        //     else {
-        //         this.$axios.get('http://127.0.0.1:8000/user/cancel_star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-        //             .then(
-        //                 (res) => {
-        //                     if (res.code === 200) {
-        //                         this.starUserInfoList[count - 1].has_star = false
-        //                         this.starUserInfoList[count - 1].star_number -= 1
-        //                         this.$message("取消收藏成功")
-        //                     }
-        //                     else
-        //                         this.$message("取消收藏失败")
-        //                 }
-        //             )
-        //     }
-        // },
-        // getStarButtonType(count) {
-        //     if (this.starUserInfoList[count - 1].has_star)
-        //         return "info"
-        //     else
-        //         return "primary"
-        // },
-    }
+            })
+          }
+        )
+    },
+    // 搜索框事件处理
+    //! 尚未完成
+    handleSearch() {
+      if (this.searchInput.length > 0) {
+        var searchContent = btoa(encodeURI(this.searchInput))
+        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+      }
+    },
+    // 关注用户事件处理
+    // handleStar(count) {
+    //     if (!this.starUserInfoList[count - 1].has_star) {
+    //         this.$axios.get('http://39.105.19.68:8000/user/star_user?starUserId=' + this.starUserInfoList[count - 1].id)
+    //             .then(
+    //                 (res) => {
+    //                     if (res.code === 200) {
+    //                         this.starUserInfoList[count - 1].has_star = true
+    //                         this.starUserInfoList[count - 1].star_number += 1
+    //                         this.$message("收藏成功")
+    //                     }
+    //                     else
+    //                         this.$message("收藏失败")
+    //                 }
+    //             )
+    //     }
+    //     else {
+    //         this.$axios.get('http://39.105.19.68:8000/user/cancel_star_user?starUserId=' + this.starUserInfoList[count - 1].id)
+    //             .then(
+    //                 (res) => {
+    //                     if (res.code === 200) {
+    //                         this.starUserInfoList[count - 1].has_star = false
+    //                         this.starUserInfoList[count - 1].star_number -= 1
+    //                         this.$message("取消收藏成功")
+    //                     }
+    //                     else
+    //                         this.$message("取消收藏失败")
+    //                 }
+    //             )
+    //     }
+    // },
+    // getStarButtonType(count) {
+    //     if (this.starUserInfoList[count - 1].has_star)
+    //         return "info"
+    //     else
+    //         return "primary"
+    // },
+  }
 })

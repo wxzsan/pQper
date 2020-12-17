@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -63,12 +63,15 @@
     </div>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
         Vue.prototype.$axios = axios
         var vm = new Vue({
             el: '#app',
-            created: function(){
+            created: function() {
                 this.initDatas()
             },
             data: {
@@ -80,7 +83,7 @@
                     content: "这是化劲儿",
                     star_number: 100,
                     has_star: false,
-                },{
+                }, {
                     id: 2,
                     poster: "马老师",
                     title: "有bear而来",
@@ -88,7 +91,7 @@
                     content: "这是化劲儿",
                     star_number: 100,
                     has_star: false,
-                },{
+                }, {
                     id: 3,
                     poster: "马老师",
                     title: "有bear而来",
@@ -101,7 +104,7 @@
             },
             methods: {
                 // 正则表达式匹配
-                getParams(key){
+                getParams(key) {
                     var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                     var r = window.location.search.substr(1).match(reg)
                     if (r != null) {
@@ -110,26 +113,26 @@
                     return null
                 },
                 // 页面初始化，填入所有评论数据
-                initDatas(){
+                initDatas() {
                     this.commentAreaId = parseInt(this.getParams("id"))
-                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + this.commentAreaId)
+                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_comment_area?commentAreaId=' + this.commentAreaId)
                         .then(
                             (res) => {
                                 res = res.data
-                                if(res.code != 200)
+                                if (res.code != 200)
                                     return
                                 this.paperInfo.title = res.comment_area.name
                                 this.paperDir = res.comment_area.paper.path
                                 this.area_star_number = res.comment_area.star_number
                                 this.area_has_star = res.comment_area.star
                                 res.comment_area.short_comment_list.forEach((shortCommentId) => {
-                                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
+                                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                         .then(
                                             (res) => {
                                                 res = res.data
-                                                if(res.code != 200){
+                                                if (res.code != 200) {
                                                     console.log('failed to initialize')
-                                                    return          
+                                                    return
                                                 }
                                                 this.shortCommentList.push({
                                                     id: shortCommentId,
@@ -145,13 +148,13 @@
                                         )
                                 })
                                 res.comment_area.long_comment_list.forEach((longCommentId) => {
-                                    this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
+                                    this.$axios.get('http://39.105.19.68:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
                                         .then(
                                             (res) => {
                                                 res = res.data
-                                                if(res.code != 200){
+                                                if (res.code != 200) {
                                                     console.log('failed to initialize')
-                                                    return          
+                                                    return
                                                 }
                                                 this.longCommentList.push({
                                                     id: longCommentId,
@@ -170,51 +173,48 @@
                 },
                 // 搜索框事件处理
                 //! 尚未完成
-                handleSearch(){
-                    if(this.searchInput.length > 0){
+                handleSearch() {
+                    if (this.searchInput.length > 0) {
                         var searchContent = btoa(encodeURI(this.searchInput))
                         window.location.href = 'searchResultPage.html?searchContent=' + searchContent
                     }
                 },
                 // 收藏长评事件处理
-                handleStar(count){
-                    if(!this.longCommentList[count - 1].has_star){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                handleStar(count) {
+                    if (!this.longCommentList[count - 1].has_star) {
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.longCommentList[count - 1].has_star = true
                                         this.longCommentList[count - 1].star_number += 1
                                         this.$message("收藏成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("收藏失败")
                                 }
                             )
-                    }
-                    else{
+                    } else {
                         // 取消收藏！！！等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.longCommentList[count - 1].has_star = false
                                         this.longCommentList[count - 1].star_number -= 1
                                         this.$message("取消收藏成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("取消收藏失败")
                                 }
                             )
                     }
                 },
                 // 发送短评事件处理
-                handlePostShortComment(){
-                    if(this.shortCommentInput.length > 0){
+                handlePostShortComment() {
+                    if (this.shortCommentInput.length > 0) {
                         let data = {
                             "commentAreaId": this.commentAreaId,
                             "content": this.shortCommentInput,
@@ -224,24 +224,23 @@
                                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                             },
                         }
-                        this.$axios.post('http://127.0.0.1:8000/commentarea/post_short_comment', JSON.stringify(data), config)
+                        this.$axios.post('http://39.105.19.68:8000/commentarea/post_short_comment', JSON.stringify(data), config)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.shortCommentInput = ""
                                         this.$message("发送成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("发送失败")
                                 }
                             )
                     }
                 },
                 // 发送长评事件处理
-                handlePostLongComment(){
-                    if(this.longCommentInput.title.length > 0 && this.longCommentInput.content.length > 0){
+                handlePostLongComment() {
+                    if (this.longCommentInput.title.length > 0 && this.longCommentInput.content.length > 0) {
                         let data = {
                             "commentAreaId": this.commentAreaId,
                             "content": this.longCommentInput.content,
@@ -252,83 +251,80 @@
                                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                             },
                         }
-                        this.$axios.post('http://127.0.0.1:8000/commentarea/post_long_comment', JSON.stringify(data), config)
+                        this.$axios.post('http://39.105.19.68:8000/commentarea/post_long_comment', JSON.stringify(data), config)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.longCommentInput.title = ""
                                         this.longCommentInput.content = ""
                                         this.$message("发送成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("发送失败")
                                 }
                             )
                     }
                 },
-                handleStarArea(){
-                    if(!this.area_has_star){
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
+                handleStarArea() {
+                    if (!this.area_has_star) {
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.area_has_star = true
                                         this.area_star_number += 1
                                         this.$message("收藏成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("收藏失败")
                                 }
                             )
-                    }
-                    else{
+                    } else {
                         //！！！需要修改，等待API
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
+                        this.$axios.get('http://39.105.19.68:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                             .then(
                                 (res) => {
                                     res = res.data
                                     console.log(res)
-                                    if(res.code === 200){
+                                    if (res.code === 200) {
                                         this.area_has_star = false
                                         this.area_star_number -= 1
                                         this.$message("取消收藏成功")
-                                    }
-                                    else
+                                    } else
                                         this.$message("取消收藏失败")
                                 }
                             )
                     }
                 },
-                getRoseButtonType(count){
-                    if(this.shortCommentList[count - 1].has_rose)
+                getRoseButtonType(count) {
+                    if (this.shortCommentList[count - 1].has_rose)
                         return "info"
                     else
                         return "success"
                 },
-                getEggButtonType(count){
-                    if(this.shortCommentList[count - 1].has_egg)
+                getEggButtonType(count) {
+                    if (this.shortCommentList[count - 1].has_egg)
                         return "info"
                     else
                         return "warning"
                 },
-                getStarButtonType(count){
-                    if(this.longCommentList[count - 1].has_star)
+                getStarButtonType(count) {
+                    if (this.longCommentList[count - 1].has_star)
                         return "info"
                     else
                         return "primary"
                 },
-                getStarAreaButtonType(){
-                    if(this.area_has_star)
+                getStarAreaButtonType() {
+                    if (this.area_has_star)
                         return "info"
                     else
                         return "primary"
                 },
             }
         })
+
     </script>
 </body>
 
@@ -336,28 +332,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -366,12 +370,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .text {
         font-family: Times;
     }
+    
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -379,6 +386,7 @@
         direction: vertical;
         padding: 10px;
     }
+
 </style>
 
 </html>

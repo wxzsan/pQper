@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 
 <body>
@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://39.105.19.68:8000/user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -31,37 +31,37 @@
             <el-container>
                 <!--左边栏-->
                 <el-aside width="120px">
-                    <div class = "mySimpleInfo">
-                      <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                      <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
+                    <div class="mySimpleInfo">
+                        <el-avatar :size="100" :src="userAvatar">user</el-avatar>
+                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://39.105.19.68:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://39.105.19.68:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://39.105.19.68:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://39.105.19.68:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
                 <!--最新动态区域-->
                 <el-main>
-                  <el-row>
-                    <p class="title" style="font-size: 20px; text-align: center;"><b>关注用户的长评发布动态</b></p>
-                    <el-button type="primary" icon="el-icon-refresh" style="width: 80px; float: right; margin-top: 16px;" @click="handleFresh()">刷新</el-button>
-                  </el-row>
+                    <el-row>
+                        <p class="title" style="font-size: 20px; text-align: center;"><b>关注用户的长评发布动态</b></p>
+                        <el-button type="primary" icon="el-icon-refresh" style="width: 80px; float: right; margin-top: 16px;" @click="handleFresh()">刷新</el-button>
+                    </el-row>
 
-                  <div class="updating" v-for="count in updateInfoList.length">
-                    <el-container>
-                      <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                      <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
-                    </el-container>
-                    <div>
-                      {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
+                    <div class="updating" v-for="count in updateInfoList.length">
+                        <el-container>
+                            <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
+                            <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
+                        </el-container>
+                        <div>
+                            {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
+                        </div>
+                        <div>
+                            {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
+                        </div>
+                        <el-button type="primary" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
                     </div>
-                    <div>
-                      {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
-                    </div>
-                    <el-button type="primary" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
-                  </div>
 
                 </el-main>
 
@@ -76,124 +76,128 @@
 
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js">
+
+
+    </script>
     <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-            userId: 2,  // 调试时暂时如此假设
-            userName: "张三",
-            userAvatar: "",
-            updateInfoList: [/*{
-                title: "关注用户的新动态",
-                id: 1,
-                poster: "李四",
-                posttime: "2020/12/16 12:00",
-                content: "",
-            },{
-                title: "关注用户的新动态",
-                id: 1,
-                poster: "李四",
-                posttime: "2020/12/16 12:00",
-                content: "",
-            },{
-                title: "关注用户的新动态",
-                id: 1,
-                poster: "李四",
-                posttime: "2020/12/16 12:00",
-                content: "",
-            }*/],
-            searchInput: "",
-        },
-        methods: {
-            // 正则表达式匹配
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
+        Vue.prototype.$axios = axios
+        var vm = new Vue({
+            el: '#app',
+            created: function() {
+                this.initDatas()
             },
-            // 页面初始化，填入数据
-            initDatas(){
-
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                    .then(
-                        (res) => {
-                            res = res.data
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            this.userName = res.name
-                            this.userAvatar = res.photo
-                        }
-                    )
+            data: {
+                userId: 2, // 调试时暂时如此假设
+                userName: "张三",
+                userAvatar: "",
+                updateInfoList: [
+                    /*{
+                                    title: "关注用户的新动态",
+                                    id: 1,
+                                    poster: "李四",
+                                    posttime: "2020/12/16 12:00",
+                                    content: "",
+                                },{
+                                    title: "关注用户的新动态",
+                                    id: 1,
+                                    poster: "李四",
+                                    posttime: "2020/12/16 12:00",
+                                    content: "",
+                                },{
+                                    title: "关注用户的新动态",
+                                    id: 1,
+                                    poster: "李四",
+                                    posttime: "2020/12/16 12:00",
+                                    content: "",
+                                }*/
+                ],
+                searchInput: "",
             },
-
-            // 搜索框事件处理
-            handleSearch(){
-                if(this.searchInput.length > 0){
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-                }
-            },
-
-            handleFresh(){
-                this.updateInfoList = []
-                let timestamp = Number(Date.parse(new Date()))
-                let timespan = 1000*3600*24*30
-                let data = {
-                  'userid': this.userId,
-                  //'time': timestamp - timespan,
-                  'time': 100000  //暂时设置成这样，时间戳的数据类型还是不太明白
-                }
-                //console.log(data.time, data.userid)
-                /*let config = {
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                  },
-                }*/
-                console.log(JSON.stringify(data))
-                this.$axios.post('http://127.0.0.1:8000/SearchAndResults/Momments', JSON.stringify(data))
-                  .then(
-                    (res) => {
-                      res = res.data
-                      result = res.data
-                      //console.log(result.LongComments)
-                      result.LongComments.forEach(
-                        (key)=>{
-                          this.updateInfoList.push(
-                            {
-                              title: key.title,
-                              id: key.pk,
-                              poster: key.poster,
-                              posttime: key.post_time,
-                              content: key.content,
-                            }
-                          )
-                        }
-                      )
-                      if (res.code === 200) {
-                        console.log("请求成功")
-                      } else {
-                        console.log("请求失败")
-                      }
+            methods: {
+                // 正则表达式匹配
+                getParams(key) {
+                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                    var r = window.location.search.substr(1).match(reg)
+                    if (r != null) {
+                        return unescape(r[2])
                     }
-                )
-            },
+                    return null
+                },
+                // 页面初始化，填入数据
+                initDatas() {
 
-            handleDetail(id){
-                window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id="+id
-                //console.log("../longComment/longComment.html?id="+ id)
-            },
-        }
-    })
+                    this.$axios.post('http://39.105.19.68:8000/user/get_user_information')
+                        .then(
+                            (res) => {
+                                res = res.data
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                                this.userName = res.name
+                                this.userAvatar = res.photo
+                            }
+                        )
+                },
+
+                // 搜索框事件处理
+                handleSearch() {
+                    if (this.searchInput.length > 0) {
+                        var searchContent = btoa(encodeURI(this.searchInput))
+                        window.location.href = 'http://39.105.19.68:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                    }
+                },
+
+                handleFresh() {
+                    this.updateInfoList = []
+                    let timestamp = Number(Date.parse(new Date()))
+                    let timespan = 1000 * 3600 * 24 * 30
+                    let data = {
+                            'userid': this.userId,
+                            //'time': timestamp - timespan,
+                            'time': 100000 //暂时设置成这样，时间戳的数据类型还是不太明白
+                        }
+                        //console.log(data.time, data.userid)
+                        /*let config = {
+                          headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                          },
+                        }*/
+                    console.log(JSON.stringify(data))
+                    this.$axios.post('http://39.105.19.68:8000/SearchAndResults/Momments', JSON.stringify(data))
+                        .then(
+                            (res) => {
+                                res = res.data
+                                result = res.data
+                                    //console.log(result.LongComments)
+                                result.LongComments.forEach(
+                                    (key) => {
+                                        this.updateInfoList.push({
+                                            title: key.title,
+                                            id: key.pk,
+                                            poster: key.poster,
+                                            posttime: key.post_time,
+                                            content: key.content,
+                                        })
+                                    }
+                                )
+                                if (res.code === 200) {
+                                    console.log("请求成功")
+                                } else {
+                                    console.log("请求失败")
+                                }
+                            }
+                        )
+                },
+
+                handleDetail(id) {
+                    window.location.href = "http://39.105.19.68:8000/commentarea/longComment.html?id=" + id
+                        //console.log("../longComment/longComment.html?id="+ id)
+                },
+            }
+        })
+
     </script>
 </body>
 
@@ -201,28 +205,36 @@
     #app {
         height: 100%;
     }
+    
     html {
         height: 100%;
     }
+    
     body {
         height: 100%;
     }
+    
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+    
     .el-header {
         background-color: #b361ff;
     }
+    
     .el-footer {
         background-color: #62c48b;
     }
+    
     .el-aside {
         background-color: #DCDFE6;
     }
+    
     .el-main {
         background-color: #EBEEF5;
     }
+    
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -231,21 +243,25 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+    
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+    
     .mySimpleInfo {
-      margin: 10px;
+        margin: 10px;
     }
+    
     .title {
         font-family: Times;
-        float:left;
+        float: left;
         width: 80%;
     }
+    
     .text {
         font-family: Times;
-
     }
+    
     .updating {
         background-color: #b3dbc4;
         border-radius: 6px;
@@ -253,6 +269,7 @@
         padding: 10px;
         margin-bottom: 50px;
     }
+
 </style>
 
 </html>

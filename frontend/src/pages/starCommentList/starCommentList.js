@@ -11,100 +11,97 @@ Vue.use(ElementUI)
 Vue.prototype.$axios = axios
 
 var vm = new Vue({
-    el: '#app',
-    created: function () {
-        this.initDatas()
+  el: '#app',
+  created: function () {
+    this.initDatas()
+  },
+  data: {
+    starCommentInfoList: new Array(),
+    searchInput: "",
+  },
+  methods: {
+    // 正则表达式匹配
+    getParams(key) {
+      var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+      var r = window.location.search.substr(1).match(reg)
+      if (r != null) {
+        return unescape(r[2])
+      }
+      return null
     },
-    data: {
-        starCommentInfoList: new Array(),
-        searchInput: "",
-    },
-    methods: {
-        // 正则表达式匹配
-        getParams(key) {
-            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-            var r = window.location.search.substr(1).match(reg)
-            if (r != null) {
-                return unescape(r[2])
+    // 页面初始化，填入所有评论数据
+    initDatas() {
+      this.$axios.get('http://39.105.19.68:8000/user/get_star_long_comment_list')
+        .then(
+          (res) => {
+            res = res.data
+            if (res.code != 200) {
+              console.log('failed to initialize')
+              return
             }
-            return null
-        },
-        // 页面初始化，填入所有评论数据
-        initDatas() {
-            this.$axios.get('http://127.0.0.1:8000/user/get_star_long_comment_list')
+            res = res.data
+            res.starCommentList.forEach((starCommentId) => {
+              this.$axios.get('http://39.105.19.68:8000/user/get_star_long_comment?starCommentId=' + starCommentId)
                 .then(
-                    (res) => {
-                        res = res.data
-                        if (res.code != 200) {
-                            console.log('failed to initialize')
-                            return
-                        }
-                        res = res.data
-                        res.starCommentList.forEach((starCommentId) => {
-                            this.$axios.get('http://127.0.0.1:8000/user/get_star_long_comment?starCommentId=' + starCommentId)
-                                .then(
-                                    (response) => {
-                                        if (response.code != 200) {
-                                            console.log('failed to initialize')
-                                            return
-                                        }
-                                        response = response.data
-                                        this.starCommentInfoList.push({
-                                            id: response.star_comment.id,
-                                            title: response.star_comment.name,
-                                            star_number: response.star_comment.star_number,
-                                            has_star: true,
-                                        })
-                                    }
-                                )
-                        })
+                  (response) => {
+                    if (response.code != 200) {
+                      console.log('failed to initialize')
+                      return
                     }
+                    response = response.data
+                    this.starCommentInfoList.push({
+                      id: response.star_comment.id,
+                      title: response.star_comment.name,
+                      star_number: response.star_comment.star_number,
+                      has_star: true,
+                    })
+                  }
                 )
-        },
-        // 搜索框事件处理
-        //! 尚未完成
-        handleSearch() {
-            if (this.searchInput.length > 0) {
-                var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+            })
+          }
+        )
+    },
+    // 搜索框事件处理
+    //! 尚未完成
+    handleSearch() {
+      if (this.searchInput.length > 0) {
+        var searchContent = btoa(encodeURI(this.searchInput))
+        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+      }
+    },
+    // 收藏评论事件处理
+    handleStar(count) {
+      if (!this.starCommentInfoList[count - 1].has_star) {
+        this.$axios.get('http://39.105.19.68:8000/user/star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
+          .then(
+            (res) => {
+              if (res.code === 200) {
+                this.starCommentInfoList[count - 1].has_star = true
+                this.starCommentInfoList[count - 1].star_number += 1
+                this.$message("收藏成功")
+              } else
+                this.$message("收藏失败")
             }
-        },
-        // 收藏评论事件处理
-        handleStar(count) {
-            if (!this.starCommentInfoList[count - 1].has_star) {
-                this.$axios.get('http://127.0.0.1:8000/user/star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
-                    .then(
-                        (res) => {
-                            if (res.code === 200) {
-                                this.starCommentInfoList[count - 1].has_star = true
-                                this.starCommentInfoList[count - 1].star_number += 1
-                                this.$message("收藏成功")
-                            }
-                            else
-                                this.$message("收藏失败")
-                        }
-                    )
+          )
+      } else {
+        this.$axios.get('http://39.105.19.68:8000/user/cancel_star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
+          .then(
+            (res) => {
+              if (res.code === 200) {
+                this.starCommentInfoList[count - 1].has_star = false
+                this.starCommentInfoList[count - 1].star_number -= 1
+                this.$message("取消收藏成功")
+              } else
+                this.$message("取消收藏失败")
             }
-            else {
-                this.$axios.get('http://127.0.0.1:8000/user/cancel_star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
-                    .then(
-                        (res) => {
-                            if (res.code === 200) {
-                                this.starCommentInfoList[count - 1].has_star = false
-                                this.starCommentInfoList[count - 1].star_number -= 1
-                                this.$message("取消收藏成功")
-                            }
-                            else
-                                this.$message("取消收藏失败")
-                        }
-                    )
-            }
-        },
-        getStarButtonType(count) {
-            if (this.starCommentInfoList[count - 1].has_star)
-                return "info"
-            else
-                return "primary"
-        },
-    }
+          )
+      }
+    },
+    getStarButtonType(count) {
+      if (this.starCommentInfoList[count - 1].has_star)
+        return "info"
+      else
+        return "primary"
+    },
+  }
 })

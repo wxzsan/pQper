@@ -37,12 +37,12 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/user/register', JSON.stringify(data), config)
+      this.$axios.post('http://39.105.19.68:8000/user/register', JSON.stringify(data), config)
         .then(
           (res) => {
             res = res.data
             if (res.code === 200) {
-              window.location.href = "http://127.0.0.1:8000/user/login.html";
+              window.location.href = "http://39.105.19.68:8000/user/login.html";
             } else {
               alert("注册失败")
             }
