@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='HomePage.html'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='../myprofile/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='../login/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -35,11 +35,11 @@
                       <el-avatar :size="100" :src="userAvatar">user</el-avatar>
                       <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='../userData/starUserListPage.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='../userData/starCommentListPage.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='../myCommentAreaList/myCommentAreaList.html'">讨论区</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
                 <!--最新动态区域-->
@@ -140,7 +140,7 @@
             handleSearch(){
                 if(this.searchInput.length > 0){
                     var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
                 }
             },
 
@@ -189,7 +189,7 @@
             },
 
             handleDetail(id){
-                window.location.href = "../longComment/longComment.html?id="+id
+                window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id="+id
                 //console.log("../longComment/longComment.html?id="+ id)
             },
         }
