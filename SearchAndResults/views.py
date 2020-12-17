@@ -47,8 +47,10 @@ def SearchForPapersAndUsers(request):
                 paper_data["id"] = p.id
                 paper_data["title"] = p.title
                 paper_data["path"] = p.path
-                paper_data["commentareaid"] = list(p.commentarea_set.values("id"))[0]['id']
-                response['data']['findCommentAreas'].append(paper_data)
+                tmp_list = list(p.commentarea_set.values("id"))
+                if tmp_list:
+                    paper_data["commentareaid"] = tmp_list[0]['id']
+                    response['data']['findCommentAreas'].append(paper_data)
 
             # 查找相关的用户
             # 直接全字匹配
@@ -59,10 +61,10 @@ def SearchForPapersAndUsers(request):
             return JsonResponse(response)
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"code", "db corrupted"}})
+            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
     else:
         # 请用 GET
-        return JsonResponse({ {"code" : 600}, {"code" : "incorrect request method"}})
+        return JsonResponse({ {"code" : 600}, {"msg" : "incorrect request method"}})
         
 
 # 获取动态
@@ -121,7 +123,7 @@ def GetMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"code", "db corrupted"}})
+            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
 
     else:
         # 请用 POST
@@ -159,7 +161,7 @@ def GetSelfMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"code", "db corrupted"}})
+            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
 
     else:
         # 请用 POST
