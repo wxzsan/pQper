@@ -42,7 +42,8 @@ var vm = new Vue({
         uploadHttpRequest(param) {
             if (this.paperTitle.length > 0 && this.fileList.length > 0) {
                 let formData = new FormData()
-                formData.append('file', param.file)
+                formData.append('paper', param.file)
+                formData.append('title', this.paperTitle)
                 this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', formData)
                     .then(
                         (res) => {
@@ -60,6 +61,7 @@ var vm = new Vue({
             if (this.paperTitle.length > 0 && this.fileList.length > 0) {
                 this.$refs.upload.submit()
                 this.$refs.upload.clearFiles()
+                this.paperTitle = ""
             }
         }
     }

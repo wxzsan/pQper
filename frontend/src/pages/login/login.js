@@ -38,10 +38,8 @@ var vm = new Vue({
         .then(
           (res) => {
             res = res.data
-            console.log(res)
-
             if (res.code === 200) {
-              alert("登录成功")
+              window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
             } else {
               alert("登录失败")
             }
@@ -49,7 +47,6 @@ var vm = new Vue({
         )
     },
     to_register: function () {
-      console.log('跳至注册')
       window.location.href = "http://127.0.0.1:8000/user/register.html";
     },
     check_email: function () {
@@ -65,8 +62,6 @@ var vm = new Vue({
       return true
     },
     check: function () {
-      console.log('check')
-      console.log(this.message)
       if (!this.check_email()) {
         this.message = '邮箱格式错误'
         return
@@ -75,7 +70,6 @@ var vm = new Vue({
         this.message = '密码格式错误'
         return
       }
-      console.log('123')
       this.message = ''
     }
   }

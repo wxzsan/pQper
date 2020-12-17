@@ -17,7 +17,8 @@ var vm = new Vue({
       photo: '',
       password: '',
       repeat_password: '',
-      message: ''
+      message: '',
+      search_content: ''
     }
   },
   methods: {
@@ -69,7 +70,7 @@ var vm = new Vue({
       return isLt2M
     },
     to_home_page: function () {
-      window.location.href = 'http://127.0.0.1:8000/home.html'
+      window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
     },
     to_my_profile_page: function () {
       window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
@@ -104,6 +105,12 @@ var vm = new Vue({
             alert('用户不存在')
           }
         })
+    },
+    search: function () {
+      if (this.search_content.length > 0) {
+        var searchContent = btoa(encodeURI(this.search_content))
+        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+      }
     }
   }
 })

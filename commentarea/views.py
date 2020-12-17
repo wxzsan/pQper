@@ -223,6 +223,39 @@ def star_comment_area(request):
             response['data'] = {'msg': form.errors}
             return JsonResponse(response)
 
+@csrf_exempt
+def get_paper(request):
+    response = {}
+    if request.method == 'GET':
+        user_id = check_cookie(request)
+        if user_id == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        print(user_id)
+        form = PaperIdForm(request.GET)
+        if form.is_valid():
+            id = form.cleaned_data['paperId']
+            try:
+                paper = Paper.objects.get(id=id)
+            except Paper.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "paper id does not exist"}
+                return JsonResponse(response)
+            print(paper.path)
+            serializer = PaperSerializer(paper)
+            data = serializer.data
+            print(data)
+            response['code'] = 200
+            response['data'] = {'msg': "success", 'paper': data}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            print(form.errors)
+            return JsonResponse(response)
+
+
 
 @csrf_exempt
 def post_short_comment_for_long_comment(request):

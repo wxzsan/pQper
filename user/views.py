@@ -23,6 +23,18 @@ def adduser(request):
         response['code'] = 200
         response['data'] = {'msg':"success"}
         return JsonResponse(response)
+@csrf_exempt
+def setadmin(request):
+    response = {}
+    if request.method == 'GET':
+        name = request.GET.get('userId')
+        user = User.objects.get(id=name)
+        user.privilege = 1
+        user.save()
+        response['code'] = 200
+        response['data'] = {'msg':"success"}
+        return JsonResponse(response)
+
         
 
 
@@ -105,7 +117,7 @@ def get_user_information(request):
         else:
             try:
                 user = User.objects.get(id=userid)
-                print(user.user_photo)
+                #print(user.user_photo)
                 response['code'] = 200
                 serializer=information_serializer(user)
                 response['data'] = {'msg':"success", 'information':serializer.data}
@@ -201,16 +213,43 @@ def get_star_user_list(request):
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}
             return JsonResponse(response)
-        try:
-            user = User.objects.get(id=userid)
-            serializer = star_serializer(user)
-            response['code'] = 200
-            response['data'] = {'msg': "success",'star_user_list':serializer.data}
-            return JsonResponse(response)
-        except:
+        else:
+            try:
+                user = User.objects.get(id=userid)
+                serializer = star_serializer(user)
+                response['code'] = 200
+                response['data'] = {'msg': "success",'star_user_list':serializer.data}
+                #print("here")
+                return JsonResponse(response)
+            except:
+                response['code'] = 300
+                response['data'] = {'msg': "User does not exist"}
+                return JsonResponse(response)
+
+    elif request.method == 'GET':
+        #print("here")
+        #先检查cookie
+        userid=check_cookie(request)
+        if userid == -1:
             response['code'] = 300
-            response['data'] = {'msg': "User does not exist"}
+            response['data'] = {'msg': "cookie out of date"}
             return JsonResponse(response)
+        else:
+            try:
+                user = User.objects.get(id=userid)
+                serializer = star_serializer(user)
+                response['code'] = 200
+                response['data'] = {'msg': "success",'star_user_list':serializer.data}
+                return JsonResponse(response)
+            except:
+                response['code'] = 300
+                response['data'] = {'msg': "User does not exist"}
+                return JsonResponse(response)
+
+    else:
+        response['code'] = 300
+        response['data'] = {'msg':"path wrong"}
+        return JsonResponse(response)
 
 
 @csrf_exempt

@@ -14,7 +14,8 @@ var vm = new Vue({
     return {
       email: '',
       name: '',
-      photo: ''
+      photo: '',
+      search_content: ''
     }
   },
   methods: {
@@ -42,7 +43,7 @@ var vm = new Vue({
       window.location.href = 'http://127.0.0.1:8000/user/settingpage.html'
     },
     to_home_page: function () {
-      window.location.href = 'http://127.0.0.1:8000/home.html'
+      window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
     },
     to_my_profile_page: function () {
       window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
@@ -57,6 +58,12 @@ var vm = new Vue({
       if (command === 'a') this.to_home_page()
       else if (command === 'b') this.to_my_profile_page()
       else if (command === 'c') this.quit()
+    },
+    search: function () {
+      if (this.search_content.length > 0) {
+        var searchContent = btoa(encodeURI(this.search_content))
+        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+      }
     }
   }
 })

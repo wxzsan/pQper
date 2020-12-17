@@ -29,4 +29,5 @@ urlpatterns = {
     path('manageComment.html', TemplateView.as_view(template_name = 'manageComment.html')),
     path('requestCreateCommentArea.html', TemplateView.as_view(template_name = 'requestCreateCommentArea.html')),
     path('myCommentAreaList.html', TemplateView.as_view(template_name = 'myCommentAreaList.html')),
+    path('get_paper', views.get_paper),
 }
