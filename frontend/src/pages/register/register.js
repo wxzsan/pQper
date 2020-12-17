@@ -24,7 +24,6 @@ var vm = new Vue({
   methods: {
     try_register: function () {
       this.check();
-      console.log('hello world')
       if (this.message !== "") {
         return;
       }
@@ -42,8 +41,6 @@ var vm = new Vue({
         .then(
           (res) => {
             res = res.data
-            console.log(res)
-
             if (res.code === 200) {
               window.location.href = "http://127.0.0.1:8000/user/login.html";
             } else {
@@ -51,7 +48,6 @@ var vm = new Vue({
             }
           }
         )
-      console.log("尝试注册");
     },
     check_name: function () {
       if (this.name.length === 0 || this.name.length > 20) {
@@ -78,7 +74,6 @@ var vm = new Vue({
       return true;
     },
     check: function () {
-      console.log("check");
       if (!this.check_name()) {
         this.message = "用户名格式错误";
         return;
