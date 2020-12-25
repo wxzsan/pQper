@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'haystack',
     'commentarea',
     'user',
+    'star',
     'SearchAndResults',
     'rest_framework',
 ]
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'pQper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist'],
+        'DIRS': ['frontend/dist', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,5 +148,7 @@ HAYSTACK_CONNECTIONS = {
 #自动更新索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
+
+# 文件存储路径和url
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL="/media/" 
+MEDIA_URL="/media/"

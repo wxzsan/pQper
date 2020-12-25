@@ -34,11 +34,21 @@ def SearchForPapersAndUsers(request):
             searchString = request.GET.get('searchString')
 
             # 查找相关的论文
-            # 使用全文索引
-            response['data']['findCommentAreas'] = list(
+            # 使用全文索引获得可能的paper的id
+            paper_ids = list(
                 SearchQuerySet().
                 filter(content=searchString).
-                values("title", "path"))
+                values("pk"))
+
+            # 根据 paper_id 获得paper 的 id, title, path, commentareaid
+            for paper_id in paper_ids:
+                p = Paper.objects.get(id=paper_id['pk'])
+                paper_data = dict()
+                paper_data["id"] = p.id
+                paper_data["title"] = p.title
+                paper_data["path"] = p.path
+                paper_data["commentareaid"] = list(p.commentarea_set.values("id"))[0]['id']
+                response['data']['findCommentAreas'].append(paper_data)
 
             # 查找相关的用户
             # 直接全字匹配
@@ -60,22 +70,21 @@ def SearchForPapersAndUsers(request):
 def GetMomments(request):
     response = {}
     if request.method == 'POST':
-
+        # print(request.body)
         # 不使用 cookie 测试的话，就将 debugflag = TRUE
-        debugflag = FALSE
+        debugflag = True
         if debugflag == False:
-        # 根据 cookie 判断能否查看动态
+            # 根据 cookie 判断能否查看动态
             userid = check_cookie(request)
             if userid == -1:
                 response['code'] = 300
                 response['data'] = {'msg': 'cookie out of date'}
                 return JsonResponse(response)
         else:
-            userid = request.POST.get('userid')
+            userid = json.loads(request.body)['userid']
         
         # 请传送时间戳
-        time_stamp = int(request.POST.get('time'))
-        start_time = datetime.fromtimestamp(time_stamp)
+        start_time = datetime.fromtimestamp(int(json.loads(request.body)['time']))
         user = User.objects.get(id=userid)
 
         try:
@@ -93,14 +102,58 @@ def GetMomments(request):
                     User.objects.get(id=friends_id).
                     post_long_comment.
                     filter(post_time__gte = start_time).
-                    values("title", "content", "post_time", "poster")
-                    )
+                    values("id", "title", "content", "post_time", "poster")
+                    ) 
+
+                friend_name = User.objects.get(id=friends_id).user_name
+                for i in friends_recent_long_comment:
+                    i['poster_name'] = friend_name
                 friends_long_comment_list.extend(friends_recent_long_comment)
+
+                friends_long_comment_list.sort(key= lambda x : x["post_time"])
 
             response['code'] = 200
             response['data'] = {
                 'msg': "success",
                 'LongComments': friends_long_comment_list
+                }
+            return JsonResponse(response)
+
+        except:
+            # 多半是数据库挂了
+            return JsonResponse({{"code" : 300}, {"code", "db corrupted"}})
+
+    else:
+        # 请用 POST
+        return JsonResponse({"code" : 600})
+
+# 获得个人的所有动态
+@csrf_exempt
+def GetSelfMomments(request):
+    response = {}
+    if request.method == 'POST':
+        # 不使用 cookie 测试的话，就将 debugflag = TRUE
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            userid = check_cookie(request)
+            if userid == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+        else:
+            userid = json.loads(request.body)['userid']
+        
+
+        try:
+            user = User.objects.get(id=userid)
+            long_comment_list = list(user.post_long_comment.values("id", "title", "content", "post_time"))
+            long_comment_list.sort(key=lambda x : x["post_time"])
+
+            response['code'] = 200
+            response['data'] = {
+                'msg': "success",
+                'LongComments': long_comment_list
                 }
             return JsonResponse(response)
 
