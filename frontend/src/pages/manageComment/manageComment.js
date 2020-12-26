@@ -43,19 +43,16 @@ var vm = new Vue({
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment_list')
                 .then(
                     (res) => {
-                        console.log(res)
                         res = res.data
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
                         }
                         res = res.data
-                        res.longCommentList.push({id: 28})
                         res.longCommentList.forEach((longCommentId) => {
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + longCommentId.id)
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
@@ -81,11 +78,10 @@ var vm = new Vue({
                 this.longComment = this.longCommentList[0]
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中长评处理

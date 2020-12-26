@@ -35,7 +35,6 @@ var vm = new Vue({
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_create_comment_area_request')
                 .then(
                     (res) => {
-                        console.log(res)
                         res = res.data
                         if (res.code != 200) {
                             console.log('failed to initialize')
@@ -45,7 +44,6 @@ var vm = new Vue({
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + element.paper)
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
@@ -66,11 +64,10 @@ var vm = new Vue({
                 this.paperDir = this.createRequestList[0].path
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中申请事件处理
@@ -94,8 +91,7 @@ var vm = new Vue({
         },
         // 拒绝申请事件处理
         handleRefuse(count) {
-            //! 待修改，应当有拒绝批准的选项
-            this.$axios.get('http://127.0.0.1:8000/commentarea/approve_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
+            this.$axios.get('http://127.0.0.1:8000/commentarea/reject_create_comment_area_request?requestId=' + this.createRequestList[count - 1].requestId)
                 .then(
                     (res) => {
                         res = res.data

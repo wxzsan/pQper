@@ -17,12 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
-                        <!--TODO-->
-                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
-                        <!--TODO-->
-                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
-                        <!--TODO-->
+                        <el-dropdown-item onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -35,19 +32,16 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
-                    <!--TODO-->
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='../SearchAndResults/HomePage.html'">主菜单</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
                     <br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='myCommentAreaList.html'">我的论文
-                        <!--TODO-->
                     </el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
-                    <!--TODO-->
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
                 <!--论文区域-->
                 <el-main>
-                    <embed src="file:///C:/Users/hp/Desktop/1.pdf" type="application/pdf" width="100%" height="100%">
+                    <embed v-bind:src="paperDir" type="application/pdf" width="100%" height="100%">
                 </el-main>
                 <!--右边栏-->
                 <el-aside width="350px">
@@ -84,6 +78,15 @@
                         </el-tab-pane>
                         <!--长评-->
                         <el-tab-pane label="长评" name="third">
+                            <div v-for="count in longCommentList.length" class="comment">
+                                <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longCommentList[count -
+                                        1].title}}{% endverbatim %}</b></p>
+                                <p class="text" style="font-size: 17px;">{% verbatim %}{{longCommentList[count - 1].poster}}{% endverbatim %}</p>
+                                <p class="text" style="font-size: 12px;">{% verbatim %}{{longCommentList[count - 1].post_time}}{% endverbatim %}</p>
+                                <p class="text" style="font-size: 15px;">{% verbatim %}{{longCommentList[count - 1].content}}{% endverbatim %}</p>
+                                <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{longCommentList[count - 1].star_number}}{% endverbatim %}</el-button>
+                                <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleOpenLongComment(count)">全文</el-button>
+                            </div>
                         </el-tab-pane>
                         <!--发表评论-->
                         <el-tab-pane label="发表评论" name="fourth">

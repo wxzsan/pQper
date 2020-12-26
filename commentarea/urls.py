@@ -23,6 +23,8 @@ urlpatterns = {
     path('cancel_star_comment',views.cancel_star_comment),
     path('cancel_rose_comment', views.cancel_rose_comment),
     path('cancel_star_comment_area', views.cancel_star_comment_area),
+    path('get_paper', views.get_paper),
+    path('reject_create_comment_area_request', views.reject_create_comment_area_request),
     path('approveCreateCommentArea.html', TemplateView.as_view(template_name = 'approveCreateCommentArea.html')),
     path('commentArea.html', TemplateView.as_view(template_name = 'commentArea.html')),
     path('longComment.html', TemplateView.as_view(template_name = 'longComment.html')),
@@ -30,5 +32,4 @@ urlpatterns = {
     path('requestCreateCommentArea.html', TemplateView.as_view(template_name = 'requestCreateCommentArea.html')),
     path('myCommentAreaList.html', TemplateView.as_view(template_name = 'myCommentAreaList.html')),
     path('starCommentList.html', TemplateView.as_view(template_name = 'starCommentList.html')),
-    path('get_paper', views.get_paper),
 }

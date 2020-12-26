@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -33,12 +33,12 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='../SearchAndResults/HomePage.html'">主菜单</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
                     <br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='myCommentAreaList.html'">我的论文
                     </el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
                 <!--论文区域-->
                 <el-main>

@@ -44,7 +44,6 @@ var vm = new Vue({
         // 页面初始化，填入所有评论数据
         initDatas() {
             this.longComment.id = parseInt(this.getParams("id"))
-            //! 需要修改，等待API
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + this.longComment.id)
                 .then(
                     (res) => {
@@ -61,11 +60,9 @@ var vm = new Vue({
                         this.longComment.content = res.comment.content
                         this.longComment.has_star = res.comment.star
                         res.comment.short_comment_list.forEach((shortCommentId) => {
-                            console.log(shortCommentId)
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
@@ -89,11 +86,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         handleRose(count) {

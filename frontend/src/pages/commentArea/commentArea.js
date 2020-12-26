@@ -65,7 +65,6 @@ var vm = new Vue({
                         this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper)
                             .then(
                                 (response) => {
-                                    console.log(response)
                                     response = response.data
                                     if (response.code != 200) {
                                         console.log('failed to initialize')
@@ -103,7 +102,6 @@ var vm = new Vue({
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + longCommentId)
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
@@ -126,11 +124,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 点赞短评事件处理
@@ -204,7 +201,7 @@ var vm = new Vue({
             }
         },
         // 收藏长评事件处理
-        handleStar1(count) {
+        handleStar(count) {
             if (!this.longCommentList[count - 1].has_star) {
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                     .then(
@@ -323,6 +320,9 @@ var vm = new Vue({
                     )
             }
         },
+        handleOpenLongComment(count) {
+            window.location.href = 'longComment.html?id=' + this.longCommentList[count - 1].id
+        },
         getRoseButtonType(count) {
             if (this.shortCommentList[count - 1].has_rose)
                 return "info"
@@ -335,7 +335,7 @@ var vm = new Vue({
             else
                 return "warning"
         },
-        getStarButtonType1(count) {
+        getStarButtonType(count) {
             if (this.longCommentList[count - 1].has_star)
                 return "info"
             else
