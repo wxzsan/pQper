@@ -3,6 +3,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import $ from 'jquery'
 
 
 Vue.use(ElementUI)
@@ -10,7 +11,8 @@ Vue.prototype.$axios = axios
   //let PDFJS = require('pdfjs-dist')
 
 let PDFJS = require('pdfjs-dist')
-console.log(PDFJS)
+PDFJS.workerSrc = require('pdfjs-dist/build/pdf.worker.entry')
+PDFJS.imageResourcesPath = 'http://127.0.0.1:8080/static/'
 
 var vm = new Vue({
   el: '#app',
@@ -79,6 +81,33 @@ var vm = new Vue({
             viewport: viewport
           }
           page.render(renderContext)
+            .then(function () {
+              // Returns a promise, on resolving it will return annotation data of page
+              return page.getAnnotations();
+            }).then(function (annotationData) {
+              // PDF canvas
+              var pdf_canvas = $("#the-canvas" + num);
+
+              // Canvas offset
+              var canvas_offset = pdf_canvas.offset();
+
+              // Canvas height
+              var canvas_height = pdf_canvas.get(0).height;
+
+              // Canvas width
+              var canvas_width = pdf_canvas.get(0).width;
+
+              // CSS for annotation layer
+              $("#annotation-layer" + num).css({ left: canvas_offset.left + 'px', top: canvas_offset.top + 'px', height: canvas_height + 'px', width: canvas_width + 'px' });
+
+              // Render the annotation layer
+              PDFJS.AnnotationLayer.render({
+                viewport: viewport.clone({ dontFlip: true }),
+                div: $("#annotation-layer" + num).get(0),
+                annotations: annotationData,
+                page: page
+              });
+            });
           if (this.pdf_pages > num) {
             this._renderPage(num + 1)
           }
