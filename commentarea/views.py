@@ -3,6 +3,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import sys
+from django.http import HttpResponse, Http404, FileResponse
 
 sys.path.append('..')
 from user.models import User
@@ -12,6 +13,7 @@ from django.forms.models import model_to_dict
 from commentarea.serializers import *
 from .forms import *
 from user.views import check_cookie
+from pQper.settings import *
 
 
 # Create your views here.
@@ -243,12 +245,20 @@ def get_paper(request):
                 response['data'] = {'msg': "paper id does not exist"}
                 return JsonResponse(response)
             print(paper.path)
-            serializer = PaperSerializer(paper)
-            data = serializer.data
-            print(data)
-            response['code'] = 200
-            response['data'] = {'msg': "success", 'paper': data}
-            return JsonResponse(response)
+            #serializer = PaperSerializer(paper)
+            #data = serializer.data
+            print(MEDIA_ROOT + '/' + paper.path)
+            try:
+                response = FileResponse(open(MEDIA_ROOT + '/' + paper.path, 'rb'))
+                response['content_type'] = "application/octet-stream"
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(paper.path)
+                return response
+            except Exception as e:
+                print(e)
+                raise Http404
+            #response['code'] = 200
+            #response['data'] = {'msg': "success", 'paper': data}
+            #return JsonResponse(response)
         else:
             response['code'] = 300
             response['data'] = {'msg': form.errors}
