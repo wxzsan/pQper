@@ -16,7 +16,7 @@ var vm = new Vue({
       name: '',
       photo: '',
       id: '',
-      search_content: '',
+      searchInput: '',
       user_data: [{
         userName: 'fuckpps',
         userAvatar: '1.png',
@@ -67,10 +67,10 @@ var vm = new Vue({
       else if (command === 'b') this.to_my_profile_page()
       else if (command === 'c') this.quit()
     },
-    search: function () {
-      if (this.search_content.length > 0) {
-        var searchContent = btoa(encodeURI(this.search_content))
-        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+    handleSearch() {
+      if (this.searchInput.length > 0) {
+        var searchContent = btoa(encodeURI(this.searchInput))
+        window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
       }
     },
     get_both_star_list: function () {

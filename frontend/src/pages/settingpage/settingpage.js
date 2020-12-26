@@ -18,7 +18,7 @@ var vm = new Vue({
       password: '',
       repeat_password: '',
       message: '',
-      search_content: ''
+      searchInput: ''
     }
   },
   methods: {
@@ -96,7 +96,6 @@ var vm = new Vue({
           } else if (res.code === 200) {
             this.name = res.data.information.user_name
             this.email = res.data.information.user_email
-            console.log(res.data.information)
             if (res.data.information.user_photo !== '')
               this.photo = res.data.information.user_photo
             else
@@ -106,10 +105,10 @@ var vm = new Vue({
           }
         })
     },
-    search: function () {
-      if (this.search_content.length > 0) {
-        var searchContent = btoa(encodeURI(this.search_content))
-        window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+    handleSearch() {
+      if (this.searchInput.length > 0) {
+        var searchContent = btoa(encodeURI(this.searchInput))
+        window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
       }
     }
   }

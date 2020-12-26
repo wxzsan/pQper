@@ -11,26 +11,33 @@
         <el-container>
             <el-header height="50px">
                 <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
-                <el-dropdown style="float: right; width: 50px;" @command="handle_command">
+                <!--我的下拉菜单-->
+                <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="a">个人主页</el-dropdown-item>
-                        <el-dropdown-item command="b">个人信息</el-dropdown-item>
-                        <el-dropdown-item command="c">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="to_home_page">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="to_my_profile_page">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="quit">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-button @click="search" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;">搜索</el-button>
+                <!--搜索框-->
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 5px;">
-                    <el-input v-model="search_content" placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
                 </el-col>
             </el-header>
             <el-container>
+                <!--左边栏-->
                 <el-aside width="120px">
-                    <br><br>
-                    <el-button type="primary" icon="el-icon-menu">主菜单</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on">收藏夹</el-button><br>
-                    <el-button type="primary" icon="el-icon-document">我的论文</el-button><br>
-                    <el-button type="primary" icon="el-icon-info">关于</el-button>
+                    <div class="mySimpleInfo">
+                        <el-avatar :size="100" :src="photo">user</el-avatar>
+                        <p style="text-align: center;">{% verbatim %}{{name}}{% endverbatim %}</p>
+                    </div>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
                 <el-main>
                     <div class="horizontally_vertically_center" style="height:100%;font-size: xx-large;">
