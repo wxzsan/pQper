@@ -28,11 +28,10 @@ var vm = new Vue({
             return null
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         handleChange(file, fileList) {

@@ -44,8 +44,7 @@ var vm = new Vue({
         // 页面初始化，填入所有评论数据
         initDatas() {
             this.longComment.id = parseInt(this.getParams("id"))
-            //! 需要修改，等待API
-            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + this.longComment.id)
+            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + this.longComment.id)
                 .then(
                     (res) => {
                         res = res.data
@@ -55,7 +54,7 @@ var vm = new Vue({
                         }
                         res = res.data
                         this.longComment.poster = res.comment.poster
-                        this.longComment.post_time = res.comment.post_time
+                        this.longComment.post_time = res.comment.post_time.slice(0, 10)
                         this.longComment.title = res.comment.title
                         this.longComment.star_number = res.comment.star_number
                         this.longComment.content = res.comment.content
@@ -73,7 +72,7 @@ var vm = new Vue({
                                         this.shortCommentList.push({
                                             id: response.comment.id,
                                             poster: response.comment.poster,
-                                            post_time: response.comment.post_time,
+                                            post_time: response.comment.post_time.slice(0, 10),
                                             content: response.comment.content,
                                             rose_number: response.comment.rose_number,
                                             egg_number: response.comment.egg_number,
@@ -87,11 +86,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         handleRose(count) {

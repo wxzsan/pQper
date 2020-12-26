@@ -50,7 +50,7 @@ var vm = new Vue({
                         }
                         res = res.data
                         res.longCommentList.forEach((longCommentId) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + longCommentId)
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + longCommentId.id)
                                 .then(
                                     (response) => {
                                         response = response.data
@@ -63,7 +63,7 @@ var vm = new Vue({
                                             id: response.comment.id,
                                             poster: response.comment.poster,
                                             title: response.comment.title,
-                                            post_time: response.comment.post_time,
+                                            post_time: response.comment.post_time.slice(0, 10),
                                             content: response.comment.content,
                                             star_number: response.comment.star_number,
                                             has_star: response.comment.star,
@@ -78,11 +78,10 @@ var vm = new Vue({
                 this.longComment = this.longCommentList[0]
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中长评处理

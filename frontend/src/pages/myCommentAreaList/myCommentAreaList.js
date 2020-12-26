@@ -41,9 +41,10 @@ var vm = new Vue({
                         }
                         res = res.data
                         res.commentAreaList.forEach((commentAreaId) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + commentAreaId)
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_comment_area?commentAreaId=' + commentAreaId.id)
                                 .then(
                                     (response) => {
+                                        response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
@@ -62,11 +63,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         handleStarArea(count) {
@@ -74,6 +74,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.commentAreaInfoList[count - 1].area_has_star = true
                                 this.commentAreaInfoList[count - 1].area_star_number += 1
@@ -88,6 +89,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment_area?commentAreaId=' + this.commentAreaInfoList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.commentAreaInfoList[count - 1].area_has_star = false
                                 this.commentAreaInfoList[count - 1].area_star_number -= 1
@@ -98,6 +100,9 @@ var vm = new Vue({
                         }
                     )
             }
+        },
+        handleJump(count){
+            window.location.href = 'commentArea.html?id=' + this.commentAreaInfoList[count - 1].id
         },
         getStarAreaButtonType(count) {
             if (this.commentAreaInfoList[count - 1].area_has_star)

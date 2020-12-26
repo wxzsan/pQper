@@ -65,14 +65,13 @@ var vm = new Vue({
                         this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper)
                             .then(
                                 (response) => {
-                                    console.log(response)
                                     response = response.data
                                     if (response.code != 200) {
                                         console.log('failed to initialize')
                                         return
                                     }
                                     response = response.data
-                                    this.paperDir = response.paper.path
+                                    this.paperDir = 'http://127.0.0.1:8000/media/' + response.paper.path
                                     this.paperInfo.title = response.paper.title
                                 }
                             )
@@ -80,6 +79,7 @@ var vm = new Vue({
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                 .then(
                                     (response) => {
+                                        response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
@@ -88,7 +88,7 @@ var vm = new Vue({
                                         this.shortCommentList.push({
                                             id: response.comment.id,
                                             poster: response.comment.poster,
-                                            post_time: response.comment.post_time,
+                                            post_time: response.comment.post_time.slice(0, 10),
                                             content: response.comment.content,
                                             rose_number: response.comment.rose_number,
                                             egg_number: response.comment.egg_number,
@@ -99,9 +99,10 @@ var vm = new Vue({
                                 )
                         })
                         res.comment_area.long_comment_list.forEach((longCommentId) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=true&longCommentId=' + longCommentId)
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + longCommentId)
                                 .then(
                                     (response) => {
+                                        response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
@@ -110,7 +111,7 @@ var vm = new Vue({
                                         this.longCommentList.push({
                                             id: response.comment.id,
                                             poster: response.comment.poster,
-                                            post_time: response.comment.post_time,
+                                            post_time: response.comment.post_time.slice(0, 10),
                                             title: response.comment.title,
                                             content: response.comment.content,
                                             star_number: response.comment.star_number,
@@ -123,11 +124,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 点赞短评事件处理
@@ -137,6 +137,7 @@ var vm = new Vue({
                     this.$axios.get('http://127.0.0.1:8000/commentarea/rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                         .then(
                             (res) => {
+                                res = res.data
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_rose = true
                                     this.shortCommentList[count - 1].rose_number += 1
@@ -151,6 +152,7 @@ var vm = new Vue({
                     this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_rose_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                         .then(
                             (res) => {
+                                res = res.data
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_rose = false
                                     this.shortCommentList[count - 1].rose_number -= 1
@@ -170,6 +172,7 @@ var vm = new Vue({
                     this.$axios.get('http://127.0.0.1:8000/commentarea/egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                         .then(
                             (res) => {
+                                res = res.data
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_egg = true
                                     this.shortCommentList[count - 1].egg_number += 1
@@ -184,6 +187,7 @@ var vm = new Vue({
                     this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_egg_comment?shortCommentId=' + this.shortCommentList[count - 1].id)
                         .then(
                             (res) => {
+                                res = res.data
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_egg = false
                                     this.shortCommentList[count - 1].egg_number -= 1
@@ -202,6 +206,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.longCommentList[count - 1].has_star = true
                                 this.longCommentList[count - 1].star_number += 1
@@ -216,6 +221,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment?longCommentId=' + this.longCommentList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.longCommentList[count - 1].has_star = false
                                 this.longCommentList[count - 1].star_number -= 1
@@ -242,6 +248,7 @@ var vm = new Vue({
                 this.$axios.post('http://127.0.0.1:8000/commentarea/post_short_comment', JSON.stringify(data), config)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.shortCommentInput = ""
                                 this.$message("发送成功")
@@ -268,6 +275,7 @@ var vm = new Vue({
                 this.$axios.post('http://127.0.0.1:8000/commentarea/post_long_comment', JSON.stringify(data), config)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.longCommentInput.title = ""
                                 this.longCommentInput.content = ""
@@ -284,6 +292,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.area_has_star = true
                                 this.area_star_number += 1
@@ -299,6 +308,7 @@ var vm = new Vue({
                 this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment_area?commentAreaId=' + this.commentAreaId)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.area_has_star = false
                                 this.area_star_number -= 1
@@ -309,6 +319,9 @@ var vm = new Vue({
                         }
                     )
             }
+        },
+        handleOpenLongComment(count) {
+            window.location.href = 'longComment.html?id=' + this.longCommentList[count - 1].id
         },
         getRoseButtonType(count) {
             if (this.shortCommentList[count - 1].has_rose)
