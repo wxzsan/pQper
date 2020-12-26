@@ -62,19 +62,7 @@ var vm = new Vue({
                         this.paperInfo.title = res.comment_area.name
                         this.area_star_number = res.comment_area.star_number
                         this.area_has_star = res.comment_area.star
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper)
-                            .then(
-                                (response) => {
-                                    response = response.data
-                                    if (response.code != 200) {
-                                        console.log('failed to initialize')
-                                        return
-                                    }
-                                    response = response.data
-                                    this.paperDir = 'http://127.0.0.1:8000/media/' + response.paper.path
-                                    this.paperInfo.title = response.paper.title
-                                }
-                            )
+                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper
                         res.comment_area.short_comment_list.forEach((shortCommentId) => {
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                 .then(

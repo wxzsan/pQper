@@ -41,27 +41,17 @@ var vm = new Vue({
                             return
                         }
                         res.data.createRequestList.forEach((element) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + element.paper)
-                                .then(
-                                    (response) => {
-                                        response = response.data
-                                        if (response.code != 200) {
-                                            console.log('failed to initialize')
-                                            return
-                                        }
-                                        response = response.data
-                                        this.createRequestList.push({
-                                            requestId: element.id,
-                                            title: response.paper.title,
-                                            path: 'http://127.0.0.1:8000/media/' + response.paper.path,
-                                        })
-                                    }
-                                )
+                            this.createRequestList.push({
+                                requestId: element.id,
+                                requestor: element.requestor,
+                                paperId: element.paper,
+                            })
                         })
                     }
                 )
+            // TODO 默认显示第一个请求
             if (this.createRequestList.length > 0)
-                this.paperDir = this.createRequestList[0].path
+                this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[0].paperId
         },
         // 搜索框事件处理
         handleSearch() {
@@ -72,7 +62,7 @@ var vm = new Vue({
         },
         // 选中申请事件处理
         handleClick(count) {
-            this.paperDir = this.createRequestList[count - 1].path
+            this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[count - 1].paperId
         },
         // 通过申请事件处理
         handleAccept(count) {
