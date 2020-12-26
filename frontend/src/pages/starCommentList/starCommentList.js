@@ -40,8 +40,8 @@ var vm = new Vue({
                             return
                         }
                         res = res.data
-                        res.longCommentList.forEach((starCommentId) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=false&longCommentId=' + starCommentId)
+                        res.starCommentList.forEach((starCommentId) => {
+                            this.$axios.get('http://127.0.0.1:8000/user/get_star_long_comment?starCommentId=' + starCommentId)
                                 .then(
                                     (response) => {
                                         if (response.code != 200) {
@@ -49,13 +49,10 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.comment.push({
-                                            id: response.id,
-                                            poster: response.poster,
-                                            post_time: response.post_time,
-                                            title: response.title,
-                                            star_number: response.star_number,
-                                            content: response.content,
+                                        this.starCommentInfoList.push({
+                                            id: response.star_comment.id,
+                                            title: response.star_comment.name,
+                                            star_number: response.star_comment.star_number,
                                             has_star: true,
                                         })
                                     }
@@ -75,7 +72,7 @@ var vm = new Vue({
         // 收藏评论事件处理
         handleStar(count) {
             if (!this.starCommentInfoList[count - 1].has_star) {
-                this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.starCommentInfoList[count - 1].id)
+                this.$axios.get('http://127.0.0.1:8000/user/star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
                     .then(
                         (res) => {
                             if (res.code === 200) {
@@ -89,7 +86,7 @@ var vm = new Vue({
                     )
             }
             else {
-                this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.starCommentInfoList[count - 1].id)
+                this.$axios.get('http://127.0.0.1:8000/user/cancel_star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
                     .then(
                         (res) => {
                             if (res.code === 200) {
