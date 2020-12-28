@@ -515,6 +515,7 @@ def post_short_comment(request):
             comment_area.short_comment_list.add(short_comment)
             comment_area.save()
             response['code'] = 200
+            response['id'] = short_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
@@ -556,6 +557,7 @@ def post_long_comment(request):
             comment_area.long_comment_list.add(long_comment)
             comment_area.save()
             response['code'] = 200
+            response['id'] = long_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
