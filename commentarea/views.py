@@ -301,6 +301,7 @@ def post_short_comment_for_long_comment(request):
             # 建立长评短评之间的关联
             long_comment.short_comment_list.add(short_comment)
             response['code'] = 200
+            response['id'] = short_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:

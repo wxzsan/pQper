@@ -231,8 +231,39 @@ var vm = new Vue({
                         (res) => {
                             res = res.data
                             if (res.code === 200) {
-                                this.shortCommentInput = ""
-                                this.$message("发送成功")
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + res.id)
+                                .then(
+                                    (response) => {
+                                        response = response.data
+                                        if (response.code != 200) {
+                                            console.log('failed to initialize')
+                                            return
+                                        }
+                                        response = response.data
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.shortCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        content: response.comment.content,
+                                                        rose_number: response.comment.rose_number,
+                                                        egg_number: response.comment.egg_number,
+                                                        has_rose: response.comment.rose,
+                                                        has_egg: response.comment.egg,
+                                                    })
+                                                    this.shortCommentInput = ""
+                                                    this.$message("发送成功")
+                                                }
+                                            )
+                                    }
+                                )
                             }
                             else
                                 this.$message("发送失败")

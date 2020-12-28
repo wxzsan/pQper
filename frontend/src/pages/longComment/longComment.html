@@ -43,7 +43,7 @@
                 <!--长评区域-->
                 <el-main>
                     <div class="comment" style="background-color: #62c48b;">
-                        <p class="text" style="font-size: 20px;">{% verbatim %}{{longComment.title}}{% endverbatim %}
+                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longComment.title}}{% endverbatim %}</b>
                         </p>
                         <p class="text" style="font-size: 17px;">发布者：{% verbatim %}{{longComment.poster}}{% endverbatim %}
                         </p>
@@ -82,7 +82,7 @@
                         <el-tab-pane label="发表评论" name="second">
                             <div class="comment">
                                 <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
-                                <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input><br>
+                                <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input><br><br>
                                 <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-check"
                                     @click="handlePostShortComment()">发送</el-button>
                             </div>
