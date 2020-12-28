@@ -68,3 +68,71 @@ def add_annotation(request):
         response['code'] = 300
         response['data'] = {'msg':'wrong http method, you should use POST method'}
         return JsonResponse(response)
+
+
+@csrf_exempt
+def getChatGroupPapers(request):
+    response = {}
+    if request.method == 'GET':
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            if check_cookie(request) == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+
+        groupId = request.GET.get('chatGroupId')
+
+        try:
+            paperlist = list(
+                ChatGroup.objects.get(id = groupId).paper.values("id", "title", "path")
+            )
+            response['code'] = 200
+            response['data'] = {
+                "msg": "success",
+                "paperList" : paperlist
+            }
+
+            return JsonResponse(response)
+        except:
+                return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})  
+        
+    else:
+        # 请用 GET
+        return JsonResponse({ {"code" : 600}, 
+        {"msg" : "incorrect request method"}})
+
+
+@csrf_exempt
+def getChatGroupMenbers(request):
+    response = {}
+    if request.method == 'GET':
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            if check_cookie(request) == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+
+        groupId = request.GET.get('chatGroupId')
+
+        try:
+            userlist = list(
+                ChatGroup.objects.get(id = groupId).user_list.values("id", "user_name", "user_photo")
+            )
+            response['code'] = 200
+            response['data'] = {
+                "msg": "success",
+                "paperList" : userlist
+            }
+
+            return JsonResponse(response)
+        except:
+                return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})  
+        
+    else:
+        # 请用 GET
+        return JsonResponse({ {"code" : 600}, 
+        {"msg" : "incorrect request method"}})

@@ -6,4 +6,4 @@ from django.db import models
 class ChatGroup(models.Model):
     name = models.CharField(max_length=255)
     user_list = models.ManyToManyField('user.User', related_name='my_chat_group')
-    paper = models.ForeignKey('commentarea.Paper', on_delete=models.CASCADE)
+    paper = models.ManyToManyField('commentarea.Paper')

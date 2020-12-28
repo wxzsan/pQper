@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'commentarea',
     'user',
     'star',
+    'chatgroup',
     'SearchAndResults',
     'rest_framework',
-    'chatgroup',
 ]
 
 MIDDLEWARE = [
