@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'star',
     'SearchAndResults',
     'rest_framework',
+    'chatgroup',
 ]
 
 MIDDLEWARE = [
