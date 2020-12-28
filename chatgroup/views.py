@@ -30,13 +30,11 @@ def add_annotation(request):
         response['data'] = {'msg': "cookie out of date"}
         return JsonResponse(response)
     if request.method == 'POST':
-        print("1******")
         form = AddAnnotationForm(json.loads(request.body))
-        print("3******")
         if form.is_valid():
+            #获取相对坐标
             x = form.cleaned_data['x']
             y = form.cleaned_data['y']
-            print("4******")
             page_num = form.cleaned_data['pageNum']
             paper_id = form.cleaned_data['paperId']
             content = form.cleaned_data['content']
@@ -50,12 +48,12 @@ def add_annotation(request):
             print(MEDIA_ROOT + '/' + paper.path)
             #打开并获取对应的页
             doc = fitz.open(full_path)
-            print(doc.metadata['encryption'])
             page = doc.loadPage(page_num)
-            top_left = (x, y)
+            rect = page.rect
+            #这里乘上这一页的宽和高获取绝对坐标
+            top_left = (x*rect[2], y*rect[3])
             #添加批注
             annot = page.addTextAnnot(top_left, content)
-            print(doc.metadata['encryption'])
             doc.save(full_path, incremental = True, encryption = False)
             response['code'] = 200
             response['data'] = {'msg': "success"}
