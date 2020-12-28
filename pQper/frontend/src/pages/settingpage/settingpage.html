@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>setting page</title>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <el-header height="50px">
+                <p style="font-family: Times; font-size: 30px; position: absolute; top: -15px; color: white;">pQper</p>
+                <!--我的下拉菜单-->
+                <el-dropdown style="float: right; width: 50px;">
+                    <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="to_home_page">个人主页</el-dropdown-item>
+                        <el-dropdown-item @click.native="to_my_profile_page">个人信息</el-dropdown-item>
+                        <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--搜索框-->
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;" @click="handleSearch()">搜索</el-button>
+                <el-col :span="3" style="float: right; margin-top: 5px;">
+                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                </el-col>
+            </el-header>
+            <el-container>
+                <!--左边栏-->
+                <el-aside width="120px">
+                    <div class="mySimpleInfo">
+                        <el-avatar :size="100" :src="photo">user</el-avatar>
+                        <p style="text-align: center;">{% verbatim %}{{name}}{% endverbatim %}</p>
+                    </div>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
+                </el-aside>
+                <el-main>
+                    <div class="horizontally_vertically_center" style="height:100%">
+                        <div>
+                            <div>
+                                <el-upload class="avatar-uploader" name="image" action="http://127.0.0.1:8000/user/upload_avatar" :show-file-list="false" :on-success="handle_avatar_success" :before-upload="before_avatar_upload">
+                                    <img v-if="photo" :src="photo" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                            </div>
+                            <br>
+                            <div class="margin16">
+                                <el-input v-model="name" placeholder="用户名" style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <el-input v-model="password" placeholder="密码" @input="check" show-password style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <el-input v-model="repeat_password" placeholder="重复密码" @input="check" show-password style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <p style="color:#F56C6C">
+                                    {% verbatim %}{{message}}{% endverbatim %}
+                                </p>
+                            </div>
+                            <div class="margin16">
+                                <el-button @click="change">修改</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-main>
+            </el-container>
+            <el-footer height="50px">
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper</p>
+            </el-footer>
+        </el-container>
+    </div>
+</body>
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+    
+    html,
+    body,
+    #app {
+        margin: 0;
+        height: 100%;
+    }
+    
+    .el-container {
+        height: 100%;
+        direction: "vertical";
+    }
+    
+    .el-header {
+        background-color: #b361ff;
+    }
+    
+    .el-footer {
+        background-color: #62c48b;
+    }
+    
+    .el-aside {
+        background-color: #DCDFE6;
+    }
+    
+    .el-main {
+        background-color: #EBEEF5;
+    }
+    
+    .el-button {
+        font-family: 'Pingang SC';
+        width: 108px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+    
+    .el-dropdown p {
+        font-family: 'Pingang SC';
+    }
+    
+    .text {
+        font-family: Times;
+    }
+    
+    .comment {
+        background-color: #b3dbc4;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
+    }
+    
+    .horizontally_vertically_center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .margin16 {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+    
+    .mySimpleInfo {
+        margin: 10px;
+    }
+
+</style>
+
+</html>
