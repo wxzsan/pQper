@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* maintained by Harris */
 
 import Vue from 'vue'
 // import App from './App'
@@ -70,11 +71,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 关注用户事件处理
