@@ -74,7 +74,7 @@ def GetMomments(request):
     if request.method == 'POST':
         # print(request.body)
         # 不使用 cookie 测试的话，就将 debugflag = TRUE
-        debugflag = True
+        debugflag = False
         if debugflag == False:
             # 根据 cookie 判断能否查看动态
             userid = check_cookie(request)
