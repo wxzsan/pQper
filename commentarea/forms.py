@@ -79,3 +79,6 @@ class PaperForm(ModelForm):
 
 class PaperIdForm(forms.Form):
     paperId = forms.IntegerField()
+
+class UserIdForm(forms.Form):
+    userId = forms.IntegerField()

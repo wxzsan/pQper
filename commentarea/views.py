@@ -870,4 +870,32 @@ def cancel_star_comment_area(request):
             response['code'] = 300
             response['data'] = {'msg': form.errors}
             return JsonResponse(response)
-# 拒绝创建讨论区
+
+
+@csrf_exempt
+def get_username(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = UserIdForm(request.GET)
+        if form.is_valid():
+            user_id = form.cleaned_data['userId']
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "user id does not exist"}
+                return JsonResponse(response)
+            response['code'] = 200
+            response['data'] = {'msg': "success", 'username': user.user_name}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
