@@ -73,16 +73,26 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.shortCommentList.push({
-                                            id: response.comment.id,
-                                            poster: response.comment.poster,
-                                            post_time: response.comment.post_time.slice(0, 10),
-                                            content: response.comment.content,
-                                            rose_number: response.comment.rose_number,
-                                            egg_number: response.comment.egg_number,
-                                            has_rose: response.comment.rose,
-                                            has_egg: response.comment.egg,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.shortCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        content: response.comment.content,
+                                                        rose_number: response.comment.rose_number,
+                                                        egg_number: response.comment.egg_number,
+                                                        has_rose: response.comment.rose,
+                                                        has_egg: response.comment.egg,
+                                                    })
+                                                }
+                                            )
                                     }
                                 )
                         })
@@ -96,15 +106,25 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.longCommentList.push({
-                                            id: response.comment.id,
-                                            poster: response.comment.poster,
-                                            post_time: response.comment.post_time.slice(0, 10),
-                                            title: response.comment.title,
-                                            content: response.comment.content,
-                                            star_number: response.comment.star_number,
-                                            has_star: response.comment.star,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.longCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        title: response.comment.title,
+                                                        content: response.comment.content,
+                                                        star_number: response.comment.star_number,
+                                                        has_star: response.comment.star,
+                                                    })
+                                                }
+                                            )
                                     }
                                 )
                         })
@@ -115,7 +135,7 @@ var vm = new Vue({
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 点赞短评事件处理
