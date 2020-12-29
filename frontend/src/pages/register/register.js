@@ -17,7 +17,8 @@ var vm = new Vue({
       email: "",
       password: "",
       password_repeat: "",
-      message: "请输入以上信息"
+      message: "请输入以上信息",
+      public_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAnAIl6VFrjwPg6v2qGMMywlOPoS/fqCk68MHt7RGroVlZJvucD7DqZJDrMyj0Y7VgCsnonsFRPlVB/PDOfywx8WT8UBzeLojjMIYIlET5QxAWvArcG6D6jiolcTDzyFPCjaeb2v4DkniqBvPaOitjm5TEI/wkV0wP9AzpbixDBQIDAQAB'
     }
   },
   methods: {
@@ -92,7 +93,7 @@ var vm = new Vue({
       this.message = "";
     },
     encrypt_data: function (data) {
-      var password_old = this.password
+      var password_old = data
       let encrypt = new JSEncrypt()
       encrypt.setPublicKey(this.public_key)
       var pass_new = encrypt.encrypt(password_old)

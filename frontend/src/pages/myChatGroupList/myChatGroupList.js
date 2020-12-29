@@ -29,7 +29,7 @@ var vm = new Vue({
             }
             return null
         },
-        // 页面初始化，填入所有评论数据
+        // 页面初始化，填入所有数据
         initDatas() {
             let data = {
                 "id": 1,
@@ -44,30 +44,10 @@ var vm = new Vue({
                         }
                         res = res.data
                         res.MyChatGroupList.forEach((chatGroupId) => {
-                            let paperdata = {
-                                "chatGroupId": chatGroupId.id,
-                            }
-                            this.$axios.post('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', JSON.stringify(paperdata))
-                                .then(
-                                    (response) => {
-                                        response = response.data
-                                        if (response.code != 200) {
-                                            console.log('failed to initialize')
-                                            return
-                                        }
-                                        response = response.data
-                                        // 结构体待修改
-                                        response.paperList.forEach((paperId) => {
-                                            this.chatGroupInfoList.push({
-                                                chatGroupId: chatGroupId.id,
-                                                name: chatGroupId.name,
-                                                paperId: paperId.id,
-                                                title: paperId.title,
-                                                path: paperId.path,
-                                            })
-                                        })
-                                    }
-                                )
+                            this.chatGroupInfoList.push({
+                                id: chatGroupId.id,
+                                title: chatGroupId.name,
+                            })
                         })
                     }
                 )
@@ -79,9 +59,9 @@ var vm = new Vue({
                 window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
-        // 跳转待修改
+        // 跳转至单个页面
         handleJump(count){
-            window.location.href = 'http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?$paperId=' + this.chatGroupInfoList[count - 1].id
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleChatGroup.html?id=' + this.chatGroupInfoList[count - 1].id
         },
     }
 })
