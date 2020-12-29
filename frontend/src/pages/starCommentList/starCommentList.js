@@ -40,21 +40,35 @@ var vm = new Vue({
                             return
                         }
                         res = res.data
-                        res.starCommentList.forEach((starCommentId) => {
-                            this.$axios.get('http://127.0.0.1:8000/user/get_star_long_comment?starCommentId=' + starCommentId)
+                        res.longCommentList.forEach((starCommentId) => {
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + starCommentId.id)
                                 .then(
                                     (response) => {
+                                        response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
                                         }
                                         response = response.data
-                                        this.starCommentInfoList.push({
-                                            id: response.star_comment.id,
-                                            title: response.star_comment.name,
-                                            star_number: response.star_comment.star_number,
-                                            has_star: true,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + res.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.starCommentInfoList.push({
+                                                        id: res.longCommentList.id,
+                                                        title: response.comment.title,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        star_number: response.comment.star_number,
+                                                        content: response.comment.content,
+                                                        has_star: true,
+                                                    })
+                                                }
+                                            )
                                     }
                                 )
                         })
@@ -65,15 +79,16 @@ var vm = new Vue({
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 收藏评论事件处理
         handleStar(count) {
             if (!this.starCommentInfoList[count - 1].has_star) {
-                this.$axios.get('http://127.0.0.1:8000/user/star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
+                this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + this.starCommentInfoList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.starCommentInfoList[count - 1].has_star = true
                                 this.starCommentInfoList[count - 1].star_number += 1
@@ -82,18 +97,20 @@ var vm = new Vue({
                                     message: "收藏成功",
                                 })
                             }
-                            else
+                            else {
                                 this.$message({
                                     type: "error",
-                                    message: "收藏失败"
+                                    message: "收藏失败",
                                 })
+                            }
                         }
                     )
             }
             else {
-                this.$axios.get('http://127.0.0.1:8000/user/cancel_star_comment?starCommentId=' + this.starCommentInfoList[count - 1].id)
+                this.$axios.get('http://127.0.0.1:8000/commentarea/cancel_star_comment?longCommentId=' + this.starCommentInfoList[count - 1].id)
                     .then(
                         (res) => {
+                            res = res.data
                             if (res.code === 200) {
                                 this.starCommentInfoList[count - 1].has_star = false
                                 this.starCommentInfoList[count - 1].star_number -= 1
@@ -102,17 +119,18 @@ var vm = new Vue({
                                     message: "取消收藏成功",
                                 })
                             }
-                            else
+                            else {
                                 this.$message({
                                     type: "error",
                                     message: "取消收藏失败",
                                 })
+                            }
                         }
                     )
             }
         },
         handleOpenStarComment(count) {
-            window.location.href = 'starComment.html?id=' + this.starCommentInfoList[count - 1].id
+            window.location.href = 'longComment.html?id=' + this.starCommentInfoList[count - 1].id
         },
         getStarButtonType(count) {
             if (this.starCommentInfoList[count - 1].has_star)
