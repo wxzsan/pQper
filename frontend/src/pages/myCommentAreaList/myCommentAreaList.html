@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -32,11 +32,14 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='#'">收藏夹</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='../SearchAndResults/HomePage.html'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
+                    <br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='myCommentAreaList.html'">我的论文
+                    </el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
+
                 <!--讨论区列表区域-->
                 <el-main>
                     <div class="comment" style="background-color: #62c48b;">
@@ -45,9 +48,10 @@
                     <div class="comment" v-for="count in commentAreaInfoList.length">
                         <p class="text" style="font-size: 17px;">{% verbatim %}{{commentAreaInfoList[count - 1].title}}{% endverbatim %}</p>
                         <el-button style="width: 120px; height: 40px;" v-bind:type="getStarAreaButtonType(count)" icon="el-icon-star-off" @click="handleStarArea(count)">收藏 {% verbatim %}{{commentAreaInfoList[count - 1].star_number}}{% endverbatim %}</el-button>
-                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='#'">全文</el-button>
+                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">全文</el-button>
                     </div>
                 </el-main>
+
             </el-container>
             <!--底栏-->
             <el-footer height="50px">
@@ -61,28 +65,36 @@
     #app {
         height: 100%;
     }
+
     html {
         height: 100%;
     }
+
     body {
         height: 100%;
     }
+
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+
     .el-header {
         background-color: #b361ff;
     }
+
     .el-footer {
         background-color: #62c48b;
     }
+
     .el-aside {
         background-color: #DCDFE6;
     }
+
     .el-main {
         background-color: #EBEEF5;
     }
+
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -91,12 +103,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+
     .text {
         font-family: Times;
     }
+
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;
