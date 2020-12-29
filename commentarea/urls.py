@@ -33,4 +33,5 @@ urlpatterns = {
     path('myCommentAreaList.html', TemplateView.as_view(template_name = 'myCommentAreaList.html')),
     path('starCommentList.html', TemplateView.as_view(template_name = 'starCommentList.html')),
     path('get_username', views.get_username),
+    path('aboutpQper.html', TemplateView.as_view(template_name = 'aboutpQper.html')),
 }
