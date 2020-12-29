@@ -13,3 +13,8 @@ pQper is an online collaborative paper reading webapp
 
 # 关于搜索引擎
 * clone 下来之后要执行 python manage.py rebuild_index 重新建立索引
+
+# 关于pdf渲染与markdown渲染
+* 在本地运行调试用服务器前
+1. pip install tools
+2. npm install showdown
