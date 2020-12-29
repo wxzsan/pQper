@@ -51,7 +51,6 @@ var vm = new Vue({
                             this.$axios.post('http://127.0.0.1:8000/user/get_user_information', JSON.stringify(userdata))
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
@@ -59,10 +58,11 @@ var vm = new Vue({
                                         }
                                         response = response.data.information
                                         this.starUserInfoList.push({
-                                            name:response.user_name,
-                                            email:response.user_email,
-                                            //star_number: 100,
-                                            //has_star: true,
+                                            id: UserId,
+                                            name: response.user_name,
+                                            email: response.user_email,
+                                            star_number: 100,
+                                            has_star: true,
                                         })
                                     }
                                 )
@@ -74,45 +74,62 @@ var vm = new Vue({
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 关注用户事件处理
-        // handleStar(count) {
-        //     if (!this.starUserInfoList[count - 1].has_star) {
-        //         this.$axios.get('http://127.0.0.1:8000/user/star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-        //             .then(
-        //                 (res) => {
-        //                     if (res.code === 200) {
-        //                         this.starUserInfoList[count - 1].has_star = true
-        //                         this.starUserInfoList[count - 1].star_number += 1
-        //                         this.$message("收藏成功")
-        //                     }
-        //                     else
-        //                         this.$message("收藏失败")
-        //                 }
-        //             )
-        //     }
-        //     else {
-        //         this.$axios.get('http://127.0.0.1:8000/user/cancel_star_user?starUserId=' + this.starUserInfoList[count - 1].id)
-        //             .then(
-        //                 (res) => {
-        //                     if (res.code === 200) {
-        //                         this.starUserInfoList[count - 1].has_star = false
-        //                         this.starUserInfoList[count - 1].star_number -= 1
-        //                         this.$message("取消收藏成功")
-        //                     }
-        //                     else
-        //                         this.$message("取消收藏失败")
-        //                 }
-        //             )
-        //     }
-        // },
-        // getStarButtonType(count) {
-        //     if (this.starUserInfoList[count - 1].has_star)
-        //         return "info"
-        //     else
-        //         return "primary"
-        // },
+        handleStar(count) {
+            let userdata = {
+                "id": this.starUserInfoList[count - 1].id,
+            }
+            if (!this.starUserInfoList[count - 1].has_star) {
+                this.$axios.post('http://127.0.0.1:8000/user/add_star_user', JSON.stringify(userdata))
+                    .then(
+                        (res) => {
+                            res = res.data
+                            if (res.code === 200) {
+                                this.starUserInfoList[count - 1].has_star = true
+                                // this.starUserInfoList[count - 1].star_number += 1
+                                this.$message({
+                                    type: "success",
+                                    message: "收藏成功",
+                                })
+                            }
+                            else
+                                this.$message({
+                                    type: "error",
+                                    message: "收藏失败",
+                                })
+                        }
+                    )
+            }
+            else {
+                this.$axios.post('http://127.0.0.1:8000/user/remove_star_user', JSON.stringify(userdata))
+                    .then(
+                        (res) => {
+                            res = res.data
+                            if (res.code === 200) {
+                                this.starUserInfoList[count - 1].has_star = false
+                                // this.starUserInfoList[count - 1].star_number -= 1
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏成功",
+                                })
+                            }
+                            else
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏失败",
+                                })
+                        }
+                    )
+            }
+        },
+        getStarButtonType(count) {
+            if (this.starUserInfoList[count - 1].has_star)
+                return "info"
+            else
+                return "primary"
+        },
     }
 })
