@@ -62,11 +62,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 收藏评论事件处理
@@ -99,6 +98,9 @@ var vm = new Vue({
                         }
                     )
             }
+        },
+        handleOpenStarComment(count) {
+            window.location.href = 'starComment.html?id=' + this.starCommentInfoList[count - 1].id
         },
         getStarButtonType(count) {
             if (this.starCommentInfoList[count - 1].has_star)

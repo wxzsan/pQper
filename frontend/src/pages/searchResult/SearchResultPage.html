@@ -168,7 +168,6 @@
                 this.searchInput = ''
             },
 
-
             // 搜索处理
             handleSearch(){
                 this.searchUserList = []
@@ -190,7 +189,8 @@
                                 this.searchUserList.push(
                                   {
                                     userId: key.id,
-                                    userName: key.user_name
+                                    userName: key.user_name,
+                                    userAvatar: "",
                                   }
                                 )
                               }
@@ -216,6 +216,7 @@
                             }
                           }
                         )
+                      
                 }
             },
 

@@ -301,6 +301,7 @@ def post_short_comment_for_long_comment(request):
             # 建立长评短评之间的关联
             long_comment.short_comment_list.add(short_comment)
             response['code'] = 200
+            response['id'] = short_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
@@ -515,6 +516,7 @@ def post_short_comment(request):
             comment_area.short_comment_list.add(short_comment)
             comment_area.save()
             response['code'] = 200
+            response['id'] = short_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
@@ -556,6 +558,7 @@ def post_long_comment(request):
             comment_area.long_comment_list.add(long_comment)
             comment_area.save()
             response['code'] = 200
+            response['id'] = long_comment.id
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
         else:
@@ -868,4 +871,32 @@ def cancel_star_comment_area(request):
             response['code'] = 300
             response['data'] = {'msg': form.errors}
             return JsonResponse(response)
-# 拒绝创建讨论区
+
+
+@csrf_exempt
+def get_username(request):
+    response = {}
+
+    user_id = check_cookie(request)
+    if user_id == -1:
+        response['code'] = 300
+        response['data'] = {'msg': "cookie out of date"}
+        return JsonResponse(response)
+
+    if request.method == 'GET':
+        form = UserIdForm(request.GET)
+        if form.is_valid():
+            user_id = form.cleaned_data['userId']
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                response['code'] = 300
+                response['data'] = {'msg': "user id does not exist"}
+                return JsonResponse(response)
+            response['code'] = 200
+            response['data'] = {'msg': "success", 'username': user.user_name}
+            return JsonResponse(response)
+        else:
+            response['code'] = 300
+            response['data'] = {'msg': form.errors}
+            return JsonResponse(response)
