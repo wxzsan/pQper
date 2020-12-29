@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
@@ -9,6 +9,10 @@ from django.shortcuts import render, redirect
 from .models import User
 import requests
 import json
+import os
+import sys
+sys.path.append('..')
+from pQper_demo.settings import BASE_DIR
 @csrf_exempt 
 def login(request):
     response = {}
@@ -47,4 +51,13 @@ def register(request):
             user.save()
             return JsonResponse(response)
 
-
+@csrf_exempt
+def get_icon(request):
+    response = {}
+    if request.method == 'GET':
+        test_file = open(os.path.join(BASE_DIR,'user/media/annotation-noicon.svg'), 'rb')
+        response = HttpResponse(content=test_file)
+        response['Content-Type'] = 'application/svg'
+        response['Content-Disposition'] = 'attachment; filename="%s.svg"' \
+                                    % 'whatever'
+        return response
