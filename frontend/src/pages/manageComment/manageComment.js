@@ -160,7 +160,7 @@ var vm = new Vue({
                         (res) => {
                             res = res.data
                             if (res.code === 200) {
-                                this.longCommentList.splice(count - 1, 1);
+                                this.longCommentList.splice(count - 1, 1)
                                 this.$message({
                                     type: "success",
                                     message: "删除成功",
@@ -189,18 +189,20 @@ var vm = new Vue({
                 return "info"
         },
         confirmDelete(count) {
-            this.$confirm('此操作将永久删除该长评, 是否继续？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-            }).then(() => {
-                this.handleDelete(count)
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '操作已取消',
+            if (this.longCommentList[count - 1].is_owner) {
+                this.$confirm('此操作将永久删除该长评, 是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(() => {
+                    this.handleDelete(count)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '操作已取消',
+                    });
                 });
-            });
+            }
         },
     }
 })

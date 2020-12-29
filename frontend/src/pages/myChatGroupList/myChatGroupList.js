@@ -17,6 +17,7 @@ var vm = new Vue({
     },
     data: {
         chatGroupInfoList: new Array(),
+        chatGroupPaperList: new Array(),
         searchInput: "",
     },
     methods: {
@@ -56,15 +57,18 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        // 结构体待修改
+                                        this.chatGroupPaperList.length = 0
                                         response.paperList.forEach((paperId) => {
-                                            this.chatGroupInfoList.push({
-                                                chatGroupId: chatGroupId.id,
-                                                name: chatGroupId.name,
-                                                paperId: paperId.id,
+                                            this.chatGroupPaperList.push({
+                                                id: paperId.id,
                                                 title: paperId.title,
                                                 path: paperId.path,
                                             })
+                                        })
+                                        this.chatGroupInfoList.push({
+                                            id: chatGroupId.id,
+                                            title: chatGroupId.name,
+                                            paperList: this.chatGroupPaperList,
                                         })
                                     }
                                 )
@@ -81,7 +85,7 @@ var vm = new Vue({
         },
         // 跳转待修改
         handleJump(count){
-            window.location.href = 'http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?$paperId=' + this.chatGroupInfoList[count - 1].id
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleChatGroup.html?id=' + this.chatGroupInfoList[count - 1].paperList.id
         },
     }
 })
