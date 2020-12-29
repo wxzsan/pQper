@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <!-- import CSS -->
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <title>SearchResultPage</title>
+  <title>memberInGroup</title>
 </head>
 
 <body>
@@ -48,36 +48,19 @@
                 <!--搜索结果区域-->
                 <el-main>
                   <el-row>
-                    <p class="title" style="font-size: 20px; text-align: center;"><b>搜索结果</b></p>
-                    <el-button type="primary" icon="el-icon-arrow-left" style="width: 120px; float: right; margin-top: 16px;" @click="handleBack()">返回主页</el-button>
+                    <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{chatGroupName}}{% endverbatim %}的所有成员</b></p>
+                    <el-button type="primary" icon="el-icon-arrow-left" style="width: 130px; float: right; margin-top: 16px;" @click="handleBack()">返回讨论组</el-button>
                   </el-row>
 
-                  <el-button-group style = "width : 100%">
-                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=0}">相关用户</el-button>
-                    <el-button style = "width: 48%" type="primary" @click="()=>{searchMode=1}">相关论文讨论区</el-button>
-                  </el-button-group>
-
-                  <div v-if="searchMode==0">
-                    <el-container class ="relatedUserList" v-for="count in searchUserList.length" >
+                  <div class ="relatedUserList" v-for="count in groupMemberList.length">
+                      <el-container>
                         <el-container width = 80%>
-                          <el-avatar :size="40" :src="searchUserList[count-1].userAvatar">user</el-avatar>
-                          <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{searchUserList[count - 1].userName}}{% endverbatim %}</span>
+                          <el-avatar :size="40" :src="groupMemberList[count-1].userAvatar">user</el-avatar>
+                          <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{groupMemberList[count - 1].userName}}{% endverbatim %}</span>
                         </el-container>
-                        <el-button  class = "detailButton"  icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(searchUserList[count - 1].userId)">详情</el-button>
-                    </el-container>
+                        <el-button  class = "detailButton"  icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
+                      </el-container>
                   </div>
-                  <div v-else-if="searchMode==1">
-                    <el-container class ="relatedCommentAreaList" v-for="count in searchCommmentAreaList.length" >
-                        <el-container width = 80%>
-                          <p class="text" style="font-size: 20px; float: center;">Title：{% verbatim %}{{searchCommmentAreaList[count - 1].title}}{% endverbatim %}</p>
-
-                        </el-container>
-                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleCommentAreaDetail(searchCommmentAreaList[count - 1].id)">详情</el-button>
-                    </el-container>
-                  </div>
-                  <div v-else></div>
-
-
 
                 </el-main>
 
@@ -104,40 +87,27 @@
             //userId: 1,  // 调试时暂时如此假设
             myName: "张三",
             myAvatar: "",
-            searchMode: 0, //searchMode=1时，显示相关讨论区，为0时显示用户
-            searchUserList: [/*{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-                address: "",
-            }*/],
 
-            searchCommmentAreaList: [/*{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
+            chatGroupId: 1,
+            chatGroupName: "一个讨论组的名字",
+
+            groupMemberList: [{
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
                 address: "",
             },{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
                 address: "",
             },{
-                id: 1
-                title: "闪电五连鞭的探讨",
-                //createUserName: "Baoguo Ma",
-                address: ""
-            }*/],
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
+                address: "",
+            }],
+
             searchInput: "",
         },
         methods: {
@@ -152,7 +122,6 @@
             },
             // 页面初始化，填入数据
             initDatas(){
-                this.searchInput = atob(decodeURI(this.getParams('searchContent')));
                 this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                     .then(
                         (res) => {
@@ -163,79 +132,57 @@
                             }
                             this.myName = res.data.information.user_name
                             this.myAvatar = res.data.information.user_photo
-                            this.searchMode = 0
                         }
                     )
-                if(this.searchInput.length>0)
-                  this.handleSearch()
-                this.searchInput = ''
+
+                //未完成
+                let data = {
+                  "chatGroupId": this.chatGroupId,
+                }
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMenbers', {params:data})
+                  .then(
+                    (res) => {
+                      res = res.data
+
+                      console.log(res.code)
+                      if (res.code != 200) {
+                          console.log('failed to initialize')
+                          return
+                      }
+
+                      /*resUser = result.data.findUsers
+                      console.log(resUser)
+                      resUser.forEach(
+                        (key)=>{
+                          this.searchUserList.push(
+                            {
+                              userId: key.id,
+                              userName: key.user_name,
+                              userAvatar: "/pQper/media/"+key.user_photo,
+                            }
+                          )
+                          console.log(key.user_photo)
+                        }
+                      )*/
+                    }
+                  )
             },
 
-            // 搜索处理
-            handleSearch(){
-                this.searchUserList = []
-                this.searchCommmentAreaLis = []
-                if(this.searchInput.length > 0){
-                      //console.log(this.searchInput)
-                      let data = {
-                        "searchString": this.searchInput,
-                      }
-                      this.$axios.get('http://127.0.0.1:8000/SearchAndResults/SearchForPapersAndUsers', {params:data})
-                        .then(
-                          (res) => {
-                            result = res.data
-
-                            resUser = result.data.findUsers
-                            console.log(resUser)
-                            resUser.forEach(
-                              (key)=>{
-                                this.searchUserList.push(
-                                  {
-                                    userId: key.id,
-                                    userName: key.user_name,
-                                    userAvatar: "/pQper/media/"+key.user_photo,
-                                  }
-                                )
-                                console.log(key.user_photo)
-                              }
-                            )
-                            console.log()
-                            resCA = result.data.findCommentAreas
-                            console.log(resCA)
-                            resCA.forEach(
-                              (key)=>{
-                                this.searchCommmentAreaList.push(
-                                  {
-                                    id: key.id,
-                                    title: key.title,
-                                    address: key.path
-                                  }
-                                )
-                              }
-                            )
-                            if (result.code === 200) {
-                              console.log("请求成功")
-                            } else {
-                              console.log("请求失败")
-                            }
-                          }
-                        )
-
+            // 搜索框事件处理
+            handleSearch() {
+                if (this.searchInput.length > 0) {
+                    var searchContent = btoa(encodeURI(this.searchInput))
+                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
                 }
             },
 
             //页面跳转处理
             handleBack(){
-              window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
+              window.location.href = "http://127.0.0.1:8000/chatgroup/" //未完成
             },
 
             handleUserDetail(id){
               window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid="+id
-              //console.log(window.location.href)
-            },
-
-            handleCommentAreaDetail(id){
-              window.location.href = "http://127.0.0.1:8000/commentarea/commentArea.html?id="+id
               //console.log(window.location.href)
             },
         }

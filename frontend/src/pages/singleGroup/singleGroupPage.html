@@ -44,27 +44,37 @@
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
-                <!--最新动态区域-->
+                <!--单个讨论组主要区域-->
                 <el-main>
                     <el-row>
-                        <p class="title" style="font-size: 20px; text-align: center;"><b>关注用户的长评发布动态</b></p>
+                        <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{chatGroupName}}{% endverbatim %}</b></p>
+                        <p class="text" style="font-size: 16px;text-align: center; float: left; width: 100px;"><b>组内论文</b></p>
+                        <el-button type="primary" icon="el-icon-arrow-left" style="width: 130px; float: right; margin-top: 6px;" @click="handleBack()">讨论组列表</el-button>
+                        <!--讨论组的下拉菜单-->
+                        <el-dropdown style="float: right; width: 100px; ">
+                            <p style="font-size: 16px; color: black;"><b>管理讨论组</b></p>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/?chatGroupId=' + this.chatGroupId">管理组员</el-dropdown-item>
+                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/?chatGroupId=' + this.chatGroupId" >上传论文</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                         <!--
                         <el-button type="primary" icon="el-icon-refresh" style="width: 80px; float: right; margin-top: 16px;" @click="handleFresh()">刷新</el-button>
                         -->
                     </el-row>
 
-                    <div class="updating" v-for="count in updateInfoList.length">
+                    <div class="papers" v-for="count in paperList.length">
                         <el-container>
                             <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                            <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
+                            <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{paperList[count - 1].title}}{% endverbatim %}</span>
                         </el-container>
-                        <div>
+                        <!--<div>
                             {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
                         </div>
                         <div>
                             {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
-                        </div>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
+                        </div>-->
+                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 200px; float: right;" @click="handleDetail(paperList[count-1].paperId)">进入该论文讨论</el-button>
                     </div>
 
                 </el-main>
@@ -93,26 +103,30 @@
                 userId: 2, // 调试时暂时如此假设
                 userName: "张三",
                 userAvatar: "",
-                updateInfoList: [
-                    /*{
-                                    title: "关注用户的新动态",
-                                    id: 1,
+
+                chatGroupId: 1,
+                chatGroupName: "一个讨论组的名字",
+
+                paperList: [
+                                {
+                                    title: "Title",
+                                    paperId: 1,
                                     poster: "李四",
                                     posttime: "2020/12/16 12:00",
                                     content: "",
                                 },{
-                                    title: "关注用户的新动态",
-                                    id: 1,
+                                    title: "Title",
+                                    paperId: 1,
                                     poster: "李四",
                                     posttime: "2020/12/16 12:00",
                                     content: "",
                                 },{
-                                    title: "关注用户的新动态",
-                                    id: 1,
+                                    title: "Title",
+                                    paperId: 1,
                                     poster: "李四",
                                     posttime: "2020/12/16 12:00",
                                     content: "",
-                                }*/
+                                }
                 ],
                 searchInput: "",
             },
@@ -141,7 +155,26 @@
                                 this.userAvatar = res.data.information.user_photo
                             }
                         )
-                    handleFresh()
+
+                    //获取chatGroupId和chatGroupName，未完成
+                    this.getParams("groupid")
+
+
+                    //获取玩chatGroupId后开始获取论文列表，未完成
+                    let data = {
+                      "chatGroupId": this.chatGroupId,
+                    }
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', {params: data})
+                        .then(
+                            (res) => {
+                                res = res.data
+                                console.log(res.code)
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                            }
+                        )
                 },
 
                 // 搜索框事件处理
@@ -152,51 +185,13 @@
                     }
                 },
 
-                handleFresh() {
-                    this.updateInfoList = []
-                    let timestamp = Number(Date.parse(new Date()))
-                    let timespan = 1000 * 3600 * 24 * 30
-                    let data = {
-                            'userid': this.userId,
-                            //'time': timestamp - timespan,
-                            'time': 100000 //暂时设置成这样，时间戳的数据类型还是不太明白
-                        }
-                        //console.log(data.time, data.userid)
-                        /*let config = {
-                          headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                          },
-                        }*/
-                    console.log(JSON.stringify(data))
-                    this.$axios.post('http://127.0.0.1:8000/SearchAndResults/Momments', JSON.stringify(data))
-                        .then(
-                            (res) => {
-                                res = res.data
-                                result = res.data
-                                    //console.log(result.LongComments)
-                                result.LongComments.forEach(
-                                    (key) => {
-                                        this.updateInfoList.push({
-                                            title: key.title,
-                                            id: key.id,
-                                            poster: key.poster,
-                                            posttime: key.post_time,
-                                            content: key.content,
-                                        })
-                                    }
-                                )
-                                if (res.code === 200) {
-                                    console.log("请求成功")
-                                } else {
-                                    console.log("请求失败")
-                                }
-                            }
-                        )
+                handleDetail(id) {
+                    console.log("in")
+                    window.location.href = "http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?paperId=" + id
                 },
 
-                handleDetail(id) {
-                    window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id=" + id
-                        //console.log("../longComment/longComment.html?id="+ id)
+                handleBack(){
+                  window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
                 },
             }
         })
@@ -267,12 +262,17 @@
         font-family: Times;
     }
 
-    .updating {
-        background-color: #b3dbc4;
-        border-radius: 6px;
+    .papers {
+        background-color: #ebeef5;
+        border-radius: 4px;
+        border-color: #000000;
         margin: 8px;
         padding: 10px;
         margin-bottom: 50px;
+    }
+    .detailButton {
+      background-color: #e8ebf1;
+      border-color: #ebeef5;
     }
 </style>
 
