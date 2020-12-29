@@ -96,12 +96,18 @@ def getChatGroupPapers(request):
 
             return JsonResponse(response)
         except:
-                return JsonResponse({"code" : 300, "msg" : "db corrupted"})  
-        
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
     else:
         # 请用 GET
-        return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
-
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
 
 @csrf_exempt
 def getChatGroupMenbers(request):
@@ -129,8 +135,15 @@ def getChatGroupMenbers(request):
 
             return JsonResponse(response)
         except:
-                return JsonResponse({"code" : 300, "msg" : "db corrupted"})  
-        
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
     else:
         # 请用 GET
-        return JsonResponse({ "code" : 600, "msg" : "incorrect request method"})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
