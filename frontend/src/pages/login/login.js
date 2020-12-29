@@ -29,7 +29,6 @@ var vm = new Vue({
         "email": this.email,
         "password": this.encrypt_data(this.password)
       }
-      console.log(data.password)
       let config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -74,7 +73,7 @@ var vm = new Vue({
       this.message = ''
     },
     encrypt_data: function (data) {
-      var password_old = this.password
+      var password_old = data
       let encrypt = new JSEncrypt()
       encrypt.setPublicKey(this.public_key)
       var pass_new = encrypt.encrypt(password_old)
