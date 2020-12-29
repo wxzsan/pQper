@@ -24,6 +24,7 @@ var vm = new Vue({
         clickY: 0,
         clickPage: 0,
         isClicked: false,
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配

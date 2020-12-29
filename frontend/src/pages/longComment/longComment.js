@@ -31,6 +31,7 @@ var vm = new Vue({
         searchInput: "",
         shortCommentInput: "",
         shortCommentButtonType: "info",
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配

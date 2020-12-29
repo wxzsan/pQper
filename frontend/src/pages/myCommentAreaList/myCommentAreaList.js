@@ -18,6 +18,7 @@ var vm = new Vue({
     data: {
         commentAreaInfoList: new Array(),
         searchInput: "",
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配

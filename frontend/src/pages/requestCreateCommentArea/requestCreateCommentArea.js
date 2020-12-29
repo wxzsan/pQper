@@ -15,7 +15,8 @@ var vm = new Vue({
     data: {
         paperTitle: "",
         searchInput: "",
-        fileList: new Array()
+        fileList: new Array(),
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配

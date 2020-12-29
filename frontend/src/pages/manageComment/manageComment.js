@@ -28,6 +28,7 @@ var vm = new Vue({
             star_number: 0,
             has_star: true,
         },
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -190,7 +191,7 @@ var vm = new Vue({
         },
         confirmDelete(count) {
             if (this.longCommentList[count - 1].is_owner) {
-                this.$confirm('此操作将永久删除该长评, 是否继续？', '提示', {
+                this.$confirm('此操作将永久删除该长评，是否继续？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
