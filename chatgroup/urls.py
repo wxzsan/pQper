@@ -9,4 +9,6 @@ urlpatterns = {
     path('createChatGroup', views.createChatGroup),
     path('chatGroupPaper.html', TemplateView.as_view(template_name = 'chatGroupPaper.html')),
     path('showpdf.html', TemplateView.as_view(template_name = 'showpdf.html')),
+    path('memberInGroupPage.html', TemplateView.as_view(template_name = 'memberInGroupPage.html')),
+    path('singleGroupPage.html', TemplateView.as_view(template_name = 'singleGroupPage.html')),
 }
