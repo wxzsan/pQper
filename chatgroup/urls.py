@@ -7,4 +7,5 @@ urlpatterns = {
     path('getChatGroupPapers', views.getChatGroupPapers),
     path('getChatGroupMenbers', views.getChatGroupMenbers),
     path('createChatGroup', views.createChatGroup),
+    path('uploadChatGroupPaper', views.uploadChatGroupPaper),
 }

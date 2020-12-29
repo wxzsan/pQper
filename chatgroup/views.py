@@ -20,6 +20,8 @@ import os
 
 import fitz
 
+from commentarea.models import PaperFile, Paper
+
 # Create your views here.
 @csrf_exempt
 def add_annotation(request):
@@ -199,6 +201,53 @@ def createChatGroup(request):
         return JsonResponse(response)
     else:
         # 请用 GET
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
+
+@csrf_exempt
+def uploadChatGroupPaper(request):
+    # 论文直接上传到公共论文的数据库中
+    # 然后再在ChatGroup的PaperList里面增加这篇论文的引用
+        
+    response = {}
+    if request.method == 'POST':
+
+        debugflag = True
+        if debugflag == False and check_cookie(request) == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        
+        form = ChatGroupPaperForm(request.POST, request.FILES)
+        if form.is_valid():
+            paper_file = PaperFile(title = form.cleaned_data["title"],
+                                   paper = request.FILES['paper'])
+            paper_file.save()
+            paper = Paper(title = paper_file.title, 
+                          path = paper_file.paper.name)
+            paper.save()
+
+            try:
+                chatGroup = ChatGroup.objects.get(id = form.cleaned_data["chatGroupId"])
+                chatGroup.paper.add(paper)
+
+                response["code"] = 200
+                response["data"] = {
+                    "msg" : "success"
+                }
+                return JsonResponse(response)
+            except:
+                response["code"] = 300
+                response["data"] = {
+                    "msg" : "database corrupted"
+                }
+                return JsonResponse(response)
+
+    else:
+        # 请用 post
         response["code"] = 600
         response["data"] = {
             "msg" : "incorrect request method"
