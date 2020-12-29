@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <title>Approve Create Comment Area</title>
+    <title>Star Comment List</title>
 </head>
 
 <body>
@@ -17,9 +17,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -33,37 +33,35 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">主菜单</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">管理长评</el-button>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='../SearchAndResults/HomePage.html'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='../commentarea/manageComment.html'">管理长评</el-button>
                     <br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">我的论文
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='../commentarea/myCommentAreaList.html'">我的论文
                     </el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
-                <!--论文区域-->
+
+                <!--关注用户列表区域-->
                 <el-main>
-                    <embed v-bind:src="paperDir" type="application/pdf" width="100%" height="100%">
-                </el-main>
-                <!--右边栏-->
-                <el-aside width="350px">
-                    <!--待审核论文列表-->
-                    <div v-for="count in createRequestList.length" class="comment">
-                        <p class="text" style="font-size: 17px;"><b>上传者：{% verbatim %}{{createRequestList[count -
-                                1].requestor}}{% endverbatim %}</b></p>
-                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus"
-                            @click="handleClick(count)">查看</el-button><br>
-                        <el-button style="width: 100px; height: 40px;" type="success" icon="el-icon-check"
-                            @click="handleAccept(count)">通过</el-button>
-                        <el-button style="width: 100px; height: 40px;" type="error" icon="el-icon-close"
-                            @click="handleRefuse(count)">拒绝</el-button>
+                    <div class="comment" style="background-color: #62c48b;">
+                        <p class="text" style="font-size: 20px;"><b>我关注的用户</b></p>
                     </div>
-                </el-aside>
+                    <div class="comment" v-for="count in starUserInfoList.length">
+                        <script>
+                        console.log("there is something");
+                        </script>
+                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starUserInfoList[count - 1].name}}{% endverbatim %}</b></p>
+                        <p class="text" style="font-size: 17px;">{% verbatim %}{{starUserInfoList[count - 1].email}}{% endverbatim %}</p>
+
+                        <!--el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">关注 {% verbatim %}{{starUserList[count - 1].star_number}}{% endverbatim %}</el-button-->
+                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">进入主页</el-button>
+                    </div>
+                </el-main>
+
             </el-container>
             <!--底栏-->
             <el-footer height="50px">
-                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper
-                </p>
+                <p style="font-family: Times; font-size: 15px; float: right; color: white;">Copyright &copy; 2020 pQper</p>
             </el-footer>
         </el-container>
     </div>

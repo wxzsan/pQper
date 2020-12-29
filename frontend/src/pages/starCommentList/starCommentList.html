@@ -2,9 +2,9 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- import CSS -->
-  <title>Star Comment List</title>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <title>Star Comment List</title>
 </head>
 
 <body>
@@ -17,13 +17,14 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="window.location.href='#'">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='#'">退出登录</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../SearchAndResults/UserProfilePage.html'">个人主页</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/myprofile.html'">个人信息</el-dropdown-item>
+                        <el-dropdown-item onclick="window.location.href='../user/login.html'">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
-                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;" @click="handleSearch()">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 4px;"
+                    @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 5px;">
                     <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
                 </el-col>
@@ -32,10 +33,12 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='#'">主菜单</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='#'">收藏夹</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='#'">我的论文</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>
+                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='../SearchAndResults/HomePage.html'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='manageComment.html'">管理长评</el-button>
+                    <br>
+                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='myCommentAreaList.html'">我的论文
+                    </el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
 
                 <!--收藏评论列表区域-->
@@ -43,14 +46,14 @@
                     <div class="comment" style="background-color: #62c48b;">
                         <p class="text" style="font-size: 20px;"><b>我收藏的长评论</b></p>
                     </div>
-                    <div class="comment" v-for="count in starCommentInfoList.length">
-                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starCommentInfoList[count - 1].title}}{% endverbatim %}</b></p>
-                        <p class="text" style="font-size: 17px;">{% verbatim %}{{starCommentInfoList[count - 1].poster}}{% endverbatim %}</p>
-                        <p class="text" style="font-size: 12px;">{% verbatim %}{{starCommentInfoList[count - 1].post_time}}{% endverbatim %}</p>
-                        <p class="text" style="font-size: 15px;">{% verbatim %}{{starCommentInfoList[count - 1].content}}{% endverbatim %}</p>
+                    <div class="comment" v-for="count in starCommentList.length">
+                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starCommentList[count - 1].title}}{% endverbatim %}</b></p>
+                        <p class="text" style="font-size: 17px;">{% verbatim %}{{starCommentList[count - 1].poster}}{% endverbatim %}</p>
+                        <p class="text" style="font-size: 12px;">{% verbatim %}{{starCommentList[count - 1].post_time}}{% endverbatim %}</p>
+                        <p class="text" style="font-size: 15px;">{% verbatim %}{{starCommentList[count - 1].content}}{% endverbatim %}</p>
 
-                        <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{starCommentInfoList[count - 1].star_number}}{% endverbatim %}</el-button>
-                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='#'">全文</el-button>
+                        <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{starCommentList[count - 1].star_number}}{% endverbatim %}</el-button>
+                        <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleOpenStarComment(count)">全文</el-button>
                     </div>
                 </el-main>
 
@@ -67,28 +70,36 @@
     #app {
         height: 100%;
     }
+
     html {
         height: 100%;
     }
+
     body {
         height: 100%;
     }
+
     .el-container {
         height: 100%;
         direction: "vertical";
     }
+
     .el-header {
         background-color: #b361ff;
     }
+
     .el-footer {
         background-color: #62c48b;
     }
+
     .el-aside {
         background-color: #DCDFE6;
     }
+
     .el-main {
         background-color: #EBEEF5;
     }
+
     .el-button {
         font-family: 'Pingang SC';
         width: 108px;
@@ -97,12 +108,15 @@
         margin-left: 6px;
         margin-right: 6px;
     }
+
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+
     .text {
         font-family: Times;
     }
+
     .comment {
         background-color: #b3dbc4;
         border-radius: 6px;

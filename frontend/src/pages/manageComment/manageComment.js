@@ -6,6 +6,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import showdown from 'showdown'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -43,54 +44,67 @@ var vm = new Vue({
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment_list')
                 .then(
                     (res) => {
-                        console.log(res)
                         res = res.data
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
                         }
                         res = res.data
-                        res.longCommentList.push({id: 28})
                         res.longCommentList.forEach((longCommentId) => {
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + longCommentId.id)
                                 .then(
                                     (response) => {
-                                        console.log(response)
                                         response = response.data
                                         if (response.code != 200) {
                                             console.log('failed to initialize')
                                             return
                                         }
                                         response = response.data
-                                        this.longCommentList.push({
-                                            id: response.comment.id,
-                                            poster: response.comment.poster,
-                                            title: response.comment.title,
-                                            post_time: response.comment.post_time.slice(0, 10),
-                                            content: response.comment.content,
-                                            star_number: response.comment.star_number,
-                                            has_star: response.comment.star,
-                                            is_owner: response.comment.create,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to get name')
+                                                        return
+                                                    }
+                                                    this.longCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        title: response.comment.title,
+                                                        content: response.comment.content,
+                                                        star_number: response.comment.star_number,
+                                                        has_star: response.comment.star,
+                                                        is_owner: response.comment.create,
+                                                    })
+                                                    this.longComment = this.longCommentList[0]
+                                                    this.displayMarkdown(1)
+                                                }
+                                            )
                                     }
                                 )
                         })
                     }
                 )
-            if (this.longCommentList.length > 0)
-                this.longComment = this.longCommentList[0]
+        },
+        // 设置显示markdown
+        displayMarkdown(count) {
+            let converter = new showdown.Converter();
+            let html = converter.makeHtml(this.longCommentList[count - 1].content)
+            document.getElementById('comment_md').innerHTML = html
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中长评处理
         handleClick(count) {
             this.longComment = this.longCommentList[count - 1]
+            this.displayMarkdown(count)
         },
         // 收藏/取消收藏长评处理
         handleStar(count) {

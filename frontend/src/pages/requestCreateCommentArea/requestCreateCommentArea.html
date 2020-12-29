@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <title>Approve Create Comment Area</title>
+    <title>Upload Paper</title>
 </head>
 
 <body>
@@ -33,7 +33,6 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <br><br>
-
                     <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">主菜单</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">管理长评</el-button>
                     <br>
@@ -41,24 +40,25 @@
                     </el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
-                <!--论文区域-->
+                <!--上传文件区域-->
                 <el-main>
-                    <embed v-bind:src="paperDir" type="application/pdf" width="100%" height="100%">
-                </el-main>
-                <!--右边栏-->
-                <el-aside width="350px">
-                    <!--待审核论文列表-->
-                    <div v-for="count in createRequestList.length" class="comment">
-                        <p class="text" style="font-size: 17px;"><b>上传者：{% verbatim %}{{createRequestList[count -
-                                1].requestor}}{% endverbatim %}</b></p>
-                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus"
-                            @click="handleClick(count)">查看</el-button><br>
-                        <el-button style="width: 100px; height: 40px;" type="success" icon="el-icon-check"
-                            @click="handleAccept(count)">通过</el-button>
-                        <el-button style="width: 100px; height: 40px;" type="error" icon="el-icon-close"
-                            @click="handleRefuse(count)">拒绝</el-button>
+                    <div class="comment" style="background-color: #62c48b;">
+                        <p class="text" style="font-size: 20px;"><b>创建讨论区</b></p>
                     </div>
-                </el-aside>
+                    <div class="comment">
+                        <p class="text" style="font-size: 17px;">论文标题</p>
+                        <el-input v-model="paperTitle" style="width: 360px;"></el-input>
+                        <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
+                        <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
+                            :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
+                            :auto-upload="false" action="#">
+                            点击选择文件或拖动文件到此处
+                        </el-upload>
+                        <br>
+                        <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-upload2"
+                            @click="handleUpload()">上传</el-button>
+                    </div>
+                </el-main>
             </el-container>
             <!--底栏-->
             <el-footer height="50px">

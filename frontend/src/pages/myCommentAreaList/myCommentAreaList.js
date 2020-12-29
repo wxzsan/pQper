@@ -63,11 +63,10 @@ var vm = new Vue({
                 )
         },
         // 搜索框事件处理
-        //! 尚未完成
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'searchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         handleStarArea(count) {
@@ -102,14 +101,14 @@ var vm = new Vue({
                     )
             }
         },
+        handleJump(count){
+            window.location.href = 'commentArea.html?id=' + this.commentAreaInfoList[count - 1].id
+        },
         getStarAreaButtonType(count) {
             if (this.commentAreaInfoList[count - 1].area_has_star)
                 return "info"
             else
                 return "primary"
         },
-        handleJump(count){
-            window.location.href = 'commentArea.html?id=' + this.commentAreaInfoList[count - 1].id
-        }
     }
 })
