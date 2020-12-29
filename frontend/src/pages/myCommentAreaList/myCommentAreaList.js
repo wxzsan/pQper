@@ -78,10 +78,16 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.commentAreaInfoList[count - 1].area_has_star = true
                                 this.commentAreaInfoList[count - 1].area_star_number += 1
-                                this.$message("收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "收藏成功",
+                                })
                             }
                             else
-                                this.$message("收藏失败")
+                                this.$message({
+                                    type: "error",
+                                    message: "收藏失败",
+                                })
                         }
                     )
             }
@@ -93,10 +99,16 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.commentAreaInfoList[count - 1].area_has_star = false
                                 this.commentAreaInfoList[count - 1].area_star_number -= 1
-                                this.$message("取消收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏成功",
+                                })
                             }
                             else
-                                this.$message("取消收藏失败")
+                                this.$message({
+                                    type: "error",
+                                    message: "取消收藏失败"
+                                })
                         }
                     )
             }
