@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>HomePage</title>
 </head>
 
 <body>
@@ -64,7 +65,7 @@
                         <div>
                             {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
                         </div>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
+                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
                     </div>
 
                 </el-main>
@@ -94,7 +95,7 @@
                 userName: "张三",
                 userAvatar: "",
                 updateInfoList: [
-                    /*{
+                                /*{
                                     title: "关注用户的新动态",
                                     id: 1,
                                     poster: "李四",
@@ -268,11 +269,17 @@
     }
 
     .updating {
-        background-color: #b3dbc4;
-        border-radius: 6px;
+        background-color: #ebeef5;
+        border-radius: 4px;
+        border-color: #000000;
         margin: 8px;
         padding: 10px;
         margin-bottom: 50px;
+    }
+    .detailButton {
+      background-color: #e8ebf1;
+      border-color: #d6d8de;
+      border-width: 1px;
     }
 </style>
 
