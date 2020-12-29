@@ -97,10 +97,16 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.starCommentInfoList[count - 1].has_star = false
                                 this.starCommentInfoList[count - 1].star_number -= 1
-                                this.$message("取消收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏成功",
+                                })
                             }
                             else
-                                this.$message("取消收藏失败")
+                                this.$message({
+                                    type: "error",
+                                    message: "取消收藏失败",
+                                })
                         }
                     )
             }
