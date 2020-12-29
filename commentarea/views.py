@@ -321,7 +321,7 @@ def request_create_comment_area(request):
         return JsonResponse(response)
 
     if request.method == 'POST':
-        # 注意这里paperform不是paper对应的form一个是Path一个是File
+        # 注意这里paperform不是paper对应的form一个是Path一个是File 
         form = PaperForm(request.POST, request.FILES)
         if form.is_valid():
             paper_file = PaperFile(title = form.cleaned_data["title"],paper = request.FILES['paper'])

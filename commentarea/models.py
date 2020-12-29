@@ -8,6 +8,7 @@ class Paper(models.Model):
 
     def __str__(self):
         return str(self.id) + '--' + self.title
+
 class PaperFile(models.Model):
     title = models.CharField(max_length=255)
     paper = models.FileField(upload_to = 'papers')

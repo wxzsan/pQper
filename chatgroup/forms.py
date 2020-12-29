@@ -13,3 +13,9 @@ class AddAnnotationForm(forms.Form):
     y = forms.FloatField()
     pageNum = forms.IntegerField()
     paperId = forms.IntegerField()
+
+class ChatGroupPaperForm(forms.Form):
+    paper  = forms.FileField()
+    title = forms.CharField()
+    chatGroupId = forms.IntegerField()
+    
