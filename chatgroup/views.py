@@ -14,6 +14,8 @@ from .forms import *
 from user.views import check_cookie
 from pQper.settings import *
 
+from user.models import User
+
 import os
 
 import fitz
@@ -130,7 +132,7 @@ def getChatGroupMenbers(request):
             response['code'] = 200
             response['data'] = {
                 "msg": "success",
-                "paperList" : userlist
+                "userlist" : userlist
             }
 
             return JsonResponse(response)
@@ -140,6 +142,61 @@ def getChatGroupMenbers(request):
                 "msg" : "database corrupted"
             }
             return JsonResponse(response)
+    else:
+        # 请用 GET
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
+
+
+@csrf_exempt
+def createChatGroup(request):
+    response = {}
+    if request.method == 'POST':
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            if check_cookie(request) == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+
+        groupName = json.loads(request.body)['groupName']
+
+        if ChatGroup.objects.filter(name = groupName).exists():
+            response['code'] = 400
+            response['data'] = {
+                "msg" : "ChatGroup already exists"
+            }
+            return JsonResponse(response)
+
+        memberList = json.loads(request.body)['userList']
+
+        newChatGroup = ChatGroup()  
+        newChatGroup.save()
+        newChatGroup.name = groupName
+        try:
+            for mb in memberList:
+                mbId = mb['userId']
+                user = User.objects.get(id=mbId)
+                newChatGroup.user_list.add(user)
+            newChatGroup.save()
+
+            response["code"] = 200
+            response["data"] = {
+                "msg" : "success",
+                "groupId" : newChatGroup.id
+            }
+        except:
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
+        
+        return JsonResponse(response)
     else:
         # 请用 GET
         response["code"] = 600
