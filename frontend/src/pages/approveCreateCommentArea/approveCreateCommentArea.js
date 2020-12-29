@@ -41,23 +41,31 @@ var vm = new Vue({
                             return
                         }
                         res.data.createRequestList.forEach((element) => {
-                            this.createRequestList.push({
-                                requestId: element.id,
-                                requestor: element.requestor,
-                                paperId: element.paper,
-                            })
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + element.requestor)
+                                .then(
+                                    (response) => {
+                                        response = response.data
+                                        if(response.code != 200){
+                                            console.log('failed to initialize')
+                                            return
+                                        }
+                                        this.createRequestList.push({
+                                            requestId: element.id,
+                                            requestor: response.data.username,
+                                            paperId: element.paper,
+                                        })
+                                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[0].paperId
+                                    }
+                                )
                         })
                     }
                 )
-            // TODO 默认显示第一个请求
-            if (this.createRequestList.length > 0)
-                this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[0].paperId
         },
         // 搜索框事件处理
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中申请事件处理
