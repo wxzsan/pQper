@@ -19,6 +19,7 @@ var vm = new Vue({
         paperDir: "",
         searchInput: "",
         createRequestList: new Array(),
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -117,7 +118,7 @@ var vm = new Vue({
                 )
         },
         confirmAccept(count) {
-            this.$confirm('此操作将通过该申请, 是否继续？', '提示', {
+            this.$confirm('此操作将通过该申请，是否继续？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
@@ -131,7 +132,7 @@ var vm = new Vue({
             });
         },
         confirmRefuse(count) {
-            this.$confirm('此操作将拒绝该申请, 是否继续？', '提示', {
+            this.$confirm('此操作将拒绝该申请，是否继续？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
