@@ -172,7 +172,6 @@
 
                         }
                     )
-                 console.log(this.userAvatar)
                  this.$axios.post('http://127.0.0.1:8000/SearchAndResults/SelfMomments',{"userid":this.userId})
                      .then(
                          (res) => {
@@ -200,10 +199,10 @@
             },
 
             // 搜索框事件处理
-            handleSearch(){
-                if(this.searchInput.length > 0){
+            handleSearch() {
+                if (this.searchInput.length > 0) {
                     var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/searchResultPage.html?searchContent=' + searchContent
+                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
                 }
             },
 
@@ -216,10 +215,30 @@
             //以下两个函数未完成，还没和后端进行交互
             handleStar(){
               this.star = 1
+              let data = {
+                'id': this.userId,
+              }
+              this.$axios.post('http://127.0.0.1:8000/user/add_star_user', JSON.stringify(data))
+              .then(
+                (res) => {
+                  res = res.data
+                  console.log(res)
+                }
+              )
             },
 
             handleCancelStar(){
               this.star = 0
+              let data = {
+                'id': this.userId,
+              }
+              this.$axios.post('http://127.0.0.1:8000/user/remove_star_user', JSON.stringify(data))
+              .then(
+                (res) => {
+                  res = res.data
+                  console.log(res)
+                }
+              )
             }
         }
     })
