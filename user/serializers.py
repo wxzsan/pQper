@@ -9,4 +9,4 @@ class star_serializer(serializers.ModelSerializer):
 class information_serializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['user_name','user_email','user_photo','privilege']
+        fields = ['user_name','user_email','user_photo','privilege','id']
