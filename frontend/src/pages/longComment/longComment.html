@@ -53,10 +53,7 @@
                             icon="el-icon-star-off" @click="handleStar()">收藏 {% verbatim
                             %}{{longComment.star_number}}{% endverbatim %}</el-button>
                     </div>
-                    <div class="comment">
-                        <p class="text" style="font-size: 15px;">{% verbatim %}{{longComment.content}}{% endverbatim %}
-                        </p>
-                    </div>
+                    <div class="comment" id="comment_md"></div>
                 </el-main>
                 <!--右边栏-->
                 <el-aside width="350px">

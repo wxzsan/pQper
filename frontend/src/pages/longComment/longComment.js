@@ -6,6 +6,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import showdown from 'showdown'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -67,6 +68,7 @@ var vm = new Vue({
                                     this.longComment.star_number = res.comment.star_number
                                     this.longComment.content = res.comment.content
                                     this.longComment.has_star = res.comment.star
+                                    this.displayMarkdown()
                                 }
                             )
                         res.comment.short_comment_list.forEach((shortCommentId) => {
@@ -104,6 +106,12 @@ var vm = new Vue({
                         })
                     }
                 )
+        },
+        // 设置显示markdown
+        displayMarkdown() {
+            let converter = new showdown.Converter();
+            let html = converter.makeHtml(this.longComment.content)
+            document.getElementById('comment_md').innerHTML = html
         },
         // 搜索框事件处理
         handleSearch() {
