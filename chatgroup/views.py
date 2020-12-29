@@ -110,7 +110,7 @@ def getChatGroupPapers(request):
         return JsonResponse(response)
 
 @csrf_exempt
-def getChatGroupMenbers(request):
+def getChatGroupMembers(request):
     response = {}
     if request.method == 'GET':
         debugflag = True

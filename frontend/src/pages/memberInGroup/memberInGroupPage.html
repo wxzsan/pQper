@@ -139,7 +139,7 @@
                 let data = {
                   "chatGroupId": this.chatGroupId,
                 }
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMenbers', {params:data})
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params:data})
                   .then(
                     (res) => {
                       res = res.data
