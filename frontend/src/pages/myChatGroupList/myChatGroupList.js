@@ -34,7 +34,7 @@ var vm = new Vue({
             let data = {
                 "id": 1,
             }
-            this.$axios.post('http://127.0.0.1:8000/chatgroup/get_my_chat_group_list', JSON.stringify(data))
+            this.$axios.post('http://127.0.0.1:8000/chatgroup/getMyChatGroupList', JSON.stringify(data))
                 .then(
                     (res) => {
                         res = res.data
@@ -44,7 +44,10 @@ var vm = new Vue({
                         }
                         res = res.data
                         res.MyChatGroupList.forEach((chatGroupId) => {
-                            this.$axios.get('http://127.0.0.1:8000/chatgroup/get_chat_group?chatGroupId=' + chatGroupId.id)
+                            let paperdata = {
+                                "chatGroupId": chatGroupId.id,
+                            }
+                            this.$axios.post('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', JSON.stringify(paperdata))
                                 .then(
                                     (response) => {
                                         response = response.data
@@ -53,9 +56,15 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.chatGroupInfoList.push({
-                                            id: response.cha_group.id,
-                                            title: response.chat_group.name,
+                                        // 结构体待修改
+                                        response.paperList.forEach((paperId) => {
+                                            this.chatGroupInfoList.push({
+                                                chatGroupId: chatGroupId.id,
+                                                name: chatGroupId.name,
+                                                paperId: paperId.id,
+                                                title: paperId.title,
+                                                path: paperId.path,
+                                            })
                                         })
                                     }
                                 )
@@ -67,11 +76,12 @@ var vm = new Vue({
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
+        // 跳转待修改
         handleJump(count){
-            window.location.href = 'chatGroupPaper.html?$paperId=' + this.chatGroupInfoList[count - 1].id
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?$paperId=' + this.chatGroupInfoList[count - 1].id
         },
     }
 })
