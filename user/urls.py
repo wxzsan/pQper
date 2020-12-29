@@ -6,5 +6,6 @@ urlpatterns = [
     path('login', views.login),
     path('register', views.register),
     path('register.html', TemplateView.as_view(template_name = 'register.html')),
-    path('login.html', TemplateView.as_view(template_name = 'login.html'))
+    path('login.html', TemplateView.as_view(template_name = 'login.html')),
+    path('showpdf.html',TemplateView.as_view(template_name = 'showpdf.html'))
 ]
