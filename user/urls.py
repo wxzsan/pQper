@@ -14,6 +14,8 @@ urlpatterns = [
     path('get_star_user_list', views.get_star_user_list),
     path('add_star_user', views.add_star_user),
     path('remove_star_user', views.remove_star_user),
+    path('verify', views.verify),
+    path('passwordtest', views.passwordtest),
     path('starUserList.html', TemplateView.as_view(template_name = 'starUserList.html')),
     path('register.html', TemplateView.as_view(template_name = 'register.html')),
     path('login.html', TemplateView.as_view(template_name = 'login.html')),
