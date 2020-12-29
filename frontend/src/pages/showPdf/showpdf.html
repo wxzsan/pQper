@@ -3,15 +3,30 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Show Pdf</title>
+    <title>show pdf</title>
 </head>
 
 <body>
     <div id="app" style="width: 100%;height: 100%;">
-        <div id="pdf" style="width: 100%;height: 100%;">
-            <div :style="{width:pdf_div_width,margin:'0 auto'}">
-                <canvas v-for="page in pdf_pages" :id="'the-canvas'+page" :key="page" @click="handle_click"></canvas>
+        <div id="pdf" @click="handle_click" style="width: 100%;height: 100%;margin:'0 auto';">
+            <!--
+            <embed src="/static/A_Mathematical_Theory_of_Communication.pdf" type="application/pdf" style="width: 100%;height: 100%;">
+            -->
+            <div :style="{margin:'0 auto',width:pdf_div_width}">
+                <div v-for="page in TOTAL_PAGES" :key="page">
+                    <canvas class="the-canvas" :id="'the-canvas'+page"></canvas>
+                    <div class="annotation-layer" :id="'annotation-layer'+page"></div>
+                </div>
             </div>
+            <!--
+            <div>
+                pdf path: {{pdf_src}}
+                <pdfAnnotate :src="pdf_src" :toolbar="true" :commentWrapper="true"></pdfAnnotate>
+            </div>
+            -->
+            <!--
+            <showpdf :src="pdf_src"></showpdf>
+            -->
         </div>
     </div>
 </body>
@@ -21,6 +36,48 @@
     #app {
         margin: 0;
         height: 100%;
+    }
+    .content {
+        padding: 16px;
+    }
+    .the-canvas {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+    }
+    .annotation-layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        opacity: 1;
+        line-height: 0.5;
+    }
+    .annotation-layer>section {
+        color: transparent;
+        position: absolute;
+        white-space: pre;
+        cursor: text;
+        transform-origin: 0% 0%;
+    }
+    .annotation-layer>.linkAnnotation>a {
+        position: absolute;
+        font-size: 1em;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: #999999;
+    }
+    .annotation-layer>.textAnnotation {
+        opacity: 0;
+    }
+    .annotation-layer>.popupAnnotation>.popupWrapper>.popup {
+        color: #020000;
+    }
+    .annotation-layer>.popupAnnotation>.popupWrapper>.popup>span {
+        color: transparent;
     }
 
 </style>
