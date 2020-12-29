@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'commentarea',
     'user',
     'star',
+    'chatgroup',
     'SearchAndResults',
     'rest_framework',
 ]
@@ -94,7 +95,7 @@ DATABASES = {
     }
 }
 
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 

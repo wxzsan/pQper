@@ -41,38 +41,36 @@ var vm = new Vue({
                             return
                         }
                         res.data.createRequestList.forEach((element) => {
-                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + element.paper)
+                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + element.requestor)
                                 .then(
                                     (response) => {
                                         response = response.data
-                                        if (response.code != 200) {
+                                        if(response.code != 200){
                                             console.log('failed to initialize')
                                             return
                                         }
-                                        response = response.data
                                         this.createRequestList.push({
                                             requestId: element.id,
-                                            title: response.paper.title,
-                                            path: 'http://127.0.0.1:8000/media/' + response.paper.path,
+                                            requestor: response.data.username,
+                                            paperId: element.paper,
                                         })
+                                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[0].paperId
                                     }
                                 )
                         })
                     }
                 )
-            if (this.createRequestList.length > 0)
-                this.paperDir = this.createRequestList[0].path
         },
         // 搜索框事件处理
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 选中申请事件处理
         handleClick(count) {
-            this.paperDir = this.createRequestList[count - 1].path
+            this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[count - 1].paperId
         },
         // 通过申请事件处理
         handleAccept(count) {

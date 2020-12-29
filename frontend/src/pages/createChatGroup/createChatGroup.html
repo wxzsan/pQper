@@ -15,9 +15,9 @@
                 <el-dropdown style="float: right; width: 50px;">
                     <p style="font-size: large; color: white; margin-top: 12px; margin-left: 14px;">我的</p>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item onclick="to_home_page">个人主页</el-dropdown-item>
-                        <el-dropdown-item onclick="to_my_profile_page">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="quit">退出登录</el-dropdown-item>
+                        <el-dropdown-item @click.native="to_home_page">个人主页</el-dropdown-item>
+                        <el-dropdown-item @click.native="to_my_profile_page">个人信息</el-dropdown-item>
+                        <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
@@ -135,6 +135,10 @@
         margin-bottom: 16px;
         margin-left: 16px;
         margin-right: 16px;
+    }
+    
+    .mySimpleInfo {
+        margin: 10px;
     }
 
 </style>

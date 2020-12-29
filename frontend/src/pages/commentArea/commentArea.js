@@ -62,19 +62,7 @@ var vm = new Vue({
                         this.paperInfo.title = res.comment_area.name
                         this.area_star_number = res.comment_area.star_number
                         this.area_has_star = res.comment_area.star
-                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper)
-                            .then(
-                                (response) => {
-                                    response = response.data
-                                    if (response.code != 200) {
-                                        console.log('failed to initialize')
-                                        return
-                                    }
-                                    response = response.data
-                                    this.paperDir = 'http://127.0.0.1:8000/media/' + response.paper.path
-                                    this.paperInfo.title = response.paper.title
-                                }
-                            )
+                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper
                         res.comment_area.short_comment_list.forEach((shortCommentId) => {
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                 .then(
@@ -85,16 +73,26 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.shortCommentList.push({
-                                            id: response.comment.id,
-                                            poster: response.comment.poster,
-                                            post_time: response.comment.post_time.slice(0, 10),
-                                            content: response.comment.content,
-                                            rose_number: response.comment.rose_number,
-                                            egg_number: response.comment.egg_number,
-                                            has_rose: response.comment.rose,
-                                            has_egg: response.comment.egg,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.shortCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        content: response.comment.content,
+                                                        rose_number: response.comment.rose_number,
+                                                        egg_number: response.comment.egg_number,
+                                                        has_rose: response.comment.rose,
+                                                        has_egg: response.comment.egg,
+                                                    })
+                                                }
+                                            )
                                     }
                                 )
                         })
@@ -108,15 +106,25 @@ var vm = new Vue({
                                             return
                                         }
                                         response = response.data
-                                        this.longCommentList.push({
-                                            id: response.comment.id,
-                                            poster: response.comment.poster,
-                                            post_time: response.comment.post_time.slice(0, 10),
-                                            title: response.comment.title,
-                                            content: response.comment.content,
-                                            star_number: response.comment.star_number,
-                                            has_star: response.comment.star,
-                                        })
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.longCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        title: response.comment.title,
+                                                        content: response.comment.content,
+                                                        star_number: response.comment.star_number,
+                                                        has_star: response.comment.star,
+                                                    })
+                                                }
+                                            )
                                     }
                                 )
                         })
@@ -127,7 +135,7 @@ var vm = new Vue({
         handleSearch() {
             if (this.searchInput.length > 0) {
                 var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
         // 点赞短评事件处理
@@ -250,8 +258,39 @@ var vm = new Vue({
                         (res) => {
                             res = res.data
                             if (res.code === 200) {
-                                this.shortCommentInput = ""
-                                this.$message("发送成功")
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + res.id)
+                                .then(
+                                    (response) => {
+                                        response = response.data
+                                        if (response.code != 200) {
+                                            console.log('failed to initialize')
+                                            return
+                                        }
+                                        response = response.data
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.shortCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        content: response.comment.content,
+                                                        rose_number: response.comment.rose_number,
+                                                        egg_number: response.comment.egg_number,
+                                                        has_rose: response.comment.rose,
+                                                        has_egg: response.comment.egg,
+                                                    })
+                                                    this.shortCommentInput = ""
+                                                    this.$message("发送成功")
+                                                }
+                                            )
+                                    }
+                                )
                             }
                             else
                                 this.$message("发送失败")
@@ -277,9 +316,39 @@ var vm = new Vue({
                         (res) => {
                             res = res.data
                             if (res.code === 200) {
-                                this.longCommentInput.title = ""
-                                this.longCommentInput.content = ""
-                                this.$message("发送成功")
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + res.id)
+                                .then(
+                                    (response) => {
+                                        response = response.data
+                                        if (response.code != 200) {
+                                            console.log('failed to initialize')
+                                            return
+                                        }
+                                        response = response.data
+                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            .then(
+                                                (resp) => {
+                                                    resp = resp.data
+                                                    if (resp.code != 200) {
+                                                        console.log('failed to initialize')
+                                                        return
+                                                    }
+                                                    this.longCommentList.push({
+                                                        id: response.comment.id,
+                                                        poster: resp.data.username,
+                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        title: response.comment.title,
+                                                        content: response.comment.content,
+                                                        star_number: response.comment.star_number,
+                                                        has_star: response.comment.star,
+                                                    })
+                                                    this.longCommentInput.title = ""
+                                                    this.longCommentInput.content = ""
+                                                    this.$message("发送成功")
+                                                }
+                                            )
+                                    }
+                                )
                             }
                             else
                                 this.$message("发送失败")

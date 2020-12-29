@@ -21,6 +21,7 @@ from datetime import datetime
 # 会返回可能的 用户的用户名、论文的论文名 用于填入待选框
 @csrf_exempt
 def SearchForPapersAndUsers(request):
+    response = {}
     if request.method == 'GET':
         try :
             response = {
@@ -57,14 +58,22 @@ def SearchForPapersAndUsers(request):
             response['data']['findUsers'] = list(
                 User.objects.
                 filter(user_name=searchString).
-                values("id", "user_name"))
+                values("id", "user_name", "user_photo"))
             return JsonResponse(response)
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
     else:
         # 请用 GET
-        return JsonResponse({ {"code" : 600}, {"msg" : "incorrect request method"}})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
         
 
 # 获取动态
@@ -74,7 +83,7 @@ def GetMomments(request):
     if request.method == 'POST':
         # print(request.body)
         # 不使用 cookie 测试的话，就将 debugflag = TRUE
-        debugflag = True
+        debugflag = False
         if debugflag == False:
             # 根据 cookie 判断能否查看动态
             userid = check_cookie(request)
@@ -123,11 +132,19 @@ def GetMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
 
     else:
         # 请用 POST
-        return JsonResponse({"code" : 600})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
 
 # 获得个人的所有动态
 @csrf_exempt
@@ -161,8 +178,16 @@ def GetSelfMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
 
     else:
         # 请用 POST
-        return JsonResponse({"code" : 600})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
