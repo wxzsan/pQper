@@ -139,7 +139,7 @@
                                     console.log('failed to initialize')
                                     return
                                 }
-                                this.userId = res.data.information.user_id
+                                this.userId = res.data.information.id
                                 this.userName = res.data.information.user_name
                                 this.userAvatar = res.data.information.user_photo
                                 console.log(this.userId)
@@ -163,21 +163,19 @@
                     let timespan = 1000 * 3600 * 24 * 30
                     let data = {
                             'userid': this.userId,
-                            'time': timestamp - timespan,
+                            'time': (timestamp - timespan)/1000,
 
                             //'time': 100000 //暂时设置成这样，时间戳的数据类型还是不太明白
                         }
                         //console.log(typeof(data.time))
                         //console.log(data.time, data.userid)
-                        /*let config = {
+                        let config = {
                           headers: {
                             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                           },
-                        }*/
-                        console.log("1")
-                    console.log(this.userName)
+                        }
                     console.log(JSON.stringify(data))
-                    this.$axios.post('http://127.0.0.1:8000/SearchAndResults/Momments', JSON.stringify(data))
+                    this.$axios.post('http://127.0.0.1:8000/SearchAndResults/Momments', JSON.stringify(data),config)
                         .then(
                             (res) => {
                                 res = res.data
