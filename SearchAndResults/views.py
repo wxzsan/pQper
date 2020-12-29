@@ -57,14 +57,14 @@ def SearchForPapersAndUsers(request):
             response['data']['findUsers'] = list(
                 User.objects.
                 filter(user_name=searchString).
-                values("id", "user_name"))
+                values("id", "user_name", "user_photo"))
             return JsonResponse(response)
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            return JsonResponse({"code" : 300, "msg": "db corrupted"})
     else:
         # 请用 GET
-        return JsonResponse({ {"code" : 600}, {"msg" : "incorrect request method"}})
+        return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
         
 
 # 获取动态
@@ -123,7 +123,8 @@ def GetMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
+            
 
     else:
         # 请用 POST
@@ -161,8 +162,9 @@ def GetSelfMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({{"code" : 300}, {"msg", "db corrupted"}})
+            return JsonResponse({"code" : 300, "msg": "db corrupted"})
 
     else:
         # 请用 POST
-        return JsonResponse({"code" : 600})
+        return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
+        
