@@ -21,6 +21,7 @@ from datetime import datetime
 # 会返回可能的 用户的用户名、论文的论文名 用于填入待选框
 @csrf_exempt
 def SearchForPapersAndUsers(request):
+    response = {}
     if request.method == 'GET':
         try :
             response = {
@@ -61,10 +62,18 @@ def SearchForPapersAndUsers(request):
             return JsonResponse(response)
         except:
             # 多半是数据库挂了
-            return JsonResponse({"code" : 300, "msg": "db corrupted"})
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
     else:
         # 请用 GET
-        return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
         
 
 # 获取动态
@@ -123,12 +132,19 @@ def GetMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
-            
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
 
     else:
         # 请用 POST
-        return JsonResponse({"code" : 600})
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
 
 # 获得个人的所有动态
 @csrf_exempt
@@ -162,9 +178,16 @@ def GetSelfMomments(request):
 
         except:
             # 多半是数据库挂了
-            return JsonResponse({"code" : 300, "msg": "db corrupted"})
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
 
     else:
         # 请用 POST
-        return JsonResponse({"code" : 600, "msg" : "incorrect request method"})
-        
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
