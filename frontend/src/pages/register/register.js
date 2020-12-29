@@ -1,11 +1,10 @@
 /* eslint-disable */
 
 import Vue from 'vue'
-// import App from './App'
-// import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import { JSEncrypt } from 'jsencrypt'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -29,7 +28,7 @@ var vm = new Vue({
       }
       let data = {
         "email": this.email,
-        "password": this.password,
+        "password": this.encrypt_data(this.password),
         'name': this.name
       }
       let config = {
@@ -91,6 +90,13 @@ var vm = new Vue({
         return;
       }
       this.message = "";
+    },
+    encrypt_data: function (data) {
+      var password_old = this.password
+      let encrypt = new JSEncrypt()
+      encrypt.setPublicKey(this.public_key)
+      var pass_new = encrypt.encrypt(password_old)
+      return pass_new
     }
   }
 })

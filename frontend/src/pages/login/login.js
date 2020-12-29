@@ -1,11 +1,10 @@
 /* eslint-disable */
 
 import Vue from 'vue'
-// import App from './App'
-// import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import { JSEncrypt } from 'jsencrypt'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -16,7 +15,8 @@ var vm = new Vue({
     return {
       email: '',
       password: '',
-      message: '请输入以上信息'
+      message: '请输入以上信息',
+      public_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAnAIl6VFrjwPg6v2qGMMywlOPoS/fqCk68MHt7RGroVlZJvucD7DqZJDrMyj0Y7VgCsnonsFRPlVB/PDOfywx8WT8UBzeLojjMIYIlET5QxAWvArcG6D6jiolcTDzyFPCjaeb2v4DkniqBvPaOitjm5TEI/wkV0wP9AzpbixDBQIDAQAB'
     }
   },
   methods: {
@@ -27,8 +27,9 @@ var vm = new Vue({
       }
       let data = {
         "email": this.email,
-        "password": this.password
+        "password": this.encrypt_data(this.password)
       }
+      console.log(data.password)
       let config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -71,6 +72,13 @@ var vm = new Vue({
         return
       }
       this.message = ''
+    },
+    encrypt_data: function (data) {
+      var password_old = this.password
+      let encrypt = new JSEncrypt()
+      encrypt.setPublicKey(this.public_key)
+      var pass_new = encrypt.encrypt(password_old)
+      return pass_new
     }
   }
 })
