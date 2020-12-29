@@ -61,6 +61,7 @@ var vm = new Vue({
                                         this.starUserInfoList.push({
                                             name:response.user_name,
                                             email:response.user_email,
+                                            id: UserId,
                                             //star_number: 100,
                                             //has_star: true,
                                         })
@@ -77,6 +78,10 @@ var vm = new Vue({
                 window.location.href = '../SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
             }
         },
+        
+        handleDetail(id){
+          window.location.href='http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid='+id
+        }
         // 关注用户事件处理
         // handleStar(count) {
         //     if (!this.starUserInfoList[count - 1].has_star) {
