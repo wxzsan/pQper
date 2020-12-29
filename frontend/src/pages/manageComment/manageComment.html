@@ -55,7 +55,7 @@
                         <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{longCommentList[count - 1].title}}{% endverbatim %}</b></p>
                         <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{longCommentList[count - 1].star_number}}{% endverbatim %}</el-button><br>
                         <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleClick(count)">查看</el-button>
-                        <el-button style="width: 100px; height: 40px;" v-bind:type="getDeleteButtonType(count)" icon="el-icon-close" @click="handleDelete(count)">删除</el-button>
+                        <el-button style="width: 100px; height: 40px;" v-bind:type="getDeleteButtonType(count)" icon="el-icon-close" @click="confirmDelete(count)">删除</el-button>
                     </div>
                 </el-aside>
             </el-container>

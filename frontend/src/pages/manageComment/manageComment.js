@@ -116,10 +116,17 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.longCommentList[count - 1].has_star = true
                                 this.longCommentList[count - 1].star_number += 1
-                                this.$message("收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "收藏成功",
+                                })
                             }
-                            else
-                                this.$message("收藏失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "收藏失败",
+                                })
+                            }
                         }
                     )
             }
@@ -131,10 +138,17 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.longCommentList[count - 1].has_star = false
                                 this.longCommentList[count - 1].star_number -= 1
-                                this.$message("取消收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏成功",
+                                })
                             }
-                            else
-                                this.$message("取消收藏失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "取消收藏失败",
+                                })
+                            }
                         }
                     )
             }
@@ -147,10 +161,17 @@ var vm = new Vue({
                             res = res.data
                             if (res.code === 200) {
                                 this.longCommentList.splice(count - 1, 1);
-                                this.$message("删除成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "删除成功",
+                                })
                             }
-                            else
-                                this.$message("删除失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "删除失败",
+                                })
+                            }
                         }
                     )
             }
@@ -166,6 +187,20 @@ var vm = new Vue({
                 return "warning"
             else
                 return "info"
+        },
+        confirmDelete(count) {
+            this.$confirm('此操作将永久删除该长评, 是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }).then(() => {
+                this.handleDelete(count)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '操作已取消',
+                });
+            });
         },
     }
 })

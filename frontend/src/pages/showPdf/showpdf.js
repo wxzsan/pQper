@@ -40,16 +40,16 @@ var vm = new Vue({
         },
         handle_click: function (event) {
             var div = document.getElementById('the-canvas1')
-            event = event || window.event;
+            event = event || window.event
             //2.获取鼠标在整个页面的位置  
-            var pagex = event.pageX || scroll().left + event.clientX;
-            var pagey = event.pageY || scroll().top + event.clientY;
+            var pagex = event.pageX || scroll().left + event.clientX
+            var pagey = event.pageY || scroll().top + event.clientY
             //3.获取盒子在整个页面的位置  
-            var xx = div.offsetLeft;
+            var xx = div.offsetLeft
             var yy = div.offsetTop
             //4.用鼠标的位置减去盒子的位置赋值给盒子的内容。  
-            var targetx = pagex - xx;
-            var targety = pagey - yy;
+            var targetx = pagex - xx
+            var targety = pagey - yy
             window.parent.postMessage({
                 data: [
                     targetx / this.pdf_x,

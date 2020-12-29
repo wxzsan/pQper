@@ -48,10 +48,18 @@ var vm = new Vue({
                         (res) => {
                             console.log(res)
                             res = res.data
-                            if (res.code === 200)
-                                this.$message("上传成功，等待审核")
-                            else
-                                this.$message("上传失败")
+                            if (res.code === 200) {
+                                this.$message({
+                                    type: "success",
+                                    message: "上传成功，等待审核",
+                                })
+                            }
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "上传失败",
+                                })
+                            }
                         }
                     )
             }

@@ -55,7 +55,7 @@ var vm = new Vue({
             }
         },
         handlePostAnnotation() {
-            if(this.isClicked && this.annotationInput.length > 0){
+            if (this.isClicked && this.annotationInput.length > 0) {
                 let data = {
                     "x": this.clickX,
                     "y": this.clickY,
@@ -74,10 +74,17 @@ var vm = new Vue({
                             res = res.data
                             if (res.code === 200) {
                                 this.annotationInput = ""
-                                this.$message("发送成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "发送成功",
+                                })
                             }
-                            else
-                                this.$message("发送失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "发送失败",
+                                })
+                            }
                         }
                     )
             }

@@ -130,10 +130,17 @@ var vm = new Vue({
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_rose = true
                                     this.shortCommentList[count - 1].rose_number += 1
-                                    this.$message("点赞成功")
+                                    this.$message({
+                                        type: "success",
+                                        message: "点赞成功",
+                                    })
                                 }
-                                else
-                                    this.$message("点赞失败")
+                                else {
+                                    this.$message({
+                                        type: "error",
+                                        message: "点赞失败",
+                                    })
+                                }
                             }
                         )
                 }
@@ -145,10 +152,17 @@ var vm = new Vue({
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_rose = false
                                     this.shortCommentList[count - 1].rose_number -= 1
-                                    this.$message("取消点赞成功")
+                                    this.$message({
+                                        type: "success",
+                                        message: "取消点赞成功",
+                                    })
                                 }
-                                else
-                                    this.$message("取消点赞失败")
+                                else {
+                                    this.$message({
+                                        type: "error",
+                                        message: "取消点赞失败",
+                                    })
+                                }
                             }
                         )
                 }
@@ -165,10 +179,17 @@ var vm = new Vue({
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_egg = true
                                     this.shortCommentList[count - 1].egg_number += 1
-                                    this.$message("点踩成功")
+                                    this.$message({
+                                        type: "success",
+                                        message: "点踩成功",
+                                    })
                                 }
-                                else
-                                    this.$message("点踩失败")
+                                else {
+                                    this.$message({
+                                        type: "error",
+                                        message: "点踩失败",
+                                    })
+                                }
                             }
                         )
                 }
@@ -180,10 +201,17 @@ var vm = new Vue({
                                 if (res.code === 200) {
                                     this.shortCommentList[count - 1].has_egg = false
                                     this.shortCommentList[count - 1].egg_number -= 1
-                                    this.$message("取消点踩成功")
+                                    this.$message({
+                                        type: "success",
+                                        message: "取消点踩成功",
+                                    })
                                 }
-                                else
-                                    this.$message("取消点踩失败")
+                                else {
+                                    this.$message({
+                                        type: "error",
+                                        message: "取消点踩失败",
+                                    })
+                                }
                             }
                         )
                 }
@@ -199,10 +227,17 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.longComment.has_star = true
                                 this.longComment.star_number += 1
-                                this.$message("收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "收藏成功",
+                                })
                             }
-                            else
-                                this.$message("收藏失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "收藏失败",
+                                })
+                            }
                         }
                     )
             }
@@ -214,10 +249,17 @@ var vm = new Vue({
                             if (res.code === 200) {
                                 this.longComment.has_star = false
                                 this.longComment.star_number -= 1
-                                this.$message("取消收藏成功")
+                                this.$message({
+                                    type: "success",
+                                    message: "取消收藏成功",
+                                })
                             }
-                            else
-                                this.$message("取消收藏失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "取消收藏失败",
+                                })
+                            }
                         }
                     )
             }
@@ -240,41 +282,48 @@ var vm = new Vue({
                             res = res.data
                             if (res.code === 200) {
                                 this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + res.id)
-                                .then(
-                                    (response) => {
-                                        response = response.data
-                                        if (response.code != 200) {
-                                            console.log('failed to initialize')
-                                            return
-                                        }
-                                        response = response.data
-                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
-                                            .then(
-                                                (resp) => {
-                                                    resp = resp.data
-                                                    if (resp.code != 200) {
-                                                        console.log('failed to initialize')
-                                                        return
+                                    .then(
+                                        (response) => {
+                                            response = response.data
+                                            if (response.code != 200) {
+                                                console.log('failed to initialize')
+                                                return
+                                            }
+                                            response = response.data
+                                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                                .then(
+                                                    (resp) => {
+                                                        resp = resp.data
+                                                        if (resp.code != 200) {
+                                                            console.log('failed to initialize')
+                                                            return
+                                                        }
+                                                        this.shortCommentList.push({
+                                                            id: response.comment.id,
+                                                            poster: resp.data.username,
+                                                            post_time: response.comment.post_time.slice(0, 10),
+                                                            content: response.comment.content,
+                                                            rose_number: response.comment.rose_number,
+                                                            egg_number: response.comment.egg_number,
+                                                            has_rose: response.comment.rose,
+                                                            has_egg: response.comment.egg,
+                                                        })
+                                                        this.shortCommentInput = ""
+                                                        this.$message({
+                                                            type: "success",
+                                                            message: "发送成功",
+                                                        })
                                                     }
-                                                    this.shortCommentList.push({
-                                                        id: response.comment.id,
-                                                        poster: resp.data.username,
-                                                        post_time: response.comment.post_time.slice(0, 10),
-                                                        content: response.comment.content,
-                                                        rose_number: response.comment.rose_number,
-                                                        egg_number: response.comment.egg_number,
-                                                        has_rose: response.comment.rose,
-                                                        has_egg: response.comment.egg,
-                                                    })
-                                                    this.shortCommentInput = ""
-                                                    this.$message("发送成功")
-                                                }
-                                            )
-                                    }
-                                )
+                                                )
+                                        }
+                                    )
                             }
-                            else
-                                this.$message("发送失败")
+                            else {
+                                this.$message({
+                                    type: "error",
+                                    message: "发送失败",
+                                })
+                            }
                         }
                     )
             }
