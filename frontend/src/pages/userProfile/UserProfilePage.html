@@ -199,10 +199,10 @@
             },
 
             // 搜索框事件处理
-            handleSearch(){
-                if(this.searchInput.length > 0){
+            handleSearch() {
+                if (this.searchInput.length > 0) {
                     var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/searchResultPage.html?searchContent=' + searchContent
+                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
                 }
             },
 
