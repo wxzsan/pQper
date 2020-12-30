@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <title>memberInGroup</title>
+  <title>Member In Group</title>
 </head>
 
 <body>
@@ -38,11 +37,12 @@
                       <p style="text-align: center;">{% verbatim %}{{myName}}{% endverbatim %}</p>
                       -->
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
+                    <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document-copy" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">讨论组</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
                 </el-aside>
 
                 <!--搜索结果区域-->
@@ -71,147 +71,6 @@
             </el-footer>
         </el-container>
     </div>
-
-
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
-    <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-            //userId: 1,  // 调试时暂时如此假设
-            myName: "张三",
-            myAvatar: "",
-            myId: -1,
-
-            chatGroupId: 1,
-            chatGroupName: "一个讨论组的名字",
-
-            groupMemberList: [/*{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-            },{
-                userId: 1,
-                userName: "李四",
-                userAvatar: "",
-            }*/],
-
-            searchInput: "",
-        },
-        methods: {
-            // 正则表达式匹配，从上个界面的url得到searchInput
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                console.log(window.location)
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
-            },
-            // 页面初始化，填入数据
-            initDatas(){
-                //获取chatGroupId
-                this.chatGroupId = Number(this.getParams("id"))
-                console.log("1")
-                console.log(this.chatGroupId)
-                console.log("1")
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                    .then(
-                        (res) => {
-                            res = res.data
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            console.log(res.data)
-                            this.myId = res.data.information.id
-                            this.myName = res.data.information.user_name
-                            this.myAvatar = res.data.information.user_photo
-                        }
-                    )
-
-
-                //获取完chatGroupId后开始获取chatGroupName和成员列表
-                let data = {
-                  "chatGroupId": this.chatGroupId,
-                }
-                /*let config = {
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                  },
-                }*/
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
-                    .then(
-                        (res) => {
-                            res = res.data
-                            //console.log(res.code)
-                            console.log(res.data)
-                            if (res.code != 200) {
-                                console.log('failed to initialize')
-                                return
-                            }
-                            this.chatGroupName = res.data.name
-                        }
-                    )
-
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params: data})
-                  .then(
-                    (res) => {
-                      res = res.data
-                      console.log(res.data)
-                      console.log(res.code)
-                      if (res.code != 200) {
-                          console.log('failed to initialize')
-                          return
-                      }
-                      res = res.data
-                      res.userlist.forEach(
-                        (key)=>{
-                          this.groupMemberList.push(
-                            {
-                              userId: key.id,
-                              userName: key.user_name,
-                              userAvatar: "/media/"+key.user_photo,
-                            }
-                          )
-                          console.log(key.path)
-                        }
-                      )
-                    }
-                  )
-            },
-
-            // 搜索框事件处理
-            handleSearch() {
-                if (this.searchInput.length > 0) {
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-                }
-            },
-
-            //页面跳转处理
-            handleBack(){
-              window.location.href = "http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id="+this.chatGroupId
-            },
-
-            handleUserDetail(id){
-              window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid="+id
-              //console.log(window.location.href)
-            },
-        }
-    })
-    </script>
 </body>
 
 <style type="text/css">

@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <title>HomePage</title>
+    <title>Home</title>
 </head>
 
 <body>
@@ -57,14 +56,14 @@
                     </el-row>
 
                     <div class="updating" v-for="count in updateInfoList.length">
+                        <div style="font-size: 20px;"><b>
+                            {% verbatim %}{{updateInfoList[updateInfoList.length-count].title}}{% endverbatim %}
+                        </b></div>
                         <el-container>
                             <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                            <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{updateInfoList[updateInfoList.length-count].poster}}{% endverbatim %}</span>
+                            <span class="text" style="font-size: 18px; align-self: center;">{% verbatim %}{{updateInfoList[updateInfoList.length-count].poster}}{% endverbatim %}</span>
                         </el-container>
-                        <div style="font-size: 20px;">
-                            {% verbatim %}{{updateInfoList[updateInfoList.length-count].title}}{% endverbatim %}
-                        </div>
-                        <div style="font-size: 18px;">
+                        <div style="font-size: 15px;">
                             {% verbatim %}{{updateInfoList[updateInfoList.length-count].posttime}}{% endverbatim %}
                         </div>
                         <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[updateInfoList.length-count].commentid)">详情</el-button>
@@ -80,137 +79,6 @@
         </el-container>
     </div>
 
-
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js">
-    </script>
-    <script>
-        Vue.prototype.$axios = axios
-        var vm = new Vue({
-            el: '#app',
-            created: function() {
-                this.initDatas()
-            },
-            data: {
-                userId: 2, // 调试时暂时如此假设
-                Administrator: 1,
-                userName: "张三",
-                userAvatar: "",
-                updateInfoList: [
-                                /*{
-                                    title: "关注用户的新动态",
-                                    id: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
-                                },{
-                                    title: "关注用户的新动态",
-                                    id: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
-                                },{
-                                    title: "关注用户的新动态",
-                                    id: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
-                                }*/
-                ],
-                searchInput: "",
-            },
-            methods: {
-                // 正则表达式匹配
-                getParams(key) {
-                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                    var r = window.location.search.substr(1).match(reg)
-                    if (r != null) {
-                        return unescape(r[2])
-                    }
-                    return null
-                },
-                // 页面初始化，填入数据
-                initDatas() {
-
-                    this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                        .then(
-                            (res) => {
-                                res = res.data
-                                console.log(res)
-                                if (res.code != 200) {
-                                    console.log('failed to initialize')
-                                    return
-                                }
-                                this.Administrator = res.data.information.privilege
-                                this.userId = res.data.information.id
-                                this.userName = res.data.information.user_name
-                                this.userAvatar = res.data.information.user_photo
-                                console.log(this.userId)
-                                this.handleFresh()
-                            }
-                        )
-                },
-
-                // 搜索框事件处理
-                handleSearch() {
-                    if (this.searchInput.length > 0) {
-                        var searchContent = btoa(encodeURI(this.searchInput))
-                        window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-                    }
-                },
-
-                handleFresh() {
-                    this.updateInfoList = []
-                    let timestamp = Number(Date.parse(new Date()))
-                    //console.log(typeof(timestamp))
-                    let timespan = 1000 * 3600 * 24 * 30  //设置刷新出来的天数时只需要改最后一个数
-                    let data = {
-                            'userid': this.userId,
-                            'time': (timestamp - timespan)/1000,
-                        }
-                        //console.log(typeof(data.time))
-                        //console.log(data.time, data.userid)
-                        let config = {
-                          headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                          },
-                        }
-                    console.log(JSON.stringify(data))
-                    this.$axios.post('http://127.0.0.1:8000/SearchAndResults/Momments', JSON.stringify(data),config)
-                        .then(
-                            (res) => {
-                                res = res.data
-                                result = res.data
-                                console.log(result)
-                                result.LongComments.forEach(
-                                    (key) => {
-                                        this.updateInfoList.push({
-                                            title: key.title,
-                                            commentid: key.id,
-                                            posterid: key.poster,
-                                            poster: key.poster_name,
-                                            posttime: key.post_time.slice(0, 19).replace('T',' '),
-                                            content: key.content,
-                                        })
-                                    }
-                                )
-                                if (res.code === 200) {
-                                    console.log("请求成功")
-                                } else {
-                                    console.log("请求失败")
-                                }
-                            }
-                        )
-                },
-
-                handleDetail(id) {
-                    window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id=" + id
-                        //console.log("../longComment/longComment.html?id="+ id)
-                },
-            }
-        })
-    </script>
 </body>
 
 <style type="text/css">

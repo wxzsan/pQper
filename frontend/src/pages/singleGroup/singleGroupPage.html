@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>Chat Group</title>
 </head>
 
 <body>
@@ -37,11 +37,12 @@
                         <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
                         -->
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
+                    <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document-copy" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">讨论组</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
                 </el-aside>
 
                 <!--单个讨论组主要区域-->
@@ -86,149 +87,6 @@
             </el-footer>
         </el-container>
     </div>
-
-
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js">
-    </script>
-    <script>
-        Vue.prototype.$axios = axios
-        var vm = new Vue({
-            el: '#app',
-            created: function() {
-                this.initDatas()
-            },
-            data: {
-                userId: 2, // 调试时暂时如此假设
-                userName: "张三",
-                userAvatar: "",
-
-                chatGroupId: 1,
-                chatGroupName: "一个讨论组的名字",
-
-                paperList: [
-                                /*{
-                                    title: "Title",
-                                    paperId: 1,
-                                    path: "",
-                                },{
-                                    title: "Title",
-                                    paperId: 1,
-                                    path: "",
-                                },{
-                                    title: "Title",
-                                    paperId: 1,
-                                    path: "",
-                                }*/
-                ],
-                searchInput: "",
-            },
-            methods: {
-                // 正则表达式匹配
-                getParams(key) {
-                    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                    var r = window.location.search.substr(1).match(reg)
-                    if (r != null) {
-                        return unescape(r[2])
-                    }
-                    return null
-                },
-                // 页面初始化，填入数据
-                initDatas() {
-                    //获取chatGroupId
-                    this.chatGroupId = Number(this.getParams("id"))
-                    console.log("1")
-                    console.log(this.chatGroupId)
-                    console.log("1")
-                    this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                        .then(
-                            (res) => {
-                                res = res.data
-                                if (res.code != 200) {
-                                    console.log('failed to initialize')
-                                    return
-                                }
-                                this.userName = res.data.information.user_name
-                                this.userAvatar = res.data.information.user_photo
-                            }
-                        )
-
-                    //获取完chatGroupId后开始获取chatGroupName和论文列表
-                    let data = {
-                      "chatGroupId": this.chatGroupId,
-                    }
-                    /*let config = {
-                      headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                      },
-                    }*/
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
-                        .then(
-                            (res) => {
-                                res = res.data
-                                //console.log(res.code)
-                                console.log(res.data)
-                                if (res.code != 200) {
-                                    console.log('failed to initialize')
-                                    return
-                                }
-                                this.chatGroupName = res.data.name
-                            }
-                        )
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', {params: data})
-                        .then(
-                            (res) => {
-                                res = res.data
-                                console.log(res.data)
-                                if (res.code != 200) {
-                                    console.log('failed to initialize')
-                                    return
-                                }
-                                res = res.data
-                                res.paperList.forEach(
-                                  (key)=>{
-                                    this.paperList.push(
-                                      {
-                                        title: key.title,
-                                        paperId: key.id,
-                                        path: key.path,
-                                      }
-                                    )
-                                    console.log(key.path)
-                                  }
-                                )
-                            }
-                        )
-                },
-
-                // 搜索框事件处理
-                handleSearch() {
-                    if (this.searchInput.length > 0) {
-                        var searchContent = btoa(encodeURI(this.searchInput))
-                        window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-                    }
-                },
-
-                handleDetail(id) {
-                    console.log("id")
-                    window.location.href = "http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?id=" + id
-                },
-
-                handleBack(){
-                    window.location.href = "http://127.0.0.1:8000/chatgroup/myChatGroupList.html"
-                },
-
-                handleManage(command){
-                  if(command == "1")
-                    window.location.href='http://127.0.0.1:8000/chatgroup/memberInGroupPage.html?id=' + this.chatGroupId
-                  else
-                    window.location.href='http://127.0.0.1:8000/chatgroup/uploadPaperToChatGroup.html?id=' + this.chatGroupId
-                },
-
-            }
-        })
-    </script>
 </body>
 
 <style type="text/css">

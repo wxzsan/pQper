@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <title>UserProfilePage</title>
+  <title>User Profile</title>
 </head>
 
 <body>
@@ -38,11 +37,12 @@
                       <p style="text-align: center;">{% verbatim %}{{myName}}{% endverbatim %}</p>
                       -->
                     </div>
-                    <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
-                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
-                    <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
-                    <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
+                    <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-document-copy" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">讨论组</el-button><br>
+                    <el-button class="button_outside" type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
                 </el-aside>
 
                 <!--用户信息区域-->
@@ -85,179 +85,6 @@
             </el-footer>
         </el-container>
     </div>
-
-
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
-    <script>
-    Vue.prototype.$axios = axios
-    var vm = new Vue({
-        el: '#app',
-        created: function(){
-            this.initDatas()
-        },
-        data: {
-
-            myName: "张三",
-            myAvatar: "",
-            userId: 0,  // 调试时暂时如此假设
-            userName: "李四",
-            userAvatar: "",
-            star: 0,
-            userMomentList: [/*{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
-            },{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
-            },{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
-            }*/],
-            searchInput: "",
-        },
-        methods: {
-            // 正则表达式匹配
-            getParams(key){
-                var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
-                var r = window.location.search.substr(1).match(reg)
-                if (r != null) {
-                    return unescape(r[2])
-                }
-                return null
-            },
-            // 页面初始化，填入所有动态数据
-            initDatas(){
-                let str = this.getParams('userid')
-                if(str == '')
-                  this.userId = 0
-                else
-                  this.userId = +str
-                console.log(this.userId)
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-                    .then(
-                        (res) => {
-                            res = res.data
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            this.myName = res.data.information.user_name
-                            this.myAvatar = res.data.information.user_photo
-                        }
-                    )
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information',{"id":this.userId})
-                    .then(
-                        (res) => {
-                            res = res.data
-                            //console.log(res)
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
-                            }
-                            res = res.data
-                            this.star = res.star
-                            res = res.information
-                            //console.log(res)
-
-                            this.userName = res.user_name
-                            this.userAvatar = res.user_photo
-
-                        }
-                    )
-                 this.$axios.post('http://127.0.0.1:8000/SearchAndResults/SelfMomments',{"userid":this.userId})
-                     .then(
-                         (res) => {
-                             res = res.data
-                             console.log(res)
-                             if(res.code != 200){
-                                 console.log('failed to initialize')
-                                 return
-                             }
-                             res = res.data
-                             res.LongComments.forEach(
-                                (key)=>{
-                                    this.userMomentList.push(
-                                        {
-                                          title: key.title,
-                                          id: key.id,
-                                          posttime: key.post_time.slice(0, 19).replace('T',' '),
-                                          content: key.content,
-                                        }
-                                    )
-                                }
-                             )
-                         }
-                     )
-            },
-
-            // 搜索框事件处理
-            handleSearch() {
-                if (this.searchInput.length > 0) {
-                    var searchContent = btoa(encodeURI(this.searchInput))
-                    window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-                }
-            },
-
-            handleDetail(id){
-                window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id="+id
-                //console.log("../longComment/longComment.html?id="+ id)
-            },
-
-
-            handleStar(){
-              this.star = 1
-              let data = {
-                'id': this.userId,
-              }
-              this.$axios.post('http://127.0.0.1:8000/user/add_star_user', JSON.stringify(data))
-              .then(
-                (res) => {
-                  res = res.data
-                  console.log(res)
-                  if(res.code != 200){
-                      console.log('关注错误')
-                      return
-                  }
-                  this.$message({
-                      type: "success",
-                      message: "关注成功",
-                  })
-                }
-              )
-            },
-
-            handleCancelStar(){
-              this.star = 0
-              let data = {
-                'id': this.userId,
-              }
-              this.$axios.post('http://127.0.0.1:8000/user/remove_star_user', JSON.stringify(data))
-              .then(
-                (res) => {
-                  res = res.data
-                  console.log(res)
-                  if(res.code != 200){
-                      console.log('取消关注错误')
-                      return
-                  }
-                  this.$message({
-                      type: "success",
-                      message: "取消关注成功",
-                  })
-                }
-              )
-            }
-        }
-    })
-    </script>
 </body>
 
 <style type="text/css">
