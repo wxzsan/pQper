@@ -161,10 +161,7 @@ def getChatGroupMembers(request):
 def getMyChatGroupList(request):
     response = {}
     if request.method == 'POST':
-        try:
-            userid = json.loads(request.body)['id']
-        except:
-            userid=check_cookie(request)
+        userid=check_cookie(request)
         if userid == -1:
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}
@@ -187,13 +184,11 @@ def getMyChatGroupList(request):
 def createChatGroup(request):
     response = {}
     if request.method == 'POST':
-        debugflag = True
-        if debugflag == False:
-            # 根据 cookie 判断能否查看动态
-            if check_cookie(request) == -1:
-                response['code'] = 300
-                response['data'] = {'msg': 'cookie out of date'}
-                return JsonResponse(response)
+        user_id = check_cookie(request)
+        if user_id == -1:
+            response['code'] = 300
+            response['data'] = {'msg': 'cookie out of date'}
+            return JsonResponse(response)
 
         groupName = json.loads(request.body)['groupName']
 
@@ -205,6 +200,7 @@ def createChatGroup(request):
             return JsonResponse(response)
 
         memberList = json.loads(request.body)['userList']
+        memberList.append({'userId':user_id})
 
         newChatGroup = ChatGroup()  
         newChatGroup.save()
