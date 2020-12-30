@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <title>Star Comment List</title>
+    <title>My Chat Group List</title>
 </head>
 
 <body>
@@ -46,12 +46,12 @@
 
                 <!--讨论组列表区域-->
                 <el-main>
-                    <div class="comment" style="background-color: #62c48b;">
+                    <div class="comment">
                         <p class="text" style="font-size: 20px;"><b>我参与的讨论组</b></p>
                     </div>
                     <div class="comment" v-for="count in chatGroupInfoList.length">
                         <p class="text" style="font-size: 17px;">{% verbatim %}{{chatGroupInfoList[count - 1].title}}{% endverbatim %}</p>
-                        <el-button style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">详情</el-button>
+                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">详情</el-button>
                     </div>
                 </el-main>
 
