@@ -172,7 +172,7 @@ def getMyChatGroupList(request):
                 grouplist = list(
                     User.objects.get(id = userid).my_chat_group.values("id", "name")
                 )
-                response['data'] = {'msg':"success", 'MyChatGruopList':grouplist}
+                response['data'] = {'msg':"success", 'MyChatGroupList':grouplist}
                 return JsonResponse(response)
             except:
                 response['code'] = 300

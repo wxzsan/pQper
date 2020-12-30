@@ -40,18 +40,18 @@
                     <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">管理长评</el-button><br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">我的论文</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>   <!-- TODO 关于页面 -->
                 </el-aside>
 
                 <!--讨论组列表区域-->
                 <el-main>
                     <el-container class="comment" style="height: 90px;">
-                        <p class="text" style="font-size: 20px;width: 100%;"><b>我参与的讨论组</b></p>
+                        <p class="text" style="text-align: center; font-size: 20px;width: 100%;"><b>我参与的讨论组</b></p>
                         <el-button type="primary" icon="el-icon-plus" style = "width: 130px;margin-top: 20px;margin-right: 10px;" @click="window.location.href='http://127.0.0.1:8000/chatgroup/createChatGroup.html'">创建讨论组</el-button>   <!-- TODO 关于页面 -->
                     </el-container>
                     <div class="comment" v-for="count in chatGroupInfoList.length">
-                        <p class="text" style="font-size: 17px;">{% verbatim %}{{chatGroupInfoList[count - 1].title}}{% endverbatim %}</p>
-                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">详情</el-button>
+                        <p class="text" style="margin-left: 30px; font-size: 20px;">{% verbatim %}{{chatGroupInfoList[count - 1].title}}{% endverbatim %}</p>
+                        <el-button class="button" style="width: 100px; height: 40px; float: right; margin-right: 20px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">详情</el-button>
                     </div>
                 </el-main>
 
@@ -101,6 +101,11 @@
         margin-bottom: 3px;
         margin-left: 6px;
         margin-right: 6px;
+    }
+    .button {
+      background-color: rgb(235, 238, 245);
+      border-color: rgb(229, 232, 238);
+      color: black;
     }
     .el-dropdown p {
         font-family: 'Pingang SC';
