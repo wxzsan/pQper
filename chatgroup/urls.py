@@ -8,6 +8,7 @@ urlpatterns = {
     path('getChatGroupMembers', views.getChatGroupMembers),
     path('createChatGroup', views.createChatGroup),
     path('uploadChatGroupPaper', views.uploadChatGroupPaper),
+    path('getBothStarList', views.getBothStarList),
     path('chatGroupPaper.html', TemplateView.as_view(template_name = 'chatGroupPaper.html')),
     path('showpdf.html', TemplateView.as_view(template_name = 'showpdf.html')),
     path('memberInGroupPage.html', TemplateView.as_view(template_name = 'memberInGroupPage.html')),
