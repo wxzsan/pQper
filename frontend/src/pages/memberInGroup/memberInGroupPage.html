@@ -58,7 +58,7 @@
                           <el-avatar :size="40" :src="groupMemberList[count-1].userAvatar">user</el-avatar>
                           <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{groupMemberList[count - 1].userName}}{% endverbatim %}</span>
                         </el-container>
-                        <el-button  class = "detailButton"  icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
+                        <el-button v-if="myId!=groupMemberList[count - 1].userId" class = "detailButton"  icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
                       </el-container>
                   </div>
 
@@ -87,6 +87,7 @@
             //userId: 1,  // 调试时暂时如此假设
             myName: "张三",
             myAvatar: "",
+            myId: -1,
 
             chatGroupId: 1,
             chatGroupName: "一个讨论组的名字",
@@ -133,6 +134,8 @@
                                 console.log('failed to initialize')
                                 return
                             }
+                            console.log(res.data)
+                            this.myId = res.data.information.id
                             this.myName = res.data.information.user_name
                             this.myAvatar = res.data.information.user_photo
                         }
