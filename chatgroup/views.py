@@ -26,7 +26,7 @@ from commentarea.models import PaperFile, Paper
 @csrf_exempt
 def add_annotation(request):
     response = {}
-    debugflag = True
+    debugflag = False
     if debugflag == False:
         user_id = check_cookie(request)
         #检查cookie

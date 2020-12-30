@@ -39,7 +39,7 @@ var vm = new Vue({
         // 页面初始化，填入所有评论数据
         initDatas() {
             this.paperId = parseInt(this.getParams("id"))
-            this.paperDir = 'http://127.0.0.1:8000/chatgroup/showpdf.html?id=' + this.paperId
+            this.paperDir = 'http://127.0.0.1:8000/chatgroup/showpdf.html?handleClick=1&id=' + this.paperId
             this.isClicked = false
             window.addEventListener('message', (msg) => {
                 this.clickX = msg.data.data[0]

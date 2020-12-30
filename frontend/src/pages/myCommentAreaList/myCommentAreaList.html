@@ -49,7 +49,7 @@
                         <p class="text" style="font-size: 20px;"><b>我收藏的讨论区</b></p>
                     </div>
                     <div class="comment_left" v-for="count in commentAreaInfoList.length">
-                        <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{commentAreaInfoList[count - 1].title}}{% endverbatim %}</b>></p>
+                        <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{commentAreaInfoList[count - 1].title}}{% endverbatim %}</b></p>
                         <el-button style="width: 100px; height: 40px;" v-bind:type="getStarAreaButtonType(count)" icon="el-icon-star-off" @click="handleStarArea(count)">收藏 {% verbatim %}{{commentAreaInfoList[count - 1].star_number}}{% endverbatim %}</el-button>
                         <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">全文</el-button>
                     </div>

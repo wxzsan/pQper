@@ -55,7 +55,7 @@ var vm = new Vue({
                                             requestor: response.data.username,
                                             paperId: element.paper,
                                         })
-                                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[0].paperId
+                                        this.paperDir = 'http://127.0.0.1:8000/commentarea/showpdf.html?handleClick=0&id=' + this.createRequestList[0].paperId
                                     }
                                 )
                         })
@@ -71,7 +71,7 @@ var vm = new Vue({
         },
         // 选中申请事件处理
         handleClick(count) {
-            this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.createRequestList[count - 1].paperId
+            this.paperDir = 'http://127.0.0.1:8000/commentarea/showpdf.html?handleClick=0&id=' + this.createRequestList[count - 1].paperId
         },
         // 通过申请事件处理
         handleAccept(count) {

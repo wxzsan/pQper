@@ -54,7 +54,6 @@ var vm = new Vue({
               .then(
                   (res) => {
                       res = res.data
-                      console.log(res)
                       if (res.code != 200) {
                           console.log('failed to initialize')
                           return
@@ -75,7 +74,7 @@ var vm = new Vue({
                         this.paperInfo.title = res.comment_area.name
                         this.area_star_number = res.comment_area.star_number
                         this.area_has_star = res.comment_area.star
-                        this.paperDir = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + res.comment_area.paper
+                        this.paperDir = 'http://127.0.0.1:8000/commentarea/showpdf.html?handleClick=0&id=' + res.comment_area.paper
                         res.comment_area.short_comment_list.forEach((shortCommentId) => {
                             this.$axios.get('http://127.0.0.1:8000/commentarea/get_short_comment?shortCommentId=' + shortCommentId)
                                 .then(
