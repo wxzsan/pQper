@@ -23,4 +23,5 @@ urlpatterns = [
     path('settingpage.html', TemplateView.as_view(template_name = 'settingpage.html')),
     path('upload_avatar.html', TemplateView.as_view(template_name = 'upload_avatar.html')),
     path('UserProfilePage.html', TemplateView.as_view(template_name = 'UserProfilePage.html')),
+    path('delete_user', views.delete_user),
 ]

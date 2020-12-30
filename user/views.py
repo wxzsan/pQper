@@ -420,3 +420,11 @@ def passwordtest(request):
         response['code'] = 200
         response['data'] = {'msg': "success", "password":password}
         return JsonResponse(response)
+
+@csrf_exempt
+def delete_user(request):
+    response = {}
+    user_id = request.GET.get('userId')
+    User.objects.get(id = user_id).delete()
+    response['code'] = 200
+    return JsonResponse(response)
