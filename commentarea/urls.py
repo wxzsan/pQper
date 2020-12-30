@@ -34,4 +34,6 @@ urlpatterns = {
     path('starCommentList.html', TemplateView.as_view(template_name = 'starCommentList.html')),
     path('get_username', views.get_username),
     path('aboutpQper.html', TemplateView.as_view(template_name = 'aboutpQper.html')),
+    path('showpdf.html', TemplateView.as_view(template_name = 'showpdf.html')),
+    path('annotation-noicon.svg', views.get_icon),
 }

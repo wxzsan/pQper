@@ -43,17 +43,18 @@ var vm = new Vue({
         // 页面初始化，填入所有数据
         initDatas() {
             this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-              .then(
-                  (res) => {
-                      res = res.data
-                      console.log(res)
-                      if (res.code != 200) {
-                          console.log('failed to initialize')
-                          return
-                      }
-                      this.userAvatar = res.data.information.user_photo
-                  }
-              )
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            if (res.code === 300)
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            console.log('failed to initialize')
+                            return
+                        }
+                        this.userAvatar = res.data.information.user_photo
+                    }
+                )
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment_list')
                 .then(
                     (res) => {
@@ -135,6 +136,8 @@ var vm = new Vue({
                                 })
                             }
                             else {
+                                if (res.code === 300)
+                                    window.location.href = 'http://127.0.0.1:8000/user/login.html'
                                 this.$message({
                                     type: "error",
                                     message: "收藏失败",
@@ -157,6 +160,8 @@ var vm = new Vue({
                                 })
                             }
                             else {
+                                if (res.code === 300)
+                                    window.location.href = 'http://127.0.0.1:8000/user/login.html'
                                 this.$message({
                                     type: "error",
                                     message: "取消收藏失败",
@@ -180,6 +185,8 @@ var vm = new Vue({
                                 })
                             }
                             else {
+                                if (res.code === 300)
+                                    window.location.href = 'http://127.0.0.1:8000/user/login.html'
                                 this.$message({
                                     type: "error",
                                     message: "删除失败",

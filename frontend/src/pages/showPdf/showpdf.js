@@ -59,7 +59,6 @@ Vue.component('showpdf', {
                 window.onscroll = function () {
                     changePage()
                 }
-
                 function changePage() {
                     var i = 1,
                         count = Number(pdf.numPages);
@@ -97,6 +96,7 @@ var vm = new Vue({
     },
     data: {
         paperId: 0,
+        handleClick: 0,
         pdf_src: '',
     },
     methods: {
@@ -124,6 +124,7 @@ var vm = new Vue({
         },
         initDatas() {
             this.paperId = parseInt(this.getParams("id"))
+            this.handleClick = parseInt(this.getParams("handleClick"))
             this.pdf_src = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.paperId
         },
         getParams(key) {
