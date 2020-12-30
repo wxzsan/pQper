@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <!-- import CSS -->
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <title>UserProfilePage</title>
+  <title>memberInGroup</title>
 </head>
 
 <body>
@@ -33,7 +33,7 @@
                 <!--左边栏-->
                 <el-aside width="120px">
                     <div class = "mySimpleInfo">
-                      <el-avatar :size="100" :src="myAvatar"></el-avatar>
+                      <el-avatar :size="100" :src="myAvatar">user</el-avatar>
                       <!--
                       <p style="text-align: center;">{% verbatim %}{{myName}}{% endverbatim %}</p>
                       -->
@@ -45,35 +45,21 @@
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
-                <!--用户信息区域-->
+                <!--搜索结果区域-->
                 <el-main>
-                  <el-container style = "height: 80px;">
-                    <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{userName}}{% endverbatim %}的个人主页</b></p>
-                  </el-container>
+                  <el-row>
+                    <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{chatGroupName}}{% endverbatim %}的所有成员</b></p>
+                    <el-button type="primary" icon="el-icon-arrow-left" style="width: 130px; float: right; margin-top: 16px;" @click="handleBack()">返回讨论组</el-button>
+                  </el-row>
 
-                  <el-container style = "height: 60px;">
-                    <el-container width = 80% >
-                      <el-avatar :size="60" :src="userAvatar"></el-avatar>
-                    </el-container>
-                    <div v-if="star == 0">
-                      <el-button type="primary" icon="el-icon-plus" style="width: 80px; float: right;" @click="handleStar()">关注</el-button>
-                    </div>
-                    <div v-else>
-                      <el-button type="info"    icon="el-icon-minus" style="width: 80px; float: right;" @click="handleCancelStar()">取关</el-button>
-                    </div>
-                  </el-container>
-
-                  <div align="center" ><p style="font-size: 20px;">TA的动态</p></div>
-
-                  <div class="updating" v-for="count in userMomentList.length">
-                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[count - 1].posttime}}{% endverbatim %}</span>
-                    <div>
-                      Title：{% verbatim %}{{userMomentList[count - 1].title}}{% endverbatim %}
-                    </div>
-                    <div>
-                      简要内容：{% verbatim %}{{userMomentList[count - 1].content}}{% endverbatim %}
-                    </div>
-                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[count-1].id)">详情</el-button>
+                  <div class ="relatedUserList" v-for="count in groupMemberList.length">
+                      <el-container>
+                        <el-container width = 80%>
+                          <el-avatar :size="40" :src="groupMemberList[count-1].userAvatar">user</el-avatar>
+                          <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{groupMemberList[count - 1].userName}}{% endverbatim %}</span>
+                        </el-container>
+                        <el-button  class = "detailButton"  icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
+                      </el-container>
                   </div>
 
                 </el-main>
@@ -98,33 +84,34 @@
             this.initDatas()
         },
         data: {
-
+            //userId: 1,  // 调试时暂时如此假设
             myName: "张三",
             myAvatar: "",
-            userId: 0,  // 调试时暂时如此假设
-            userName: "李四",
-            userAvatar: "",
-            star: 0,
-            userMomentList: [/*{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
+
+            chatGroupId: 1,
+            chatGroupName: "一个讨论组的名字",
+
+            groupMemberList: [{
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
+                address: "",
             },{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
+                address: "",
             },{
-                title: "这里要改成此用户的动态",
-                id: 1,
-                posttime: "2020/12/16 12:00",
-                content: "",
-            }*/],
+                userId: 1,
+                userName: "李四",
+                userAvatar: "",
+                address: "",
+            }],
+
             searchInput: "",
         },
         methods: {
-            // 正则表达式匹配
+            // 正则表达式匹配，从上个界面的url得到searchInput
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
                 var r = window.location.search.substr(1).match(reg)
@@ -133,14 +120,8 @@
                 }
                 return null
             },
-            // 页面初始化，填入所有动态数据
+            // 页面初始化，填入数据
             initDatas(){
-                let str = this.getParams('userid')
-                if(str == '')
-                  this.userId = 0
-                else
-                  this.userId = +str
-                console.log(this.userId)
                 this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                     .then(
                         (res) => {
@@ -153,49 +134,38 @@
                             this.myAvatar = res.data.information.user_photo
                         }
                     )
-                this.$axios.post('http://127.0.0.1:8000/user/get_user_information',{"id":this.userId})
-                    .then(
-                        (res) => {
-                            res = res.data
-                            //console.log(res)
-                            if(res.code != 200){
-                                console.log('failed to initialize')
-                                return
+
+                //未完成
+                let data = {
+                  "chatGroupId": this.chatGroupId,
+                }
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params:data})
+                  .then(
+                    (res) => {
+                      res = res.data
+
+                      console.log(res.code)
+                      if (res.code != 200) {
+                          console.log('failed to initialize')
+                          return
+                      }
+
+                      /*resUser = result.data.findUsers
+                      console.log(resUser)
+                      resUser.forEach(
+                        (key)=>{
+                          this.searchUserList.push(
+                            {
+                              userId: key.id,
+                              userName: key.user_name,
+                              userAvatar: "/pQper/media/"+key.user_photo,
                             }
-                            res = res.data
-                            //console.log(res)
-                            res = res.information
-                            //console.log(res)
-
-                            this.userName = res.user_name
-                            this.userAvatar = res.user_photo
-
+                          )
+                          console.log(key.user_photo)
                         }
-                    )
-                 this.$axios.post('http://127.0.0.1:8000/SearchAndResults/SelfMomments',{"userid":this.userId})
-                     .then(
-                         (res) => {
-                             res = res.data
-                             console.log(res)
-                             if(res.code != 200){
-                                 console.log('failed to initialize')
-                                 return
-                             }
-                             res = res.data
-                             res.LongComments.forEach(
-                                (key)=>{
-                                    this.userMomentList.push(
-                                        {
-                                          title: key.title,
-                                          id: key.id,
-                                          posttime: key.post_time,
-                                          content: key.content,
-                                        }
-                                    )
-                                }
-                             )
-                         }
-                     )
+                      )*/
+                    }
+                  )
             },
 
             // 搜索框事件处理
@@ -206,40 +176,15 @@
                 }
             },
 
-            handleDetail(id){
-                window.location.href = "http://127.0.0.1:8000/commentarea/longComment.html?id="+id
-                //console.log("../longComment/longComment.html?id="+ id)
+            //页面跳转处理
+            handleBack(){
+              window.location.href = "http://127.0.0.1:8000/chatgroup/" //未完成
             },
 
-
-            //以下两个函数未完成，还没和后端进行交互
-            handleStar(){
-              this.star = 1
-              let data = {
-                'id': this.userId,
-              }
-              this.$axios.post('http://127.0.0.1:8000/user/add_star_user', JSON.stringify(data))
-              .then(
-                (res) => {
-                  res = res.data
-                  console.log(res)
-                }
-              )
+            handleUserDetail(id){
+              window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid="+id
+              //console.log(window.location.href)
             },
-
-            handleCancelStar(){
-              this.star = 0
-              let data = {
-                'id': this.userId,
-              }
-              this.$axios.post('http://127.0.0.1:8000/user/remove_star_user', JSON.stringify(data))
-              .then(
-                (res) => {
-                  res = res.data
-                  console.log(res)
-                }
-              )
-            }
         }
     })
     </script>
@@ -297,20 +242,30 @@
     }
     .title {
         font-family: Times;
-        width: 100%;
+        float:left;
+        width: 80%;
+        align-self: center;
     }
     .text {
         font-family: Times;
-
+        margin: 6px;
     }
-    .updating {
+    .relatedUserList {
         background-color: #ebeef5;
-        border-radius: 4px;
-        border-color: #000000;
+        border-radius: 6px;
         margin: 8px;
         padding: 10px;
-        margin-bottom: 50px;
+        margin-bottom: 10px;
     }
+
+    .relatedCommentAreaList {
+        background-color: #ebeef5;
+        border-radius: 6px;
+        margin: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
     .detailButton {
       background-color: #e8ebf1;
       border-color: #ebeef5;

@@ -153,3 +153,25 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 # 文件存储路径和url
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL="/media/"
+
+
+# 发送邮件
+# 发送邮件设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False   # 是否使用TLS安全传输协议
+EMAIL_USE_SSL = True    # 是否使用SSL加密，qq企业邮箱要求使用
+# SMTP地址
+EMAIL_HOST = 'smtp.qq.com'
+# SMTP端口
+EMAIL_PORT = 465
+# 自己的邮箱
+EMAIL_HOST_USER = '1192359897@qq.com'
+# 自己的邮箱授权码，非密码
+EMAIL_HOST_PASSWORD = 'wrhybjzdurjfbabd'
+EMAIL_SUBJECT_PREFIX = 'pQper'
+
+
+
+RSA_PUBLIC_KEY = "<MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAnAIl6VFrjwPg6v2qGMMywlOPoS/fqCk68MHt7RGroVlZJvucD7DqZJDrMyj0Y7VgCsnonsFRPlVB/PDOfywx8WT8UBzeLojjMIYIlET5QxAWvArcG6D6jiolcTDzyFPCjaeb2v4DkniqBvPaOitjm5TEI/wkV0wP9AzpbixDBQIDAQAB>"
+ 
+RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" + "<MIICXAIBAAKBgQDAnAIl6VFrjwPg6v2qGMMywlOPoS/fqCk68MHt7RGroVlZJvucD7DqZJDrMyj0Y7VgCsnonsFRPlVB/PDOfywx8WT8UBzeLojjMIYIlET5QxAWvArcG6D6jiolcTDzyFPCjaeb2v4DkniqBvPaOitjm5TEI/wkV0wP9AzpbixDBQIDAQABAoGAVqeZu869x+Ne/lka6OUdJQASsiL1s+0nJ5Jb3Zxz/8CmvxpvxuW0VbALFxY8Tb9yQZR5BIQwO0oM95RCDtVeXwwg7pRXdIYbVj2WxeFsnD41ANpYg/UyPoG/Mduu4Cr+8zDR4B/CWzQju7vX1NcIxSByh+TATSeZFdXj+kNEgB0CQQDBY/CE+tDX7srtx4iQ3vWbLTggCROK4zUV6NvULatfg0MecnaehxFCt8wDTp2rKqQAHBS6dlElSICoUc9B7o7/AkEA/vdXebWXzM4ZZhTQ8t8lIvudJCb1cnbN3Z2gy09BRgyWQPKCOA75r+/2KeLteNKkxKepoJWwQiKPjncb81jx+wJAXA1RIEsu+4mbqGEQ3TxzlgCJNZ58YeDSlPI5KR7v8s/NNAHx+nV6PtKz1mMmY6IxXCgBqdvFtkRzkSsXx19hSwJABB+0Bn/taJ6cwo3ro0IAs8QmEoOezK8nPUJja2Zow91IQNyrRoTXfQUAkkTdWmrtx1B+6d4B78/nSoKarSDvKQJBAITD/OKVDqqhBlyRpNuRGauxPxk+i1MO/IHhNA4IAJT12HbMklaB42YS9YCe104AeQLENJON1HXw9hzEqYkLhtI=>" + "\n-----END RSA PRIVATE KEY-----"

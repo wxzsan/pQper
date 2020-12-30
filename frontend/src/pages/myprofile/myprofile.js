@@ -53,6 +53,11 @@ var vm = new Vue({
           window.location.href = 'http://127.0.0.1:8000/user/login.html'
         })
     },
+    handle_command: function (command) {
+      if (command === 'a') this.to_home_page()
+      else if (command === 'b') this.to_my_profile_page()
+      else if (command === 'c') this.quit()
+    },
     handleSearch() {
       if (this.searchInput.length > 0) {
         var searchContent = btoa(encodeURI(this.searchInput))

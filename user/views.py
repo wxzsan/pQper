@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 # Create your views here.
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.http import require_http_methods
@@ -10,6 +8,14 @@ from .models import User
 from .serializers import information_serializer, star_serializer
 import requests
 import json
+from django.core.mail import send_mail
+import random
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5, PKCS1_OAEP
+from django.conf import settings
+import base64
+
 #这里王昕兆为了方便调试假的view，暂时不要删
 @csrf_exempt
 def adduser(request):
@@ -35,8 +41,6 @@ def setadmin(request):
         response['data'] = {'msg':"success"}
         return JsonResponse(response)
 
-        
-
 
 def check_cookie(request):
     try:
@@ -47,11 +51,39 @@ def check_cookie(request):
 
 
 @csrf_exempt 
+def verify(request):
+    response = {}
+    if request.method == 'POST':
+        try:
+            email = json.loads(request.body)['email']
+            verification = json.loads(request.body)['verification'] #理论上name是允许重复
+        except:
+            response['code'] = 300
+            response['data'] = {'msg':"json wrong"}
+            return JsonResponse(response)
+        try:
+            user = User.objects.get(user_email=email)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg':"user do not exist"}
+            return JsonResponse(response)
+        if verification == user.verification:
+            user.active=True
+            user.save()
+            response['code'] = 200
+            response['data'] = {'msg':"verify success"}
+        else:
+            response['code'] = 300
+            response['data'] = {'msg':"verification is wrong"}
+        return JsonResponse(response)
+
+@csrf_exempt 
 def login(request):
     response = {}
     if request.method == 'POST':
         email = json.loads(request.body)['email']
         password = json.loads(request.body)['password']
+        password = decrypt_pass(password).decode()
         try:
             user = User.objects.get(user_email = email)
         except:
@@ -79,6 +111,7 @@ def register(request):
         try:
             email = json.loads(request.body)['email']
             password = json.loads(request.body)['password']
+            password = decrypt_pass(password).decode()
             name = json.loads(request.body)['name'] #理论上name是允许重复
         except:
             response['code'] = 300
@@ -93,9 +126,19 @@ def register(request):
         except:
             response['code'] = 200
             response['data'] = {'msg':"success"}
-            user = User(user_name = name, user_email = email, user_password = password)
-            user.save()
+            verification = str(random.randint(0,9999999999))
+            user = User(user_name = name, user_email = email, user_password = password, verification = verification)
+        try:
+            print(email)
+            sending_email(verification, email)
+        except:
+            response['code'] = 300
+            response['data'] = {'msg':"email adress is wrong"}
             return JsonResponse(response)
+        response['code'] = 200
+        response['data'] = {'msg':"success"}
+        user.save()
+        return JsonResponse(response)
     else:
         response['code'] = 300
         response['data'] = {'msg':"path wrong"}
@@ -116,12 +159,9 @@ def get_user_information(request):
             return JsonResponse(response)
         else:
             try:
+                print(userid)
                 user = User.objects.get(id=userid)
                 #print(user.user_photo)
-                response['code'] = 200
-                serializer=information_serializer(user)
-                response['data'] = {'msg':"success", 'information':serializer.data}
-                return JsonResponse(response)
             except:
                 response['code'] = 300
                 #if email == email_test:
@@ -129,8 +169,10 @@ def get_user_information(request):
                 #else:
                 response['data'] = {'msg': "User does not exist"}
                 return JsonResponse(response)
-            '''response['data'] = {'msg':"success", 'name':user.user_name, 'photo':str(user.user_photo), 'email':user.user_emali}
-            return JsonResponse(response)'''
+            response['code'] = 200
+            serializer=information_serializer(user)
+            response['data'] = {'msg':"success", 'information':serializer.data}
+            return JsonResponse(response)
         
 
 @csrf_exempt
@@ -146,6 +188,7 @@ def change_user_information(request):
         else:
             name = json.loads(request.body)['name']
             password = json.loads(request.body)['password']
+            password = decrypt_pass(password).decode()
             print(userid*3)
             try:
                 user = User.objects.get(id=userid)
@@ -281,6 +324,7 @@ def add_star_user(request):
 
         try:
             user.star_user_list.add(star_user)
+            user.save()
             response['code'] = 200
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
@@ -315,6 +359,7 @@ def remove_star_user(request):
             return JsonResponse(response)
             
         user.star_user_list.remove(star_user)
+        user.save()
         response['code'] = 200
         response['data'] = {'msg': "success"}
         return JsonResponse(response)
@@ -346,3 +391,28 @@ def logout(request):
                 #else:
                 response['data'] = {'msg': "User does not exist"}
                 return JsonResponse(response)
+
+def sending_email(ver, email):
+        string = "验证码:"+ver+"\n验证网址: http://127.0.0.1:8000/user/verify.html \n请勿将验证码泄露给他人！"
+        send_mail(subject="验证邮件",
+                message=string,
+                from_email='1192359897@qq.com',  #发送者邮箱
+                recipient_list=[email], # 接收者邮箱可以写多个
+                fail_silently=False)
+
+def decrypt_pass(password):
+    random_generator = Random.new().read
+    RSA.generate(1024, random_generator)
+    rsakey = RSA.importKey(settings.RSA_PRIVATE_KEY)
+    cipher = PKCS1_v1_5.new(rsakey)
+    return cipher.decrypt(base64.b64decode(password), random_generator)
+
+@csrf_exempt
+def passwordtest(request):
+    response = {}
+    if request.method == 'POST':
+        text = json.loads(request.body)['password']
+        password = decrypt_pass(text).decode()
+        response['code'] = 200
+        response['data'] = {'msg': "success", "password":password}
+        return JsonResponse(response)

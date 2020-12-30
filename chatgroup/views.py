@@ -112,7 +112,7 @@ def getChatGroupPapers(request):
         return JsonResponse(response)
 
 @csrf_exempt
-def getChatGroupMenbers(request):
+def getChatGroupMembers(request):
     response = {}
     if request.method == 'GET':
         debugflag = True
@@ -287,6 +287,30 @@ def getBothStarList(request):
 
             return JsonResponse(response)
 
+@csrf_exempt
+def getChatGroupName(request):
+    response = {}
+    if request.method == 'GET':
+        debugflag = True
+        if debugflag == False:
+            # 根据 cookie 判断能否查看动态
+            if check_cookie(request) == -1:
+                response['code'] = 300
+                response['data'] = {'msg': 'cookie out of date'}
+                return JsonResponse(response)
+
+        groupId = request.GET.get('chatGroupId')
+
+        try:
+            name = ChatGroup.objects.get(id = groupId).name
+            print("hello")
+            response['code'] = 200
+            response['data'] = {
+                "msg": "success",
+                "name" : name
+            }
+
+            return JsonResponse(response)
         except:
             response["code"] = 300
             response["data"] = {
@@ -294,7 +318,7 @@ def getBothStarList(request):
             }
             return JsonResponse(response)
     else:
-        # 请用 post
+        # 请用 GET
         response["code"] = 600
         response["data"] = {
             "msg" : "incorrect request method"

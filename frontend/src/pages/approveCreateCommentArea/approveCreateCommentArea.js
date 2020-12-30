@@ -19,6 +19,7 @@ var vm = new Vue({
         paperDir: "",
         searchInput: "",
         createRequestList: new Array(),
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -80,10 +81,17 @@ var vm = new Vue({
                         res = res.data
                         if (res.code === 200) {
                             this.createRequestList.splice(count - 1, 1);
-                            this.$message("操作成功")
+                            this.$message({
+                                type: "success",
+                                message: "操作成功",
+                            })
                         }
-                        else
-                            this.$message("操作失败")
+                        else{
+                            this.$message({
+                                type: "error",
+                                message: "操作失败",
+                            })
+                        }
                     }
                 )
         },
@@ -95,12 +103,47 @@ var vm = new Vue({
                         res = res.data
                         if (res.code === 200) {
                             this.createRequestList.splice(count - 1, 1);
-                            this.$message("操作成功")
+                            this.$message({
+                                type: "success",
+                                message: "操作成功",
+                            })
                         }
-                        else
-                            this.$message("操作失败")
+                        else{
+                            this.$message({
+                                type: "error",
+                                message: "操作失败",
+                            })
+                        }
                     }
                 )
+        },
+        confirmAccept(count) {
+            this.$confirm('此操作将通过该申请，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }).then(() => {
+                this.handleAccept(count)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '操作已取消',
+                });
+            });
+        },
+        confirmRefuse(count) {
+            this.$confirm('此操作将拒绝该申请，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }).then(() => {
+                this.handleRefuse(count)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '操作已取消',
+                });
+            });
         },
     }
 })

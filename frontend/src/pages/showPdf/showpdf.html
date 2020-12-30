@@ -3,15 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Show Pdf</title>
+    <title>show pdf</title>
 </head>
 
 <body>
     <div id="app" style="width: 100%;height: 100%;">
-        <div id="pdf" style="width: 100%;height: 100%;">
-            <div :style="{width:pdf_div_width,margin:'0 auto'}">
-                <canvas v-for="page in pdf_pages" :id="'the-canvas'+page" :key="page" @click="handle_click"></canvas>
-            </div>
+        <div id="pdf" @click="handle_click" style="width: 100%;height: 100%;">
+            <showpdf :src="pdf_src"></showpdf>
         </div>
     </div>
 </body>
@@ -22,7 +20,15 @@
         margin: 0;
         height: 100%;
     }
-
+    .content {
+        padding: 16px;
+    }
+    .annotationLayer>.textAnnotation {
+        opacity: 0;
+    }
+    .annotationLayer>.popupAnnotation>.popupWrapper>.popup>span {
+        opacity: 0;
+    }
 </style>
 
 </html>

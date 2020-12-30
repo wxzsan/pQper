@@ -4,6 +4,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import { JSEncrypt } from 'jsencrypt'
 
 Vue.use(ElementUI)
 Vue.prototype.$axios = axios
@@ -18,7 +19,8 @@ var vm = new Vue({
       password: '',
       repeat_password: '',
       message: '',
-      searchInput: ''
+      searchInput: '',
+      public_key: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAnAIl6VFrjwPg6v2qGMMywlOPoS/fqCk68MHt7RGroVlZJvucD7DqZJDrMyj0Y7VgCsnonsFRPlVB/PDOfywx8WT8UBzeLojjMIYIlET5QxAWvArcG6D6jiolcTDzyFPCjaeb2v4DkniqBvPaOitjm5TEI/wkV0wP9AzpbixDBQIDAQAB'
     }
   },
   methods: {
@@ -35,7 +37,7 @@ var vm = new Vue({
         return
       let data = {
         "name": this.name,
-        "password": this.password
+        "password": this.encrypt_data(this.password)
       }
       let config = {
         headers: {
@@ -110,6 +112,13 @@ var vm = new Vue({
         var searchContent = btoa(encodeURI(this.searchInput))
         window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
       }
+    },
+    encrypt_data: function (data) {
+      var password_old = data
+      let encrypt = new JSEncrypt()
+      encrypt.setPublicKey(this.public_key)
+      var pass_new = encrypt.encrypt(password_old)
+      return pass_new
     }
   }
 })
