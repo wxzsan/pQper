@@ -363,13 +363,13 @@ var vm = new Vue({
             if (this.shortCommentList[count - 1].has_rose)
                 return "info"
             else
-                return "success"
+                return "primary"
         },
         getEggButtonType(count) {
             if (this.shortCommentList[count - 1].has_egg)
                 return "info"
             else
-                return "warning"
+                return "primary"
         },
         getStarButtonType() {
             if (this.longComment.has_star)
