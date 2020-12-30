@@ -83,7 +83,7 @@ def GetMomments(request):
     if request.method == 'POST':
         # print(request.body)
         # 不使用 cookie 测试的话，就将 debugflag = TRUE
-        debugflag = False
+        debugflag = True
         if debugflag == False:
             # 根据 cookie 判断能否查看动态
             userid = check_cookie(request)
@@ -101,14 +101,14 @@ def GetMomments(request):
         try:
             # 获取关注了的人的id
             # userlist = [{"id" : ...}, ....]
-            userlist = list(user.staruserlist_set.values('user_id'))
+            userlist = list(user.star_user_list.values('id'))
             # 包括他自己
-            userlist.append({'user_id' : user.id})
+            userlist.append({'id' : user.id})
 
             # 根据关注了的人的 id 进行检索，找到 start_time 之后提交的长评
             friends_long_comment_list = []
             for friends in userlist:
-                friends_id = friends['user_id']
+                friends_id = friends['id']
                 friends_recent_long_comment = list(
                     User.objects.get(id=friends_id).
                     post_long_comment.
