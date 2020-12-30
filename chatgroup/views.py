@@ -284,8 +284,22 @@ def getBothStarList(request):
                 "msg" : "success",
                 "userList" : retList
             }
-
+            
             return JsonResponse(response)
+        except:
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
+    else:
+        # 请用 POST
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
+
 
 @csrf_exempt
 def getChatGroupName(request):
