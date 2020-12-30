@@ -271,6 +271,11 @@ def uploadChatGroupPaper(request):
                     "msg" : "database corrupted"
                 }
                 return JsonResponse(response)
+        else:
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "wrong paremeter format"
+            }
 
     else:
         # 请用 post
