@@ -42,7 +42,7 @@
                     <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
                 </el-aside>
 
                 <!--用户信息区域-->
@@ -66,14 +66,14 @@
                   <div align="center" ><p style="font-size: 20px;">TA的动态</p></div>
 
                   <div class="updating" v-for="count in userMomentList.length">
-                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[count - 1].posttime}}{% endverbatim %}</span>
+                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[userMomentList.length-count].posttime}}{% endverbatim %}</span>
                     <div>
-                      Title：{% verbatim %}{{userMomentList[count - 1].title}}{% endverbatim %}
+                      Title：{% verbatim %}{{userMomentList[userMomentList.length-count].title}}{% endverbatim %}
                     </div>
                     <div>
-                      简要内容：{% verbatim %}{{userMomentList[count - 1].content}}{% endverbatim %}
+                      简要内容：{% verbatim %}{{userMomentList[userMomentList.length-count].content}}{% endverbatim %}
                     </div>
-                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[count-1].id)">详情</el-button>
+                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[userMomentList.length-count].id)">详情</el-button>
                   </div>
 
                 </el-main>
@@ -188,7 +188,7 @@
                                         {
                                           title: key.title,
                                           id: key.id,
-                                          posttime: key.post_time,
+                                          posttime: key.post_time.slice(0, 19).replace('T',' '),
                                           content: key.content,
                                         }
                                     )

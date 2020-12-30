@@ -60,12 +60,16 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
+                        console.log(res)
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
                         }
+
                         res = res.data
-                        res.MyChatGroupList.forEach((chatGroupId) => {
+                        console.log(res)
+                        res.MyChatGroupList.forEach(
+                          (chatGroupId) => {
                             this.chatGroupInfoList.push({
                                 id: chatGroupId.id,
                                 title: chatGroupId.name,
@@ -83,7 +87,7 @@ var vm = new Vue({
         },
         // 跳转至单个页面
         handleJump(count){
-            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleChatGroup.html?id=' + this.chatGroupInfoList[count - 1].id
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id=' + this.chatGroupInfoList[count - 1].id
         },
     }
 })

@@ -43,8 +43,8 @@
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
                     <el-button type="primary" icon="el-icon-document-copy" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">讨论组</el-button><br>
+                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href='http://127.0.0.1:8000/commentarea/aboutpQper.html'">关于</el-button>
                     <el-button v-if = "Administrator != 0" type="primary" icon="el-icon-s-check" onclick="window.location.href='http://127.0.0.1:8000/commentarea/approveCreateCommentArea.html'">申请管理</el-button><br>
-                    <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
                 <!--最新动态区域-->
@@ -59,15 +59,15 @@
                     <div class="updating" v-for="count in updateInfoList.length">
                         <el-container>
                             <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                            <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
+                            <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{updateInfoList[updateInfoList.length-count].poster}}{% endverbatim %}</span>
                         </el-container>
                         <div style="font-size: 20px;">
-                            {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
+                            {% verbatim %}{{updateInfoList[updateInfoList.length-count].title}}{% endverbatim %}
                         </div>
                         <div style="font-size: 18px;">
-                            {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
+                            {% verbatim %}{{updateInfoList[updateInfoList.length-count].posttime}}{% endverbatim %}
                         </div>
-                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].commentid)">详情</el-button>
+                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[updateInfoList.length-count].commentid)">详情</el-button>
                     </div>
 
                 </el-main>
@@ -190,7 +190,7 @@
                                             commentid: key.id,
                                             posterid: key.poster,
                                             poster: key.poster_name,
-                                            posttime: key.post_time,
+                                            posttime: key.post_time.slice(0, 19).replace('T',' '),
                                             content: key.content,
                                         })
                                     }
