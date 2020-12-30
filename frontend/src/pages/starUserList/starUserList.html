@@ -52,8 +52,8 @@
                     <div class="comment" v-for="count in starUserInfoList.length">
 
                         <el-container width = 80%>
-                          <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starUserInfoList[count - 1].name}}{% endverbatim %}</b></p>
-                          <p class="text" style="font-size: 20px;margin-left: 20px;">{% verbatim %}{{starUserInfoList[count - 1].email}}{% endverbatim %}</p>
+                          <p class="text" style="font-size: 20px;width: 150px;"><b>{% verbatim %}{{starUserInfoList[count - 1].name}}{% endverbatim %}</b></p>
+                          <p class="text" style="font-size: 20px;margin-left: 20px;">Email:{% verbatim %}{{starUserInfoList[count - 1].email}}{% endverbatim %}</p>
                         </el-container>
                         <el-button style="width: 120px; height: 40px;float: right;" class = "detailButton" icon="el-icon-plus" @click="handleDetail(starUserInfoList[count-1].id)">进入主页</el-button>
                     </div>
