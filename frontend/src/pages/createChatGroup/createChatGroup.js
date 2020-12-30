@@ -17,11 +17,7 @@ var vm = new Vue({
       photo: '',
       id: '',
       searchInput: '',
-      user_data: [{
-        userName: 'fuckpps',
-        userAvatar: '1.png',
-        userId: 1
-      }],
+      user_data: [],
       group_name: '',
       multiple_selection: []
     }
@@ -82,7 +78,7 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/get_both_star_list', JSON.stringify(data), config)
+      this.$axios.post('http://127.0.0.1:8000/chatgroup/get_both_star_list', JSON.stringify(data), config)
         .then((res) => {
           res = res.data
           if (res.data.msg === 'cookie out of date') {
@@ -113,14 +109,14 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/create_chat_group', JSON.stringify(data), config)
+      this.$axios.post('http://127.0.0.1:8000/chatgroup/create_chat_group', JSON.stringify(data), config)
         .then((res) => {
           res = res.data
           if (res.data.msg === 'cookie out of date') {
             alert('登录超时')
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
-            window.location.href = 'http://127.0.0.1:8000/chatGroup/ChatGroupPage.html?GroupId=' + res.data.groupId
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleChatGroup.html?id=' + res.data.groupId
           } else {
             alert('用户不存在')
           }
