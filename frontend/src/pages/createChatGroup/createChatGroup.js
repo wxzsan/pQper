@@ -10,7 +10,7 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
   el: '#app',
-  data: function () {
+  data: function() {
     return {
       email: '',
       name: '',
@@ -23,7 +23,7 @@ var vm = new Vue({
     }
   },
   methods: {
-    get_user_information: function () {
+    get_user_information: function() {
       var that = this
       var promise = new Promise((resolve, reject) => {
         that.$axios.post('http://127.0.0.1:8000/user/get_user_information')
@@ -48,22 +48,22 @@ var vm = new Vue({
       })
       return promise
     },
-    to_setting_page: function () {
+    to_setting_page: function() {
       window.location.href = 'http://127.0.0.1:8000/user/settingpage.html'
     },
-    to_home_page: function () {
+    to_home_page: function() {
       window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
     },
-    to_my_profile_page: function () {
+    to_my_profile_page: function() {
       window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
     },
-    quit: function () {
+    quit: function() {
       this.$axios.post('http://127.0.0.1:8000/user/logout')
         .then((res) => {
           window.location.href = 'http://127.0.0.1:8000/user/login.html'
         })
     },
-    handle_command: function (command) {
+    handle_command: function(command) {
       if (command === 'a') this.to_home_page()
       else if (command === 'b') this.to_my_profile_page()
       else if (command === 'c') this.quit()
@@ -74,7 +74,7 @@ var vm = new Vue({
         window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
       }
     },
-    get_both_star_list: function () {
+    get_both_star_list: function() {
       let data = {
         "userId": this.id
       }
@@ -96,14 +96,14 @@ var vm = new Vue({
           }
         })
     },
-    handle_selection_change: function (val) {
+    handle_selection_change: function(val) {
       this.multiple_selection = val
     },
-    create_chat_group: function () {
+    create_chat_group: function() {
       var userList = []
       var i
       for (i in this.multiple_selection) {
-        userList.push(this.multiple_selection[i].userId)
+        userList.push({ 'userId': this.multiple_selection[i].userId })
       }
       let data = {
         "groupName": this.group_name,
@@ -122,12 +122,14 @@ var vm = new Vue({
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
             window.location.href = 'http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id=' + res.data.groupId
+          } else if (res.data.msg === 'ChatGroup already exists') {
+            alert('组名重复')
           } else {
             alert('用户不存在')
           }
         })
     },
-    init: function () {
+    init: function() {
       this.get_user_information()
         .then((id) => {
           this.get_both_star_list()
