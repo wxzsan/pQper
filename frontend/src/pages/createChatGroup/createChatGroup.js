@@ -24,25 +24,28 @@ var vm = new Vue({
   },
   methods: {
     get_user_information: function () {
-      this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
-        .then((res) => {
-          res = res.data
-          if (res.data.msg === 'cookie out of date') {
-            alert('登录超时')
-            window.location.href = 'http://127.0.0.1:8000/user/login.html'
-          } else if (res.code === 200) {
-            this.name = res.data.information.user_name
-            this.email = res.data.information.user_email
-            this.id = res.data.information.id
-            if (res.data.information.user_photo !== '')
-              this.photo = res.data.information.user_photo
-            else
-              this.photo = ''
-          } else {
-            alert('用户不存在')
-          }
-        })
-      var promise = new Promise((resolve, reject) => {})
+      var that = this
+      var promise = new Promise((resolve, reject) => {
+        that.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+          .then((res) => {
+            res = res.data
+            if (res.data.msg === 'cookie out of date') {
+              alert('登录超时')
+              window.location.href = 'http://127.0.0.1:8000/user/login.html'
+            } else if (res.code === 200) {
+              that.name = res.data.information.user_name
+              that.email = res.data.information.user_email
+              that.id = res.data.information.id
+              if (res.data.information.user_photo !== '')
+                that.photo = res.data.information.user_photo
+              else
+                that.photo = ''
+            } else {
+              alert('用户不存在')
+            }
+            resolve(that.id)
+          })
+      })
       return promise
     },
     to_setting_page: function () {
@@ -111,14 +114,14 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/chatgroup/create_chat_group', JSON.stringify(data), config)
+      this.$axios.post('http://127.0.0.1:8000/chatgroup/createChatGroup', JSON.stringify(data), config)
         .then((res) => {
           res = res.data
           if (res.data.msg === 'cookie out of date') {
             alert('登录超时')
             window.location.href = 'http://127.0.0.1:8000/user/login.html'
           } else if (res.code === 200) {
-            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleChatGroup.html?id=' + res.data.groupId
+            window.location.href = 'http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id=' + res.data.groupId
           } else {
             alert('用户不存在')
           }
@@ -126,7 +129,7 @@ var vm = new Vue({
     },
     init: function () {
       this.get_user_information()
-        .then(() => {
+        .then((id) => {
           this.get_both_star_list()
         })
     }
