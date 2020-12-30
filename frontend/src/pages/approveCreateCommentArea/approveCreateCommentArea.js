@@ -67,6 +67,7 @@ var vm = new Vue({
                                         }
                                         this.createRequestList.push({
                                             requestId: element.id,
+                                            requestorId: element.requestor,
                                             requestor: response.data.username,
                                             paperId: element.paper,
                                         })

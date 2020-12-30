@@ -47,7 +47,7 @@
                 <!--上传文件区域-->
                 <el-main>
                     <div class="comment_left">
-                        <p class="text" style="font-size: 20px;"><b>创建讨论区</b></p>
+                        <p class="text" style="font-size: 20px;"><b>上传讨论组论文</b></p>
                     </div>
                     <div class="comment_left">
                         <p class="text" style="font-size: 17px;">论文标题</p>
@@ -61,6 +61,8 @@
                         <br>
                         <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-upload2"
                             @click="handleUpload()">上传</el-button>
+                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left"
+                            onclick="history.back()">返回</el-button>
                     </div>
                 </el-main>
             </el-container>

@@ -84,8 +84,9 @@ var vm = new Vue({
                                                     }
                                                     this.longCommentList.push({
                                                         id: response.comment.id,
+                                                        posterId: response.comment.poster,
                                                         poster: resp.data.username,
-                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
                                                         title: response.comment.title,
                                                         content: response.comment.content,
                                                         star_number: response.comment.star_number,
@@ -102,12 +103,6 @@ var vm = new Vue({
                     }
                 )
         },
-        // 设置显示markdown
-        displayMarkdown(count) {
-            let converter = new showdown.Converter();
-            let html = converter.makeHtml(this.longCommentList[count - 1].content)
-            document.getElementById('comment_md').innerHTML = html
-        },
         // 搜索框事件处理
         handleSearch() {
             if (this.searchInput.length > 0) {
@@ -117,8 +112,7 @@ var vm = new Vue({
         },
         // 选中长评处理
         handleClick(count) {
-            this.longComment = this.longCommentList[count - 1]
-            this.displayMarkdown(count)
+            window.location.href = 'http://127.0.0.1:8000/commentarea/longComment.html?id=' + this.longCommentList[count - 1].id
         },
         // 收藏/取消收藏长评处理
         handleStar(count) {

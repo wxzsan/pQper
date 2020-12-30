@@ -76,8 +76,9 @@ var vm = new Vue({
                                         console.log('failed to initialize')
                                         return
                                     }
+                                    this.longComment.posterId = res.comment.poster
                                     this.longComment.poster = resp.data.username
-                                    this.longComment.post_time = res.comment.post_time.slice(0, 10)
+                                    this.longComment.post_time = res.comment.post_time.slice(0, 19).replace('T', ' ')
                                     this.longComment.title = res.comment.title
                                     this.longComment.star_number = res.comment.star_number
                                     this.longComment.content = res.comment.content
@@ -105,8 +106,9 @@ var vm = new Vue({
                                                     }
                                                     this.shortCommentList.push({
                                                         id: response.comment.id,
+                                                        posterId: response.comment.poster,
                                                         poster: resp.data.username,
-                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
                                                         content: response.comment.content,
                                                         rose_number: response.comment.rose_number,
                                                         egg_number: response.comment.egg_number,
@@ -326,8 +328,9 @@ var vm = new Vue({
                                                         }
                                                         this.shortCommentList.push({
                                                             id: response.comment.id,
+                                                            posterId: response.comment.poster,
                                                             poster: resp.data.username,
-                                                            post_time: response.comment.post_time.slice(0, 10),
+                                                            post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
                                                             content: response.comment.content,
                                                             rose_number: response.comment.rose_number,
                                                             egg_number: response.comment.egg_number,

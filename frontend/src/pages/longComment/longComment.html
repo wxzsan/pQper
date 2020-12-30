@@ -49,13 +49,14 @@
                     <div class="comment_left">
                         <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longComment.title}}{% endverbatim %}</b>
                         </p>
-                        <p class="text" style="font-size: 17px;">发布者：{% verbatim %}{{longComment.poster}}{% endverbatim %}
+                        <p class="text" style="font-size: 17px;">发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + longComment.posterId'>{% verbatim %}{{longComment.poster}}{% endverbatim %}</a>
                         </p>
                         <p class="text" style="font-size: 12px;">{% verbatim %}{{longComment.post_time}}{% endverbatim
                             %}</p>
                         <el-button style="width: 100px; height: 40px;" v-bind:type="getStarButtonType()"
                             icon="el-icon-star-off" @click="handleStar()">收藏 {% verbatim
                             %}{{longComment.star_number}}{% endverbatim %}</el-button>
+                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left" onclick="history.back()">返回</el-button>
                     </div>
                     <div class="comment_left" id="comment_md"></div>
                 </el-main>
@@ -65,12 +66,13 @@
                         <!--短评-->
                         <el-tab-pane label="短评" name="first">
                             <div v-for="count in shortCommentList.length" class="comment">
-                                <p class="text" style="font-size: 17px;"><b>发布者：{% verbatim %}{{shortCommentList[count -
-                                        1].poster}}{% endverbatim %}</b></p>
+                                <p class="text" style="font-size: 17px;"></p>发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + shortCommentList[count -
+                                    1].posterId'>{% verbatim %}{{shortCommentList[count -
+                                        1].poster}}{% endverbatim %}</a></p>
                                 <p class="text" style="font-size: 12px;">{% verbatim %}{{shortCommentList[count -
                                     1].post_time}}{% endverbatim %}</p>
                                 <p class="text" style="font-size: 15px;">{% verbatim %}{{shortCommentList[count -
-                                    1].content}}{% endverbatim %}</p><br>
+                                    1].content}}{% endverbatim %}</p>
                                 <el-button style="width: 100px; height: 40px;" v-bind:type="getRoseButtonType(count)"
                                     icon="el-icon-caret-top" @click="handleRose(count)">赞 {% verbatim
                                     %}{{shortCommentList[count - 1].rose_number}}{% endverbatim %}</el-button>
