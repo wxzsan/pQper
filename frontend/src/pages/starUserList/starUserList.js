@@ -71,8 +71,9 @@ var vm = new Vue({
                                         }
                                         response = response.data.information
                                         this.starUserInfoList.push({
-                                            name:response.user_name,
-                                            email:response.user_email,
+                                            name: response.user_name,
+                                            email: response.user_email,
+                                            userAvatar: response.user_photo,
                                             id: UserId,
                                             //star_number: 100,
                                             //has_star: true,
