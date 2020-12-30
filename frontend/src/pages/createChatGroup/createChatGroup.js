@@ -33,7 +33,7 @@ var vm = new Vue({
           } else if (res.code === 200) {
             this.name = res.data.information.user_name
             this.email = res.data.information.user_email
-            this.id = res.data.information.user_id
+            this.id = res.data.information.id
             if (res.data.information.user_photo !== '')
               this.photo = res.data.information.user_photo
             else
@@ -42,6 +42,8 @@ var vm = new Vue({
             alert('用户不存在')
           }
         })
+      var promise = new Promise((resolve, reject) => {})
+      return promise
     },
     to_setting_page: function () {
       window.location.href = 'http://127.0.0.1:8000/user/settingpage.html'
@@ -78,7 +80,7 @@ var vm = new Vue({
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
       }
-      this.$axios.post('http://127.0.0.1:8000/chatgroup/get_both_star_list', JSON.stringify(data), config)
+      this.$axios.post('http://127.0.0.1:8000/chatgroup/getBothStarList', JSON.stringify(data), config)
         .then((res) => {
           res = res.data
           if (res.data.msg === 'cookie out of date') {
@@ -121,8 +123,13 @@ var vm = new Vue({
             alert('用户不存在')
           }
         })
+    },
+    init: function () {
+      this.get_user_information()
+        .then(() => {
+          this.get_both_star_list()
+        })
     }
   }
 })
-vm.get_user_information()
-vm.get_both_star_list()
+vm.init()
