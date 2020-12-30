@@ -251,3 +251,52 @@ def uploadChatGroupPaper(request):
             "msg" : "incorrect request method"
         }
         return JsonResponse(response)
+
+@csrf_exempt
+def getBothStarList(request):
+    response = {}
+    if request.method == 'POST':
+
+        debugflag = True
+        if debugflag == False and check_cookie(request) == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        else:
+            userId = json.loads(request.body)['userId']
+
+        try:
+            user = User.objects.get(id = userId)
+            userStarList = list(user.star_user_list.values("id"))
+
+            retList = []
+            for fd in userStarList:
+                friend = User.objects.get(id=fd["id"])
+                if user in friend.star_user_list.all():
+                    tmp = {}
+                    tmp["userId"] = friend.id
+                    tmp["userName"] = friend.user_name
+                    tmp["userAvatar"] = friend.user_photo.url
+                    retList.append(tmp)
+        
+            response["code"] = 200
+            response["data"] = {
+                "msg" : "success",
+                "userList" : retList
+            }
+
+            return JsonResponse(response)
+
+        except:
+            response["code"] = 300
+            response["data"] = {
+                "msg" : "database corrupted"
+            }
+            return JsonResponse(response)
+    else:
+        # 请用 post
+        response["code"] = 600
+        response["data"] = {
+            "msg" : "incorrect request method"
+        }
+        return JsonResponse(response)
