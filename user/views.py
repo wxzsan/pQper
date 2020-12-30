@@ -144,36 +144,6 @@ def register(request):
         response['data'] = {'msg':"path wrong"}
         return JsonResponse(response)
 
-@csrf_exempt
-def get_user_information(request):
-    response = {}
-    if request.method == 'POST':
-        try:
-            userid = json.loads(request.body)['id']
-        except:
-            #先检查cookie
-            userid=check_cookie(request)
-        if userid == -1:
-            response['code'] = 300
-            response['data'] = {'msg': "cookie out of date"}
-            return JsonResponse(response)
-        else:
-            try:
-                print(userid)
-                user = User.objects.get(id=userid)
-                #print(user.user_photo)
-            except:
-                response['code'] = 300
-                #if email == email_test:
-                    #response['data'] = {'msg': "unkown wrong"}
-                #else:
-                response['data'] = {'msg': "User does not exist"}
-                return JsonResponse(response)
-            response['code'] = 200
-            star=user.star_user_list.filter(id=user_id).exists()
-            serializer=information_serializer(user)
-            response['data'] = {'msg':"success", 'information':serializer.data}
-            return JsonResponse(response)
         
 @csrf_exempt
 def get_user_information(request):
@@ -204,7 +174,7 @@ def get_user_information(request):
                 return JsonResponse(response)
             response['code'] = 200
             ##注意这里是看对方的star_user_list里面有没有自己的id
-            star=user.star_user_list.filter(id=userid).exists()
+            star=User.objects.get(id=userid).star_user_list.filter(id=duifangid).exists()
             serializer=information_serializer(user)
             response['data'] = {'msg':"success", 'information':serializer.data, 'star': star}
             return JsonResponse(response)
