@@ -20,7 +20,7 @@ var vm = new Vue({
         searchInput: "",
         myName: "",
         myId: "",
-        myAvatar: "",
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -44,7 +44,7 @@ var vm = new Vue({
                         }
                         this.myId = res.data.information.id
                         this.myName = res.data.information.user_name
-                        this.myAvatar = res.data.information.user_photo
+                        this.userAvatar = res.data.information.user_photo
                     }
                 )
 
