@@ -46,7 +46,7 @@
 
                 <!--收藏评论列表区域-->
                 <el-main>
-                    <div class="comment" style="background-color: #62c48b;">
+                    <div class="comment">
                         <p class="text" style="font-size: 20px;"><b>我收藏的长评论</b></p>
                     </div>
                     <div class="comment" v-for="count in starCommentList.length">
@@ -56,8 +56,8 @@
                         <br>
                         <p class="text" style="font-size: 15px;">{% verbatim %}{{starCommentList[count - 1].content}}{% endverbatim %}</p>
 
-                        <el-button style="width: 120px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{starCommentList[count - 1].star_number}}{% endverbatim %}</el-button>
-                        <el-button style="width: 120px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleOpenStarComment(count)">全文</el-button>
+                        <el-button style="width: 100px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{starCommentList[count - 1].star_number}}{% endverbatim %}</el-button>
+                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" @click="handleOpenStarComment(count)">全文</el-button>
                     </div>
                 </el-main>
 
