@@ -198,7 +198,7 @@ var vm = new Vue({
         },
         getDeleteButtonType(count) {
             if (this.longCommentList[count - 1].is_owner)
-                return "warning"
+                return "primary"
             else
                 return "info"
         },
