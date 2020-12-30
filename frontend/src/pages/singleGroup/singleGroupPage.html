@@ -51,11 +51,11 @@
                         <p class="text" style="font-size: 16px;text-align: center; float: left; width: 100px;"><b>组内论文</b></p>
                         <el-button type="primary" icon="el-icon-arrow-left" style="width: 130px; float: right; margin-top: 6px;" @click="handleBack()">讨论组列表</el-button>
                         <!--讨论组的下拉菜单-->
-                        <el-dropdown style="float: right; width: 100px; ">
+                        <el-dropdown style="float: right; width: 100px; " @command="handleManage">
                             <p style="font-size: 16px; color: black;"><b>管理讨论组</b></p>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/chatgroup/memberInGroupPage.html?chatGroupId=' + this.chatGroupId">管理组员</el-dropdown-item>
-                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/" >上传论文</el-dropdown-item>
+                                <el-dropdown-item command = "1">管理组员</el-dropdown-item>
+                                <el-dropdown-item command = "2">上传论文</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                         <!--
@@ -108,25 +108,19 @@
                 chatGroupName: "一个讨论组的名字",
 
                 paperList: [
-                                {
+                                /*{
                                     title: "Title",
                                     paperId: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
+                                    path: "",
                                 },{
                                     title: "Title",
                                     paperId: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
+                                    path: "",
                                 },{
                                     title: "Title",
                                     paperId: 1,
-                                    poster: "李四",
-                                    posttime: "2020/12/16 12:00",
-                                    content: "",
-                                }
+                                    path: "",
+                                }*/
                 ],
                 searchInput: "",
             },
@@ -142,7 +136,11 @@
                 },
                 // 页面初始化，填入数据
                 initDatas() {
-
+                    //获取chatGroupId
+                    this.chatGroupId = Number(this.getParams("id"))
+                    console.log("1")
+                    console.log(this.chatGroupId)
+                    console.log("1")
                     this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                         .then(
                             (res) => {
@@ -156,38 +154,50 @@
                             }
                         )
 
-                    //获取chatGroupId和chatGroupName，未完成
-                    this.chatGroupId = this.getParams("id")
-
-                    //获取完chatGroupId后开始获取chatGroupId和论文列表，未完成
+                    //获取完chatGroupId后开始获取chatGroupName和论文列表
                     let data = {
                       "chatGroupId": this.chatGroupId,
                     }
-                    let config = {
+                    /*let config = {
                       headers: {
                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                       },
-                    }
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', JSON.stringify(data),config)
+                    }*/
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
                         .then(
                             (res) => {
                                 res = res.data
-                                console.log(res.code)
+                                //console.log(res.code)
+                                console.log(res.data)
                                 if (res.code != 200) {
                                     console.log('failed to initialize')
                                     return
                                 }
+                                this.chatGroupName = res.data.name
                             }
                         )
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', JSON.stringify(data),config)
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', {params: data})
                         .then(
                             (res) => {
                                 res = res.data
-                                console.log(res.code)
+                                console.log(res.data)
                                 if (res.code != 200) {
                                     console.log('failed to initialize')
                                     return
                                 }
+                                res = res.data
+                                res.paperList.forEach(
+                                  (key)=>{
+                                    this.paperList.push(
+                                      {
+                                        title: key.title,
+                                        paperId: key.id,
+                                        path: key.path,
+                                      }
+                                    )
+                                    console.log(key.path)
+                                  }
+                                )
                             }
                         )
                 },
@@ -208,6 +218,14 @@
                 handleBack(){
                     window.location.href = "http://127.0.0.1:8000/chatgroup/myChatGroupList.html"
                 },
+
+                handleManage(command){
+                  if(command == "1")
+                    window.location.href='http://127.0.0.1:8000/chatgroup/memberInGroupPage.html?id=' + this.chatGroupId
+                  else
+                    window.location.href='http://127.0.0.1:8000/chatgroup/uploadPaperToChatGroup.html'
+                },
+
             }
         })
     </script>

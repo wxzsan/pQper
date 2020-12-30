@@ -48,7 +48,7 @@
                 <!--搜索结果区域-->
                 <el-main>
                   <el-row>
-                    <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{chatGroupName}}{% endverbatim %}的所有成员</b></p>
+                    <p class="title" style="font-size: 20px; text-align: center;"><b>{% verbatim %}{{chatGroupName}}{% endverbatim %} 所有成员</b></p>
                     <el-button type="primary" icon="el-icon-arrow-left" style="width: 130px; float: right; margin-top: 16px;" @click="handleBack()">返回讨论组</el-button>
                   </el-row>
 
@@ -91,22 +91,19 @@
             chatGroupId: 1,
             chatGroupName: "一个讨论组的名字",
 
-            groupMemberList: [{
+            groupMemberList: [/*{
                 userId: 1,
                 userName: "李四",
                 userAvatar: "",
-                address: "",
             },{
                 userId: 1,
                 userName: "李四",
                 userAvatar: "",
-                address: "",
             },{
                 userId: 1,
                 userName: "李四",
                 userAvatar: "",
-                address: "",
-            }],
+            }*/],
 
             searchInput: "",
         },
@@ -114,6 +111,7 @@
             // 正则表达式匹配，从上个界面的url得到searchInput
             getParams(key){
                 var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+                console.log(window.location)
                 var r = window.location.search.substr(1).match(reg)
                 if (r != null) {
                     return unescape(r[2])
@@ -122,6 +120,11 @@
             },
             // 页面初始化，填入数据
             initDatas(){
+                //获取chatGroupId
+                this.chatGroupId = Number(this.getParams("id"))
+                console.log("1")
+                console.log(this.chatGroupId)
+                console.log("1")
                 this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                     .then(
                         (res) => {
@@ -135,55 +138,53 @@
                         }
                     )
 
-                //未完成
-                this.chatGroupId = this.getParams("chatGroupId")
 
-                //获取完chatGroupId后开始获取chatGroupId和论文列表，未完成
+                //获取完chatGroupId后开始获取chatGroupName和成员列表
                 let data = {
                   "chatGroupId": this.chatGroupId,
                 }
-                let config = {
+                /*let config = {
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                   },
-                }
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', JSON.stringify(data),config)
+                }*/
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
                     .then(
                         (res) => {
                             res = res.data
-                            console.log(res.code)
+                            //console.log(res.code)
+                            console.log(res.data)
                             if (res.code != 200) {
                                 console.log('failed to initialize')
                                 return
                             }
+                            this.chatGroupName = res.data.name
                         }
                     )
 
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', JSON.stringify(data),config)
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params: data})
                   .then(
                     (res) => {
                       res = res.data
-
+                      console.log(res.data)
                       console.log(res.code)
                       if (res.code != 200) {
                           console.log('failed to initialize')
                           return
                       }
-
-                      /*resUser = result.data.findUsers
-                      console.log(resUser)
-                      resUser.forEach(
+                      res = res.data
+                      res.userlist.forEach(
                         (key)=>{
-                          this.searchUserList.push(
+                          this.groupMemberList.push(
                             {
                               userId: key.id,
                               userName: key.user_name,
-                              userAvatar: "/pQper/media/"+key.user_photo,
+                              userAvatar: "/media/"+key.user_photo,
                             }
                           )
-                          console.log(key.user_photo)
+                          console.log(key.path)
                         }
-                      )*/
+                      )
                     }
                   )
             },
