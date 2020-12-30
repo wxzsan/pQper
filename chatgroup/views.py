@@ -150,6 +150,31 @@ def getChatGroupMembers(request):
         }
         return JsonResponse(response)
 
+@csrf_exempt
+def getMyChatGroupList(request):
+    response = {}
+    if request.method == 'POST':
+        try:
+            userid = json.loads(request.body)['id']
+        except:
+            userid=check_cookie(request)
+        if userid == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+        else:
+            try:
+                response['code'] = 200
+                grouplist = list(
+                    User.objects.get(id = userid).my_chat_group.values("id", "name")
+                )
+                response['data'] = {'msg':"success", 'MyChatGruopList':grouplist}
+                return JsonResponse(response)
+            except:
+                response['code'] = 300
+                response['data'] = {'msg': "User does not exist"}
+                return JsonResponse(response)
+
 
 @csrf_exempt
 def createChatGroup(request):
