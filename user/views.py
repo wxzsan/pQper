@@ -91,7 +91,11 @@ def login(request):
             print('fail')
             response['data'] = {'msg': "User does not exist"}
             return JsonResponse(response)
-        if user.user_password == password:
+        if user.active==False:
+            response['code']=300
+            response['data']={'msg':"is not active"}
+            return JsonResponse(response)
+        elif user.user_password == password:
             response['code'] = 200
             response['data'] = {'msg':"success"}
             #这里设置了cookie，最长使用时间为1小时
