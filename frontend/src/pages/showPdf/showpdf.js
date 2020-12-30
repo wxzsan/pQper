@@ -32,7 +32,7 @@ Vue.component('showpdf', {
     },
     computed: {
         formattedZoom() {
-            return Number.parseInt(this.scale * 100);
+            return Number.parseInt(this.scale * 100)
         },
     },
     mounted() {
@@ -41,22 +41,21 @@ Vue.component('showpdf', {
     watch: {
         show: function (s) {
             if (s) {
-                this.getPdf();
+                this.getPdf()
             }
         },
         page: function (p) {
             if (window.pageYOffset <= this.findPos(document.getElementById(p)) || (document.getElementById(p + 1) && window.pageYOffset >= this.findPos(document.getElementById(p + 1)))) {
-                // window.scrollTo(0,this.findPos(document.getElementById(p)));
-                document.getElementById(p).scrollIntoView();
+                document.getElementById(p).scrollIntoView()
             }
         }
     },
     methods: {
         getPdf() {
-            var self = this;
+            var self = this
             self.pdfdata = pdfvuer.createLoadingTask(this.src);
             self.pdfdata.then(pdf => {
-                self.numPages = pdf.numPages;
+                self.numPages = pdf.numPages
                 window.onscroll = function () {
                     changePage()
                 }
@@ -99,118 +98,41 @@ var vm = new Vue({
     data: {
         paperId: 0,
         pdf_src: '',
-        pdf_x: 0,
-        pdf_y: 0,
     },
     methods: {
         handle_click: function (event) {
+            var pagediv = document.getElementsByClassName('page')[0]
+            var pdf_x = parseInt(pagediv.style.width.slice(0, -2))
+            var pdf_y = parseInt(pagediv.style.height.slice(0, -2)) + 20    // 抵消间距
             var div = document.getElementById('pdf')
-            event = event || window.event;
-            //2.获取鼠标在整个页面的位置  
-            var pagex = event.pageX || scroll().left + event.clientX;
-            var pagey = event.pageY || scroll().top + event.clientY;
-            //3.获取盒子在整个页面的位置  
-            var xx = div.offsetLeft;
+            event = event || window.event
+            //2.获取鼠标在整个页面的位置
+            var pagex = event.pageX || scroll().left + event.clientX
+            var pagey = event.pageY || scroll().top + event.clientY
+            //3.获取盒子在整个页面的位置
+            var xx = div.offsetLeft
             var yy = div.offsetTop
-            //4.用鼠标的位置减去盒子的位置赋值给盒子的内容。  
-            var targetx = pagex - xx;
-            var targety = pagey - yy;
+            //4.用鼠标的位置减去盒子的位置赋值给盒子的内容
+            var targetx = pagex - xx
+            var targety = pagey - yy
             window.parent.postMessage({
                 data: [
-                    targetx / this.pdf_x,
-                    (targety % this.pdf_y) / this.pdf_y,
-                    Math.floor(targety / this.pdf_y)
+                    targetx / pdf_x,
+                    (targety % pdf_y) / pdf_y,
+                    Math.floor(targety / pdf_y)
                 ]}, '*')
-            /*
-            console.log('目标x：' + targetx)
-            console.log('目标y：' + targety)
-            */
         },
         initDatas() {
             this.paperId = parseInt(this.getParams("id"))
             this.pdf_src = 'http://127.0.0.1:8000/commentarea/get_paper?paperId=' + this.paperId
         },
-        _loadFile: function (url) { //初始化pdf
-            let loadingTask = PDFJS.getDocument(url)
-            loadingTask.promise
-                .then((pdf) => {
-                    this.pdfDoc = pdf
-                    this.pdf_pages = this.pdfDoc.numPages
-                    this.$nextTick(() => {
-                        this._renderPage(1)
-                    })
-                })
+        getParams(key) {
+            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+            var r = window.location.search.substr(1).match(reg)
+            if (r != null) {
+                return unescape(r[2])
+            }
+            return null
         },
-        _renderPage: function (num) {
-            this.pdfDoc.getPage(num)
-                .then((page) => {
-                    var scale = 1;
-                    var viewport = page.getViewport(scale);
-                    var $canvas = $('#the-canvas' + num);
-                    var canvas = $canvas.get(0);
-                    var context = canvas.getContext("2d");
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    this.pdf_x = viewport.width
-                    this.pdf_y = viewport.height
-                    console.log('pdf_x' + this.pdf_x)
-                    console.log('pdf_y' + this.pdf_y)
-
-                    var $pdfContainer = $("#pdf");
-                    $pdfContainer.css("height", canvas.height + "px")
-                        .css("width", canvas.width + "px");
-
-                    var renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    page.render(renderContext);
-                    this.setupAnnotations(page, viewport, $canvas, $('#annotation-layer' + num));
-                    if (num < this.pdf_pages) {
-                        this._renderPage(num + 1)
-                    }
-                })
-        },
-        setupAnnotations: function (page, viewport, $canvas, $annotationLayerDiv) {
-            //var canvasOffset = $(canvas).offset();
-            var promise = page.getAnnotations()
-                .then(function (annotationsData) {
-                    
-                    var pdf_canvas = $canvas
-
-                    // Canvas offset
-                    var canvas_offset = pdf_canvas.offset();
-
-                    // Canvas height
-                    var canvas_height = pdf_canvas.get(0).height;
-
-                    // Canvas width
-                    var canvas_width = pdf_canvas.get(0).width;
-
-                    // CSS for annotation layer
-                    $annotationLayerDiv.css({ left: canvas_offset.left + 'px', top: canvas_offset.top + 'px', height: canvas_height + 'px', width: canvas_width + 'px' });
-
-                    // Render the annotation layer
-                    PDFJS.AnnotationLayer.render({
-                        viewport: viewport.clone({ dontFlip: true }),
-                        div: $annotationLayerDiv.get(0),
-                        annotations: annotationsData,
-                        page: page
-                    });
-                });
-            return promise;
-        }
     }
 })
-  //vm._loadFile(vm.pdf_src)
-
-/*function Annotation_fromData(data) {
-  var subtype = data.subtype;
-  var fieldType = data.fieldType;
-  var Constructor = PDFAnnotations.getConstructor(subtype, fieldType);
-  if (Constructor) {
-    return new Constructor({ data: data });
-  }
-}
-*/

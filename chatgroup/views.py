@@ -289,3 +289,14 @@ def getChatGroupName(request):
             "msg" : "incorrect request method"
         }
         return JsonResponse(response)
+
+@csrf_exempt
+def get_icon(request):
+    response = {}
+    if request.method == 'GET':
+        test_file = open(os.path.join(BASE_DIR,'media/svg/annotation-noicon.svg'), 'rb')
+        response = HttpResponse(content=test_file)
+        response['Content-Type'] = 'application/svg'
+        response['Content-Disposition'] = 'attachment; filename="%s.svg"' \
+                                    % 'whatever'
+        return response

@@ -16,4 +16,5 @@ urlpatterns = {
     path('getChatGroupName', views.getChatGroupName),
     path('myChatGroupList.html', TemplateView.as_view(template_name = 'myChatGroupList.html')),
     path('createChatGroup.html', TemplateView.as_view(template_name = 'createChatGroup.html')),
+    path('annotation-noicon.svg', views.get_icon),
 }
