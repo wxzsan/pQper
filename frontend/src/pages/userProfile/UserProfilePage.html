@@ -59,7 +59,7 @@
                       <el-button type="primary" icon="el-icon-plus" style="width: 80px; float: right;" @click="handleStar()">关注</el-button>
                     </div>
                     <div v-else>
-                      <el-button type="info"    icon="el-icon-minus" style="width: 80px; float: right;" @click="handleCancelStar()">取关</el-button>
+                      <el-button class="info"  icon="el-icon-minus" style="width: 80px; float: right;" @click="handleCancelStar()">取关</el-button>
                     </div>
                   </el-container>
 
@@ -163,7 +163,7 @@
                                 return
                             }
                             res = res.data
-                            //console.log(res)
+                            this.star = res.star
                             res = res.information
                             //console.log(res)
 
@@ -212,7 +212,6 @@
             },
 
 
-            //以下两个函数未完成，还没和后端进行交互
             handleStar(){
               this.star = 1
               let data = {
@@ -223,6 +222,14 @@
                 (res) => {
                   res = res.data
                   console.log(res)
+                  if(res.code != 200){
+                      console.log('关注错误')
+                      return
+                  }
+                  this.$message({
+                      type: "success",
+                      message: "关注成功",
+                  })
                 }
               )
             },
@@ -237,6 +244,14 @@
                 (res) => {
                   res = res.data
                   console.log(res)
+                  if(res.code != 200){
+                      console.log('取消关注错误')
+                      return
+                  }
+                  this.$message({
+                      type: "success",
+                      message: "取消关注成功",
+                  })
                 }
               )
             }
@@ -287,6 +302,10 @@
         margin-bottom: 3px;
         margin-left: 6px;
         margin-right: 6px;
+    }
+    .info {
+        background-color: #909399;
+        border-color: #909399;
     }
 
     .el-dropdown p {
