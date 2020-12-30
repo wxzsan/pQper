@@ -18,6 +18,7 @@ var vm = new Vue({
     data: {
         starCommentInfoList: new Array(),
         searchInput: "",
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -31,6 +32,19 @@ var vm = new Vue({
         },
         // 页面初始化，填入所有评论数据
         initDatas() {
+            this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+                .then(
+                    (res1) => {
+                        res1 = res1.data
+                        if (res1.code != 200) {
+                            if (res1.code === 300)
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            console.log('failed to initialize')
+                            return
+                        }
+                        this.userAvatar = res1.data.information.user_photo
+                    }
+                )
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_star_long_comment_list')
                 .then(
                     (res) => {
@@ -62,7 +76,7 @@ var vm = new Vue({
                                                         id: res.longCommentList.id,
                                                         title: response.comment.title,
                                                         poster: resp.data.username,
-                                                        post_time: response.comment.post_time.slice(0, 10),
+                                                        post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
                                                         star_number: response.comment.star_number,
                                                         content: response.comment.content,
                                                         has_star: true,
