@@ -7,38 +7,42 @@
 </head>
 
 <body>
-    <div id="app" style="background-color: #EBEEF5;">
+    <div id="app" style="background-color: white;">
         <el-container id="top_container">
             <el-main>
                 <div class="horizontally_vertically_center" style="height:100%">
-                    <div id="main_div" class="text_align_center">
+                    <div class="text_align_center">
+                        <div class="margin16">
+                            <img src="/media/logo.png" alt="PQper" style="height: 100px;border-radius: 50%;">
+                        </div>
                         <div class="margin16">
                             <p style="font-family: '微软雅黑';font-size: 20px;color:#606266">
-                                PQper用户注册
+                                Register to pQper
                             </p>
                         </div>
-                        <div class="margin16">
-                            <img src="../image/logo.png" alt="PQper">
-                        </div>
-                        <div class="margin16">
-                            <el-input v-model="name" @input="check" placeholder="请输入用户名" style="width:250px;"></el-input>
-                        </div>
-                        <div class="margin16">
-                            <el-input v-model="email" @input="check" placeholder="请输入邮箱" style="width:250px;"></el-input>
-                        </div>
-                        <div class="margin16">
-                            <el-input v-model="password" @input="check" placeholder="请输入密码" show-password style="width:250px;"></el-input>
-                        </div>
-                        <div class="margin16">
-                            <el-input v-model="password_repeat" @input="check" placeholder="请重复密码" show-password style="width:250px;"></el-input>
-                        </div>
-                        <div>
-                            <p style="color:#F56C6C">
-                                {% verbatim %}{{message}}{% endverbatim %}
-                            </p>
-                        </div>
-                        <div class="margin16" style="text-align: center;">
-                            <el-button @click="try_register">注册</el-button>
+                        <div id="main_div">
+                            <br>
+                            <div class="margin16">
+                                <el-input v-model="name" @input="check" placeholder="请输入用户名" style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <el-input v-model="email" @input="check" placeholder="请输入邮箱" style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <el-input v-model="password" @input="check" placeholder="请输入密码" show-password style="width:250px;"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <el-input v-model="password_repeat" @input="check" placeholder="请重复密码" show-password style="width:250px;"></el-input>
+                            </div>
+                            <div>
+                                <p style="color:#F56C6C">
+                                    {% verbatim %}{{message}}{% endverbatim %}
+                                </p>
+                            </div>
+                            <div class="margin16" style="text-align: center;">
+                                <el-button @click="try_register">注册</el-button>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </div>
@@ -67,9 +71,14 @@
     }
     
     #main_div {
-        background-color: white;
-        height: 450px;
+        background-color: #f6f7fa;
         width: 350px;
+        height: 350px;
+        margin: 16px;
+        border-radius: 4px;
+        border-style: solid;
+        border-color: #eaebee;
+        border-width: 1px;
     }
     
     .margin16 {
@@ -78,7 +87,6 @@
         margin-left: 16px;
         margin-right: 16px;
     }
-
 </style>
 
 </html>

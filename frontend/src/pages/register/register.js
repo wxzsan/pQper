@@ -10,8 +10,8 @@ Vue.use(ElementUI)
 Vue.prototype.$axios = axios
 
 var vm = new Vue({
-  el: "#main_div",
-  data: function () {
+  el: "#app",
+  data: function() {
     return {
       name: "",
       email: "",
@@ -22,7 +22,7 @@ var vm = new Vue({
     }
   },
   methods: {
-    try_register: function () {
+    try_register: function() {
       this.check();
       if (this.message !== "") {
         return;
@@ -49,31 +49,31 @@ var vm = new Vue({
           }
         )
     },
-    check_name: function () {
+    check_name: function() {
       if (this.name.length === 0 || this.name.length > 20) {
         return false;
       }
       return true;
     },
-    check_email: function () {
+    check_email: function() {
       if (this.email.length === 0 || this.email.indexOf("@") === -1) {
         return false;
       }
       return true;
     },
-    check_password: function () {
+    check_password: function() {
       if (this.password.length <= 5) {
         return false;
       }
       return true;
     },
-    check_password_repeat: function () {
+    check_password_repeat: function() {
       if (this.password_repeat !== this.password) {
         return false;
       }
       return true;
     },
-    check: function () {
+    check: function() {
       if (!this.check_name()) {
         this.message = "用户名格式错误";
         return;
@@ -92,7 +92,7 @@ var vm = new Vue({
       }
       this.message = "";
     },
-    encrypt_data: function (data) {
+    encrypt_data: function(data) {
       var password_old = data
       let encrypt = new JSEncrypt()
       encrypt.setPublicKey(this.public_key)
