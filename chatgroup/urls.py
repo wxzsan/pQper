@@ -13,4 +13,7 @@ urlpatterns = {
     path('memberInGroupPage.html', TemplateView.as_view(template_name = 'memberInGroupPage.html')),
     path('singleGroupPage.html', TemplateView.as_view(template_name = 'singleGroupPage.html')),
     path('uploadPaperToChatGroup.html', TemplateView.as_view(template_name = 'uploadPaperToChatGroup.html')),
+    path('getChatGroupName', views.getChatGroupName),
+    path('myChatGroupList.html', TemplateView.as_view(template_name = 'myChatGroupList.html')),
+    path('createChatGroup.html', TemplateView.as_view(template_name = 'createChatGroup.html')),
 }

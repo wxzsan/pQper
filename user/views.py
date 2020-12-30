@@ -188,6 +188,7 @@ def change_user_information(request):
         else:
             name = json.loads(request.body)['name']
             password = json.loads(request.body)['password']
+            password = decrypt_pass(password).decode()
             print(userid*3)
             try:
                 user = User.objects.get(id=userid)
@@ -323,6 +324,7 @@ def add_star_user(request):
 
         try:
             user.star_user_list.add(star_user)
+            user.save()
             response['code'] = 200
             response['data'] = {'msg': "success"}
             return JsonResponse(response)
@@ -357,6 +359,7 @@ def remove_star_user(request):
             return JsonResponse(response)
             
         user.star_user_list.remove(star_user)
+        user.save()
         response['code'] = 200
         response['data'] = {'msg': "success"}
         return JsonResponse(response)
