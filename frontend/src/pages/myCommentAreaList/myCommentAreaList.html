@@ -47,7 +47,8 @@
                 <!--讨论区列表区域-->
                 <el-main>
                     <div class="comment_left">
-                        <p class="text" style="font-size: 20px;"><b>我收藏的讨论区</b></p>
+                        <p class="text" style="font-size: 20px;"><b>我的讨论区</b></p>
+                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus" onclick="window.location.href='http://127.0.0.1:8000/commentarea/requestCreateCommentArea.html'">新建</el-button>
                     </div>
                     <div class="comment_left" v-for="count in commentAreaInfoList.length">
                         <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{commentAreaInfoList[count - 1].title}}{% endverbatim %}</b></p>

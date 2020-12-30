@@ -66,10 +66,9 @@ var vm = new Vue({
                 formData.append('paper', param.file)
                 formData.append('title', this.paperTitle)
                 formData.append('chatGroupId', this.chatGroupId)
-                this.$axios.post('http://127.0.0.1:8000/chatgroup/upload_paper_to_chatgroup', formData)
+                this.$axios.post('http://127.0.0.1:8000/chatgroup/uploadChatGroupPaper', formData)
                     .then(
                         (res) => {
-                            console.log(res)
                             res = res.data
                             if (res.code === 200) {
                                 this.$message({

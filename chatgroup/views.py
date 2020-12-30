@@ -241,7 +241,7 @@ def uploadChatGroupPaper(request):
     response = {}
     if request.method == 'POST':
 
-        debugflag = True
+        debugflag = False
         if debugflag == False and check_cookie(request) == -1:
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}

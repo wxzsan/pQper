@@ -47,22 +47,16 @@
                 <!--长评区域-->
                 <el-main>
                     <div class="comment_left">
-                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longComment.title}}{% endverbatim %}</b></p>
-                        <p class="text" style="font-size: 17px;">发布者：{% verbatim %}{{longComment.poster}}{% endverbatim %}</p>
-                        <p class="text" style="font-size: 12px;">{% verbatim %}{{longComment.post_time}}{% endverbatim %}</p>
+                        <p class="text" style="font-size: 20px;"><b>我收藏的长评</b></p>
                     </div>
-                    <div class="comment_left" id="comment_md"></div>
-                </el-main>
-                <!--右边栏-->
-                <el-aside width="350px">
                     <!--长评列表-->
-                    <div v-for="count in longCommentList.length" class="comment">
+                    <div v-for="count in longCommentList.length" class="comment_left">
                         <p class="text" style="font-size: 17px;"><b>{% verbatim %}{{longCommentList[count - 1].title}}{% endverbatim %}</b></p>
                         <el-button style="width: 100px; height: 40px;" v-bind:type="getStarButtonType(count)" icon="el-icon-star-off" @click="handleStar(count)">收藏 {% verbatim %}{{longCommentList[count - 1].star_number}}{% endverbatim %}</el-button><br><br>
                         <el-button style="width: 100px; height: 40px;" class="button" type="primary" icon="el-icon-plus" @click="handleClick(count)">查看</el-button>
                         <el-button style="width: 100px; height: 40px;" v-bind:type="getDeleteButtonType(count)" icon="el-icon-close" @click="confirmDelete(count)">删除</el-button>
                     </div>
-                </el-aside>
+                </el-main>
             </el-container>
             <!--底栏-->
             <el-footer height="50px">

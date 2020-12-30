@@ -53,7 +53,7 @@
                     <div class="comment">
                         <p class="text" style="font-size: 20px;"><b>发表批注</b></p>
                         <p class="text" style="font-size: 15px;">点击选择批注位置</p>
-                        <p class="text" style="font-size: 15px;">x={% verbatim %}{{clickX.toFixed(3)}}{% endverbatim %}, y={% verbatim %}{{clickY.toFixed(3)}}{% endverbatim %}, page={% verbatim %}{{clickPage}}{% endverbatim %}</p>
+                        <p class="text" style="font-size: 15px;">已选择：x={% verbatim %}{{clickX.toFixed(3)}}{% endverbatim %}, y={% verbatim %}{{clickY.toFixed(3)}}{% endverbatim %}, page={% verbatim %}{{clickPage}}{% endverbatim %}</p>
                         <el-input type="textarea" :rows="5" v-model="annotationInput"></el-input><br><br>
                         <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-check" @click="handlePostAnnotation()">发送</el-button>
                     </div>

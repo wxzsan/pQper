@@ -52,8 +52,9 @@
                 <el-aside width="350px">
                     <!--待审核论文列表-->
                     <div v-for="count in createRequestList.length" class="comment">
-                        <p class="text" style="font-size: 17px;"><b>上传者：{% verbatim %}{{createRequestList[count -
-                                1].requestor}}{% endverbatim %}</b></p>
+                        <p class="text" style="font-size: 17px;">上传者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + createRequestList[count -
+                            1].requestorId'>{% verbatim %}{{createRequestList[count -
+                                1].requestor}}{% endverbatim %}</a></p>
                         <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-plus"
                             @click="handleClick(count)">查看</el-button><br><br>
                         <el-button style="width: 100px; height: 40px;" type="success" icon="el-icon-check"
