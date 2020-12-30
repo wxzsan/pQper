@@ -18,6 +18,9 @@ var vm = new Vue({
     data: {
         chatGroupInfoList: new Array(),
         searchInput: "",
+        myName: "",
+        myId: "",
+        myAvatar: "",
     },
     methods: {
         // 正则表达式匹配
@@ -31,10 +34,29 @@ var vm = new Vue({
         },
         // 页面初始化，填入所有数据
         initDatas() {
+            this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if(res.code != 200){
+                            console.log('failed to initialize')
+                            return
+                        }
+                        this.myId = res.data.information.id
+                        this.myName = res.data.information.user_name
+                        this.myAvatar = res.data.information.user_photo
+                    }
+                )
+
             let data = {
-                "id": 1,
+                "id": this.myId,
             }
-            this.$axios.post('http://127.0.0.1:8000/chatgroup/getMyChatGroupList', JSON.stringify(data))
+            let config = {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+              },
+            }
+            this.$axios.post('http://127.0.0.1:8000/chatgroup/getMyChatGroupList', JSON.stringify(data), config)
                 .then(
                     (res) => {
                         res = res.data
