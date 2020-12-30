@@ -17,10 +17,13 @@
     "axios": "^0.21.0",
     "element-ui": "^2.14.1",
     "glob": "^7.1.6",
+    "jquery": "^3.5.1",
     "jsencrypt": "^3.0.0-rc.1",
     "jshint": "^2.12.0",
     "npm": "^6.14.9",
+    "pdf-annotate-vue": "^1.0.2",
     "pdfjs-dist": "^2.5.207",
+    "pdfvuer": "^1.7.5",
     "showdown": "^1.9.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
