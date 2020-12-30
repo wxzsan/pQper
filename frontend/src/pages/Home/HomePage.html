@@ -42,6 +42,7 @@
                     <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">收藏长评</el-button><br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">讨论区</el-button><br>
+                    <el-button type="primary" icon="el-icon-document-copy" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">讨论组</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href=''">关于</el-button>
                 </el-aside>
 
@@ -57,15 +58,15 @@
                     <div class="updating" v-for="count in updateInfoList.length">
                         <el-container>
                             <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                            <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
+                            <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{updateInfoList[count - 1].poster}}{% endverbatim %}</span>
                         </el-container>
-                        <div>
+                        <div style="font-size: 20px;">
                             {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
                         </div>
-                        <div>
+                        <div style="font-size: 18px;">
                             {% verbatim %}{{updateInfoList[count - 1].posttime}}{% endverbatim %}
                         </div>
-                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].id)">详情</el-button>
+                        <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(updateInfoList[count-1].commentid)">详情</el-button>
                     </div>
 
                 </el-main>
@@ -160,12 +161,10 @@
                     this.updateInfoList = []
                     let timestamp = Number(Date.parse(new Date()))
                     //console.log(typeof(timestamp))
-                    let timespan = 1000 * 3600 * 24 * 30
+                    let timespan = 1000 * 3600 * 24 * 30  //设置刷新出来的天数时只需要改最后一个数
                     let data = {
                             'userid': this.userId,
                             'time': (timestamp - timespan)/1000,
-
-                            //'time': 100000 //暂时设置成这样，时间戳的数据类型还是不太明白
                         }
                         //console.log(typeof(data.time))
                         //console.log(data.time, data.userid)
@@ -185,8 +184,9 @@
                                     (key) => {
                                         this.updateInfoList.push({
                                             title: key.title,
-                                            id: key.id,
-                                            poster: key.poster,
+                                            commentid: key.id,
+                                            posterid: key.poster,
+                                            poster: key.poster_name,
                                             posttime: key.post_time,
                                             content: key.content,
                                         })
