@@ -12,6 +12,9 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
     el: '#app',
+    created: function() {
+        this.initDatas()
+    },
     data: {
         paperTitle: "",
         searchInput: "",
@@ -27,6 +30,22 @@ var vm = new Vue({
                 return unescape(r[2])
             }
             return null
+        },
+        // 页面初始化
+        initDatas() {
+            this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            if (res.code === 300)
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            console.log('failed to initialize')
+                            return
+                        }
+                        this.userAvatar = res.data.information.user_photo
+                    }
+                )
         },
         // 搜索框事件处理
         handleSearch() {
@@ -47,7 +66,6 @@ var vm = new Vue({
                 this.$axios.post('http://127.0.0.1:8000/commentarea/request_create_comment_area', formData)
                     .then(
                         (res) => {
-                            console.log(res)
                             res = res.data
                             if (res.code === 200) {
                                 this.$message({
@@ -56,6 +74,8 @@ var vm = new Vue({
                                 })
                             }
                             else {
+                                if (res.code === 300)
+                                    window.location.href = 'http://127.0.0.1:8000/user/login.html'
                                 this.$message({
                                     type: "error",
                                     message: "上传失败",
