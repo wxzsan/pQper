@@ -43,8 +43,20 @@ var vm = new Vue({
             }
             return null
         },
-        // 页面初始化，填入所有评论数据
+        // 页面初始化，填入所有评论数据+用户头像
         initDatas() {
+            this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
+              .then(
+                  (res) => {
+                      res = res.data
+                      console.log(res)
+                      if (res.code != 200) {
+                          console.log('failed to initialize')
+                          return
+                      }
+                      this.userAvatar = res.data.information.user_photo
+                  }
+              )
             this.longComment.id = parseInt(this.getParams("id"))
             this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=0&longCommentId=' + this.longComment.id)
                 .then(

@@ -136,10 +136,30 @@
                     )
 
                 //未完成
+                this.chatGroupId = this.getParams("chatGroupId")
+
+                //获取完chatGroupId后开始获取chatGroupId和论文列表，未完成
                 let data = {
                   "chatGroupId": this.chatGroupId,
                 }
-                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params:data})
+                let config = {
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                  },
+                }
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', JSON.stringify(data),config)
+                    .then(
+                        (res) => {
+                            res = res.data
+                            console.log(res.code)
+                            if (res.code != 200) {
+                                console.log('failed to initialize')
+                                return
+                            }
+                        }
+                    )
+
+                this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', JSON.stringify(data),config)
                   .then(
                     (res) => {
                       res = res.data
@@ -178,7 +198,7 @@
 
             //页面跳转处理
             handleBack(){
-              window.location.href = "http://127.0.0.1:8000/chatgroup/" //未完成
+              window.location.href = "http://127.0.0.1:8000/chatgroup/singleGroupPage.html"
             },
 
             handleUserDetail(id){

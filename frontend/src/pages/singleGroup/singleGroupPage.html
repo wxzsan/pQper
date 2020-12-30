@@ -54,8 +54,8 @@
                         <el-dropdown style="float: right; width: 100px; ">
                             <p style="font-size: 16px; color: black;"><b>管理讨论组</b></p>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/?chatGroupId=' + this.chatGroupId">管理组员</el-dropdown-item>
-                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/?chatGroupId=' + this.chatGroupId" >上传论文</el-dropdown-item>
+                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/chatgroup/memberInGroupPage.html?chatGroupId=' + this.chatGroupId">管理组员</el-dropdown-item>
+                                <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/" >上传论文</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                         <!--
@@ -66,7 +66,7 @@
                     <div class="papers" v-for="count in paperList.length">
                         <el-container>
                             <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                            <span class="text" style="font-size: 17px; align-self: center;">{% verbatim %}{{paperList[count - 1].title}}{% endverbatim %}</span>
+                            <span class="text" style="font-size: 20px; align-self: center;">{% verbatim %}{{paperList[count - 1].title}}{% endverbatim %}</span>
                         </el-container>
                         <!--<div>
                             {% verbatim %}{{updateInfoList[count - 1].title}}{% endverbatim %}
@@ -157,14 +157,29 @@
                         )
 
                     //获取chatGroupId和chatGroupName，未完成
-                    this.getParams("groupid")
+                    this.chatGroupId = this.getParams("id")
 
-
-                    //获取玩chatGroupId后开始获取论文列表，未完成
+                    //获取完chatGroupId后开始获取chatGroupId和论文列表，未完成
                     let data = {
                       "chatGroupId": this.chatGroupId,
                     }
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', {params: data})
+                    let config = {
+                      headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                      },
+                    }
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', JSON.stringify(data),config)
+                        .then(
+                            (res) => {
+                                res = res.data
+                                console.log(res.code)
+                                if (res.code != 200) {
+                                    console.log('failed to initialize')
+                                    return
+                                }
+                            }
+                        )
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', JSON.stringify(data),config)
                         .then(
                             (res) => {
                                 res = res.data
@@ -186,12 +201,12 @@
                 },
 
                 handleDetail(id) {
-                    console.log("in")
+                    console.log("id")
                     window.location.href = "http://127.0.0.1:8000/chatgroup/chatGroupPaper.html?paperId=" + id
                 },
 
                 handleBack(){
-                  window.location.href = "http://127.0.0.1:8000/SearchAndResults/HomePage.html"
+                    window.location.href = "http://127.0.0.1:8000/chatgroup/myChatGroupList.html"
                 },
             }
         })

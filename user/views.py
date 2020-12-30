@@ -144,23 +144,26 @@ def register(request):
         response['data'] = {'msg':"path wrong"}
         return JsonResponse(response)
 
+        
 @csrf_exempt
 def get_user_information(request):
     response = {}
     if request.method == 'POST':
-        try:
-            userid = json.loads(request.body)['id']
-        except:
-            #先检查cookie
-            userid=check_cookie(request)
+        #先检查cookie
+        userid=check_cookie(request)
         if userid == -1:
             response['code'] = 300
             response['data'] = {'msg': "cookie out of date"}
             return JsonResponse(response)
         else:
+            #判断有没有传id，如果没有的话duifangid（要获取的user信息的Id变为自己）
             try:
-                print(userid)
-                user = User.objects.get(id=userid)
+                duifangid = json.loads(request.body)['id']
+            except:
+                duifangid = userid
+            try:
+                print(duifangid)
+                user = User.objects.get(id=duifangid)
                 #print(user.user_photo)
             except:
                 response['code'] = 300
@@ -170,10 +173,11 @@ def get_user_information(request):
                 response['data'] = {'msg': "User does not exist"}
                 return JsonResponse(response)
             response['code'] = 200
+            ##注意这里是看对方的star_user_list里面有没有自己的id
+            star=User.objects.get(id=userid).star_user_list.filter(id=duifangid).exists()
             serializer=information_serializer(user)
-            response['data'] = {'msg':"success", 'information':serializer.data}
+            response['data'] = {'msg':"success", 'information':serializer.data, 'star': star}
             return JsonResponse(response)
-        
 
 @csrf_exempt
 def change_user_information(request):
