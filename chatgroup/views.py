@@ -26,13 +26,16 @@ from commentarea.models import PaperFile, Paper
 @csrf_exempt
 def add_annotation(request):
     response = {}
-
-    user_id = check_cookie(request)
-    #检查cookie
-    if user_id == -1:
-        response['code'] = 300
-        response['data'] = {'msg': "cookie out of date"}
-        return JsonResponse(response)
+    debugflag = True
+    if debugflag == False:
+        user_id = check_cookie(request)
+        #检查cookie
+        if user_id == -1:
+            response['code'] = 300
+            response['data'] = {'msg': "cookie out of date"}
+            return JsonResponse(response)
+    else:
+        user_id = json.loads(request.body)['userId']
     if request.method == 'POST':
         form = AddAnnotationForm(json.loads(request.body))
         if form.is_valid():
@@ -58,6 +61,10 @@ def add_annotation(request):
             top_left = (x*rect[2], y*rect[3])
             #添加批注
             annot = page.addTextAnnot(top_left, content)
+            print(dir(annot))
+            #这里需要设置Popup的位置
+            annot.set_popup(annot.rect)
+            annot.setInfo(title = User.objects.get(id = user_id).user_name)
             doc.save(full_path, incremental = True, encryption = False)
             response['code'] = 200
             response['data'] = {'msg': "success"}
