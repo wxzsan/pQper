@@ -157,18 +157,21 @@
                         )
 
                     //获取chatGroupId和chatGroupName，未完成
-                    this.chatGroupId = this.getParams("id")
+                    this.chatGroupId = Number(this.getParams("id"))
+                    console.log("1")
+                    console.log(this.chatGroupId)
+                    console.log("1")
 
                     //获取完chatGroupId后开始获取chatGroupId和论文列表，未完成
                     let data = {
                       "chatGroupId": this.chatGroupId,
                     }
-                    let config = {
+                    /*let config = {
                       headers: {
                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                       },
-                    }
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', JSON.stringify(data),config)
+                    }*/
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
                         .then(
                             (res) => {
                                 res = res.data
@@ -179,7 +182,7 @@
                                 }
                             }
                         )
-                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', JSON.stringify(data),config)
+                    this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupPapers', {params: data})
                         .then(
                             (res) => {
                                 res = res.data
