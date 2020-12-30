@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- import CSS -->
-    <title>Star Comment List</title>
+    <title>Star User List</title>
 </head>
 
 <body>
@@ -55,7 +55,7 @@
                           <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{starUserInfoList[count - 1].name}}{% endverbatim %}</b></p>
                           <p class="text" style="font-size: 20px;margin-left: 20px;">{% verbatim %}{{starUserInfoList[count - 1].email}}{% endverbatim %}</p>
                         </el-container>
-                        <el-button style="width: 120px; height: 40px;float: right;" class = "detailButton" icon="el-icon-plus" @click="handleDetail(starUserInfoList[count-1].id)">进入主页</el-button>
+                        <el-button style="width: 120px; height: 40px;float: right;" class = "button" icon="el-icon-plus" @click="handleDetail(starUserInfoList[count-1].id)">进入主页</el-button>
                     </div>
                 </el-main>
 
@@ -95,7 +95,7 @@
     .el-main {
         background-color: #EBEEF5;
     }
-    .el-button {
+    .button {
         background-color: rgb(36, 104, 207);
         border-color: rgb(36, 104, 207);
         font-family: 'Pingang SC';
@@ -108,9 +108,6 @@
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
-	.mySimpleInfo {
-	    margin: 10px;
-	}
     .text {
         font-family: Times;
     }
@@ -122,16 +119,14 @@
         padding: 10px;
     }
     .comment {
-        background-color: #ebeef5;
+        background-color: rgb(207, 209, 216);
         border-radius: 6px;
         margin: 8px;
         direction: vertical;
         padding: 10px;
     }
-    .detailButton {
-      background-color: #ebeef5;
-      border-color: #d6d8de;
-      border-width: 1px;
+    .mySimpleInfo {
+        margin: 10px;
     }
 </style>
 
