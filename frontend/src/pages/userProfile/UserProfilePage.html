@@ -66,14 +66,14 @@
                   <div align="center" ><p style="font-size: 20px;">TA的动态</p></div>
 
                   <div class="updating" v-for="count in userMomentList.length">
-                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[count - 1].posttime}}{% endverbatim %}</span>
+                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[userMomentList.length-count].posttime}}{% endverbatim %}</span>
                     <div>
-                      Title：{% verbatim %}{{userMomentList[count - 1].title}}{% endverbatim %}
+                      Title：{% verbatim %}{{userMomentList[userMomentList.length-count].title}}{% endverbatim %}
                     </div>
                     <div>
-                      简要内容：{% verbatim %}{{userMomentList[count - 1].content}}{% endverbatim %}
+                      简要内容：{% verbatim %}{{userMomentList[userMomentList.length-count].content}}{% endverbatim %}
                     </div>
-                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[count-1].id)">详情</el-button>
+                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[userMomentList.length-count].id)">详情</el-button>
                   </div>
 
                 </el-main>
@@ -188,7 +188,7 @@
                                         {
                                           title: key.title,
                                           id: key.id,
-                                          posttime: key.post_time,
+                                          posttime: key.post_time.slice(0, 19).replace('T',' '),
                                           content: key.content,
                                         }
                                     )
