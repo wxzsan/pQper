@@ -30,9 +30,13 @@
             </el-header>
             <el-container>
                 <!--左边栏-->
+
                 <el-aside width="120px">
-                    <br><br>
+                    <div class="mySimpleInfo">
+                    <el-avatar :size="100" :src="userAvatar">user</el-avatar>
+                    </div>
                     <el-button type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">主菜单</el-button><br>
+                    <el-button type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
                     <el-button type="primary" icon="el-icon-star-on" onclick="window.location.href='http://127.0.0.1:8000/commentarea/manageComment.html'">管理长评</el-button><br>
                     <el-button type="primary" icon="el-icon-document" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">我的论文</el-button><br>
                     <el-button type="primary" icon="el-icon-info" onclick="window.location.href='#'">关于</el-button>   <!-- TODO 关于页面 -->
@@ -102,6 +106,9 @@
     .el-dropdown p {
         font-family: 'Pingang SC';
     }
+	.mySimpleInfo {
+	    margin: 10px;
+	}
     .text {
         font-family: Times;
     }
