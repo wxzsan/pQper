@@ -25,7 +25,7 @@
                 <!--搜索框-->
                 <el-button type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 18px; margin-left: 15px" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 18px; width: 180px;">
-                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                  <el-input v-model="searchInput" placeholder="论文/用户"></el-input>
                 </el-col>
             </el-header>
             <el-container>
@@ -33,9 +33,6 @@
                 <el-aside width="120px">
                     <div class = "mySimpleInfo">
                       <el-avatar :size="100" :src="myAvatar"></el-avatar>
-                      <!--
-                      <p style="text-align: center;">{% verbatim %}{{myName}}{% endverbatim %}</p>
-                      -->
                     </div>
                     <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
@@ -63,17 +60,18 @@
                     </div>
                   </el-container>
 
-                  <div align="center" ><p style="font-size: 20px;">TA的动态</p></div>
+                  <div align="center" ><p style="font-size: 20px;"><b>TA的动态</b></p></div>
 
-                  <div class="updating" v-for="count in userMomentList.length">
-                    <span class="text" style="font-size: 17px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[userMomentList.length-count].posttime}}{% endverbatim %}</span>
-                    <div>
-                      Title：{% verbatim %}{{userMomentList[userMomentList.length-count].title}}{% endverbatim %}
-                    </div>
-                    <div>
-                      简要内容：{% verbatim %}{{userMomentList[userMomentList.length-count].content}}{% endverbatim %}
-                    </div>
-                    <el-button class = "detailButton" icon="el-icon-caret-right" style="width: 80px; float: right;" @click="handleDetail(userMomentList[userMomentList.length-count].id)">详情</el-button>
+                  <div class="comment_left" v-for="count in userMomentList.length">
+                    <el-container direction="horizontal">
+                      <el-container width=80%>
+                        <div>
+                          <p class="text" style="font-size: 20px; align-self: center;"><b>{% verbatim %}{{userMomentList[userMomentList.length-count].title}}{% endverbatim %}</b></p>
+                          <p class="text" style="font-size: 15px; align-self: center;">发布时间：{% verbatim %}{{userMomentList[userMomentList.length-count].posttime}}{% endverbatim %}</p>
+                        </div>
+                      </el-container>
+                      <el-button type="primary" icon="el-icon-caret-right" style="width: 100px; float: right; height: 40px; margin-top: 60px;" @click="handleDetail(userMomentList[userMomentList.length-count].id)">详情</el-button>
+                    </el-container>
                   </div>
 
                 </el-main>
@@ -160,6 +158,13 @@
     .detailButton {
       background-color: #e8ebf1;
       border-color: #ebeef5;
+    }
+    .comment_left {
+        background-color: #DCDFE6;
+        border-radius: 6px;
+        margin: 8px;
+        direction: vertical;
+        padding: 10px;
     }
 </style>
 

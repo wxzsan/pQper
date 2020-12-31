@@ -25,7 +25,7 @@
                 <!--搜索框-->
                 <el-button class="button_outside" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 18px; margin-left: 15px" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 18px; width: 180px;">
-                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="searchInput" placeholder="论文/用户"></el-input>
                 </el-col>
             </el-header>
             <el-container>
@@ -33,9 +33,6 @@
                 <el-aside width="120px">
                     <div class="mySimpleInfo">
                         <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                        <!--
-                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
-                        -->
                     </div>
                     <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
@@ -47,16 +44,23 @@
 
                 <!--讨论组列表区域-->
                 <el-main>
-                    <el-container class="comment" style="height: 90px;">
-                        <p class="text" style="text-align: center; font-size: 20px;width: 100%;"><b>我参与的讨论组</b></p>
-                        <el-button type="primary" icon="el-icon-plus" style = "width: 130px;margin-top: 20px;margin-right: 10px;" @click="window.location.href='http://127.0.0.1:8000/chatgroup/createChatGroup.html'">创建讨论组</el-button>   <!-- TODO 关于页面 -->
-                    </el-container>
-                    <div class="comment" v-for="count in chatGroupInfoList.length">
-                        <p class="text" style="margin-left: 30px; font-size: 20px;">{% verbatim %}{{chatGroupInfoList[count - 1].title}}{% endverbatim %}</p>
-                        <el-button class="button" style="width: 100px; height: 40px; float: right; margin-right: 20px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">详情</el-button>
+                    <div class="comment_left" style="background-color: #EBEEF5;">
+                        <el-container direction="horizontal">
+                            <el-container width=80%>
+                                <p class="text" style="text-align: center; font-size: 20px; width: 100%;"><b>我参与的讨论组</b></p>
+                            </el-container>
+                            <el-button class="button" type="primary" icon="el-icon-plus" style = "width: 100px; height: 40px; margin-top: 15px;" @click="window.location.href='http://127.0.0.1:8000/chatgroup/createChatGroup.html'">新建</el-button>
+                        </el-container>
+                    </div>
+                    <div class="comment_left" v-for="count in chatGroupInfoList.length">
+                        <el-container direction="horizontal">
+                            <el-container width=80%>
+                                <p class="text" style="font-size: 18px;"><b>{% verbatim %}{{chatGroupInfoList[count - 1].title}}{% endverbatim %}</b></p>
+                            </el-container>
+                            <el-button class="button" style="width: 100px; height: 40px; margin-top: 8px; float: right;" type="primary" icon="el-icon-plus" @click="handleJump(count)">进入</el-button>
+                        </el-container>
                     </div>
                 </el-main>
-
 
             </el-container>
             <!--底栏-->

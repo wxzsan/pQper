@@ -100,6 +100,8 @@ var vm = new Vue({
       this.multiple_selection = val
     },
     create_chat_group: function () {
+      if (this.group_name.length === 0)
+        return
       var userList = [{ 'userId': this.id }]
       var i
       for (i in this.multiple_selection) {

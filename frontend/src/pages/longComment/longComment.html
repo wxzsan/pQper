@@ -25,7 +25,7 @@
                 <!--搜索框-->
                 <el-button class="button_outside" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 18px; margin-left: 15px" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 18px; width: 180px;">
-                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="searchInput" placeholder="论文/用户"></el-input>
                 </el-col>
             </el-header>
             <el-container>
@@ -33,9 +33,6 @@
                 <el-aside width="120px">
                     <div class="mySimpleInfo">
                         <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                        <!--
-                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
-                        -->
                     </div>
                     <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
@@ -46,25 +43,23 @@
                 </el-aside>
                 <!--长评区域-->
                 <el-main>
-                    <div class="comment_left">
-                        <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longComment.title}}{% endverbatim %}</b>
-                        </p>
-                        <p class="text" style="font-size: 17px;">发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + longComment.posterId'>{% verbatim %}{{longComment.poster}}{% endverbatim %}</a>
-                        </p>
-                        <p class="text" style="font-size: 12px;">{% verbatim %}{{longComment.post_time}}{% endverbatim
-                            %}</p>
-                        <el-button style="width: 100px; height: 40px;" v-bind:type="getStarButtonType()"
-                            icon="el-icon-star-off" @click="handleStar()">收藏 {% verbatim
-                            %}{{longComment.star_number}}{% endverbatim %}</el-button>
-                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left" onclick="history.back()">返回</el-button>
-                    </div>
                     <div class="comment_left" id="comment_md"></div>
                 </el-main>
                 <!--右边栏-->
                 <el-aside width="350px">
                     <el-tabs type="card" v-model="selectedTab">
+                        <!--长评信息-->
+                        <el-tab-pane label="长评信息" name="first">
+                            <div class="comment">
+                                <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{longComment.title}}{% endverbatim %}</b></p>
+                                <p class="text" style="font-size: 17px;">发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + longComment.posterId'>{% verbatim %}{{longComment.poster}}{% endverbatim %}</a></p>
+                                <p class="text" style="font-size: 12px;">{% verbatim %}{{longComment.post_time}}{% endverbatim %}</p>
+                                <el-button style="width: 100px; height: 40px;" v-bind:type="getStarButtonType()" icon="el-icon-star-off" @click="handleStar()">收藏 {% verbatim %}{{longComment.star_number}}{% endverbatim %}</el-button>
+                                <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left" onclick="history.back()">返回</el-button>
+                            </div>
+                        </el-tab-pane>
                         <!--短评-->
-                        <el-tab-pane label="短评" name="first">
+                        <el-tab-pane label="短评" name="second">
                             <div v-for="count in shortCommentList.length" class="comment">
                                 <p class="text" style="font-size: 17px;"></p>发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + shortCommentList[count -
                                     1].posterId'>{% verbatim %}{{shortCommentList[count -
@@ -82,7 +77,7 @@
                             </div>
                         </el-tab-pane>
                         <!--发表短评-->
-                        <el-tab-pane label="发表评论" name="second">
+                        <el-tab-pane label="发表评论" name="third">
                             <div class="comment">
                                 <p class="text" style="font-size: 20px;"><b>发表短评</b></p>
                                 <el-input type="textarea" :rows="3" v-model="shortCommentInput"></el-input><br><br>
