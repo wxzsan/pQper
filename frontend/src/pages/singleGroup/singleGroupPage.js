@@ -44,6 +44,8 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
+                        if (res.code === 300)
+                            window.location.href = 'http://127.0.0.1:8000/user/login.html'
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
@@ -61,6 +63,8 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
+                        if (res.code === 300)
+                            window.location.href = 'http://127.0.0.1:8000/user/login.html'
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
@@ -72,6 +76,8 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
+                        if (res.code === 300)
+                            window.location.href = 'http://127.0.0.1:8000/user/login.html'
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
