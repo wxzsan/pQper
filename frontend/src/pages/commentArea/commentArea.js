@@ -396,39 +396,49 @@ var vm = new Vue({
                         (res) => {
                             res = res.data
                             if (res.code === 200) {
-                                this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + res.id)
+                                this.$axios.get('http://127.0.0.1:8000/commentarea/star_comment?longCommentId=' + res.id)
                                     .then(
-                                        (response) => {
-                                            response = response.data
-                                            if (response.code != 200) {
+                                        (respp) => {
+                                            respp = respp.data
+                                            if (respp.code != 200) {
                                                 console.log('failed to initialize')
                                                 return
                                             }
-                                            response = response.data
-                                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                            this.$axios.get('http://127.0.0.1:8000/commentarea/get_long_comment?inCommentArea=1&longCommentId=' + res.id)
                                                 .then(
-                                                    (resp) => {
-                                                        resp = resp.data
-                                                        if (resp.code != 200) {
+                                                    (response) => {
+                                                        response = response.data
+                                                        if (response.code != 200) {
                                                             console.log('failed to initialize')
                                                             return
                                                         }
-                                                        this.longCommentList.push({
-                                                            id: response.comment.id,
-                                                            posterId: response.comment.poster,
-                                                            poster: resp.data.username,
-                                                            post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
-                                                            title: response.comment.title,
-                                                            content: response.comment.content,
-                                                            star_number: response.comment.star_number,
-                                                            has_star: response.comment.star,
-                                                        })
-                                                        this.longCommentInput.title = ""
-                                                        this.longCommentInput.content = ""
-                                                        this.$message({
-                                                            type: "success",
-                                                            message: "发送成功",
-                                                        })
+                                                        response = response.data
+                                                        this.$axios.get('http://127.0.0.1:8000/commentarea/get_username?userId=' + response.comment.poster)
+                                                            .then(
+                                                                (resp) => {
+                                                                    resp = resp.data
+                                                                    if (resp.code != 200) {
+                                                                        console.log('failed to initialize')
+                                                                        return
+                                                                    }
+                                                                    this.longCommentList.push({
+                                                                        id: response.comment.id,
+                                                                        posterId: response.comment.poster,
+                                                                        poster: resp.data.username,
+                                                                        post_time: response.comment.post_time.slice(0, 19).replace('T', ' '),
+                                                                        title: response.comment.title,
+                                                                        content: response.comment.content,
+                                                                        star_number: response.comment.star_number,
+                                                                        has_star: response.comment.star,
+                                                                    })
+                                                                    this.longCommentInput.title = ""
+                                                                    this.longCommentInput.content = ""
+                                                                    this.$message({
+                                                                        type: "success",
+                                                                        message: "发送成功",
+                                                                    })
+                                                                }
+                                                            )
                                                     }
                                                 )
                                         }
