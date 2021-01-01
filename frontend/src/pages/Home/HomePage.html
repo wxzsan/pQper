@@ -49,7 +49,14 @@
                 <!--最新动态区域-->
                 <el-main>
                     <div class="comment_left" style="background-color: #EBEEF5;">
-                        <p class="text" style="font-size: 20px; text-align: center;"><b>关注用户的长评发布动态</b></p>
+                        <el-container direction="horizontal">
+                            <el-container width=80%>
+                                <p class="text" style="font-size: 20px; text-align: center; width: 100%;"><b>关注用户的长评发布动态</b></p>
+                            </el-container>
+                            <el-button class="button" type="primary" icon="el-icon-refresh" style="width: 100px; height: 40px; margin-top: 15px; float: right;"
+                                @click="handleFresh()">刷新
+                            </el-button>
+                        </el-container>
                     </div>
 
                     <div class="comment_left" v-for="count in updateInfoList.length">

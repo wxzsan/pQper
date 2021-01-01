@@ -12,7 +12,7 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
     el: '#app',
-    created: function(){
+    created: function () {
         this.initDatas()
     },
     data: {
@@ -29,7 +29,7 @@ var vm = new Vue({
     },
     methods: {
         // 正则表达式匹配，从上个界面的url得到searchInput
-        getParams(key){
+        getParams(key) {
             var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
             var r = window.location.search.substr(1).match(reg)
             if (r != null) {
@@ -38,16 +38,18 @@ var vm = new Vue({
             return null
         },
         // 页面初始化，填入数据
-        initDatas(){
+        initDatas() {
             //获取chatGroupId
             this.chatGroupId = Number(this.getParams("id"))
             this.$axios.post('http://127.0.0.1:8000/user/get_user_information')
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code === 300)
-                            window.location.href = 'http://127.0.0.1:8000/user/login.html'
-                        if(res.code != 200){
+                        if (res.code != 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
                             console.log('failed to initialize')
                             return
                         }
@@ -60,19 +62,17 @@ var vm = new Vue({
 
             //获取完chatGroupId后开始获取chatGroupName和成员列表
             let data = {
-              "chatGroupId": this.chatGroupId,
+                "chatGroupId": this.chatGroupId,
             }
             /*let config = {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
               },
             }*/
-            this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', {params: data})
+            this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupName', { params: data })
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code === 300)
-                            window.location.href = 'http://127.0.0.1:8000/user/login.html'
                         if (res.code != 200) {
                             console.log('failed to initialize')
                             return
@@ -81,30 +81,28 @@ var vm = new Vue({
                     }
                 )
 
-            this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', {params: data})
-              .then(
-                (res) => {
-                  res = res.data
-                  if (res.code === 300)
-                      window.location.href = 'http://127.0.0.1:8000/user/login.html'
-                  if (res.code != 200) {
-                      console.log('failed to initialize')
-                      return
-                  }
-                  res = res.data
-                  res.userlist.forEach(
-                    (key)=>{
-                      this.groupMemberList.push(
-                        {
-                          userId: key.id,
-                          userName: key.user_name,
-                          userAvatar: "/media/"+key.user_photo,
+            this.$axios.get('http://127.0.0.1:8000/chatgroup/getChatGroupMembers', { params: data })
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            console.log('failed to initialize')
+                            return
                         }
-                      )
+                        res = res.data
+                        res.userlist.forEach(
+                            (key) => {
+                                this.groupMemberList.push(
+                                    {
+                                        userId: key.id,
+                                        userName: key.user_name,
+                                        userAvatar: "/media/" + key.user_photo,
+                                    }
+                                )
+                            }
+                        )
                     }
-                  )
-                }
-              )
+                )
         },
 
         // 搜索框事件处理
@@ -116,12 +114,12 @@ var vm = new Vue({
         },
 
         //页面跳转处理
-        handleBack(){
-          window.location.href = "http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id="+this.chatGroupId
+        handleBack() {
+            window.location.href = "http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id=" + this.chatGroupId
         },
 
-        handleUserDetail(id){
-          window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid="+id
+        handleUserDetail(id) {
+            window.location.href = "http://127.0.0.1:8000/SearchAndResults/UserProfilePage.html?userid=" + id
         },
     }
 })

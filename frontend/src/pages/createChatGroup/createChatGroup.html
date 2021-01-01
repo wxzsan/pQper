@@ -45,28 +45,26 @@
                         <p class="text" style="font-size: 20px; text-align: center;"><b>创建讨论组</b></p>
                     </div>
                     <div class="horizontally_vertically_center">
-                        <div style="width: 327px; height: 526px;" class="horizontally_vertically_center comment_left">
-                            <div>
-                                <div class="margin16">
-                                    <p>小组名称</p>
-                                    <el-input v-model="group_name" placeholder="Group Name"></el-input>
-                                </div>
-                                <div class="margin16">
-                                    <p>添加成员</p>
-                                    <el-table :data="user_data" tooltip-effect="dark" style="width: 100%;" @selection-change="handle_selection_change" height="300">
-                                        <el-table-column type="selection" width="55"></el-table-column>
-                                        <el-table-column label="Avatar" width="120">
-                                            <template slot-scope="scope">
-                                                <el-avatar :src="scope.row.userAvatar" :size="50"></el-avatar>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column label="Name" prop="userName" width="120"></el-table-column>
-                                    </el-table>
-                                </div>
-                                <div class="margin16">
-                                    <el-button type="primary" style="width: 100px; height: 40px;" @click="create_chat_group" icon="el-icon-upload2">创建</el-button>
-                                    <el-button type="primary" style="width: 100px; height: 40px;" icon="el-icon-arrow-left" onclick="history.back()">返回</el-button>
-                                </div>
+                        <div>
+                            <div class="margin16">
+                                <p>讨论组名称</p>
+                                <el-input v-model="group_name" placeholder="Group Name"></el-input>
+                            </div>
+                            <div class="margin16">
+                                <p>添加成员</p>
+                                <el-table :data="user_data" tooltip-effect="dark" style="width: 100%;" @selection-change="handle_selection_change" height="300">
+                                    <el-table-column type="selection" width="55"></el-table-column>
+                                    <el-table-column label="Avatar" width="120">
+                                        <template slot-scope="scope">
+                                            <el-avatar :src="scope.row.userAvatar" :size="50"></el-avatar>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Name" prop="userName" width="120"></el-table-column>
+                                </el-table>
+                            </div>
+                            <div class="margin16">
+                                <el-button type="primary" style="width: 100px; height: 40px; margin-left: 39px;" @click="create_chat_group" icon="el-icon-upload2">创建</el-button>
+                                <el-button type="primary" style="width: 100px; height: 40px;" icon="el-icon-arrow-left" onclick="window.location.href='http://127.0.0.1:8000/chatgroup/myChatGroupList.html'">返回</el-button>
                             </div>
                         </div>
                     </div>

@@ -43,14 +43,14 @@
                     <div class="horizontally_vertically_center" style="height:100%">
                         <div>
                             <div>
-                                <el-upload class="avatar-uploader" name="image" action="http://127.0.0.1:8000/user/upload_avatar" :show-file-list="false" :on-success="handle_avatar_success" :before-upload="before_avatar_upload">
+                                <el-upload style="margin-left: 52px;" class="avatar-uploader" name="image" action="http://127.0.0.1:8000/user/upload_avatar" :show-file-list="false" :on-success="handle_avatar_success" :before-upload="before_avatar_upload">
                                     <img v-if="photo" :src="photo" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
                             </div>
                             <br>
                             <div class="margin16">
-                                <el-input v-model="name" placeholder="用户名" style="width:250px;"></el-input>
+                                <el-input v-model="name" placeholder="用户名" @input="check" style="width:250px;"></el-input>
                             </div>
                             <div class="margin16">
                                 <el-input v-model="password" placeholder="密码" @input="check" show-password style="width:250px;"></el-input>
@@ -59,12 +59,13 @@
                                 <el-input v-model="repeat_password" placeholder="重复密码" @input="check" show-password style="width:250px;"></el-input>
                             </div>
                             <div class="margin16">
-                                <p style="color:#F56C6C">
+                                <p style="color:#F56C6C; text-align: center; width: 100%;">
                                     {% verbatim %}{{message}}{% endverbatim %}
                                 </p>
                             </div>
                             <div class="margin16">
-                                <el-button type="primary" @click="change" style="margin-left: 20px;">修改</el-button>
+                                <el-button type="primary" @click="change" icon="el-icon-check" style="margin-left: 9px;">修改</el-button>
+                                <el-button type="primary" @click="to_my_profile_page" icon="el-icon-arrow-left">取消</el-button>
                             </div>
                         </div>
                     </div>

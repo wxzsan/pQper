@@ -47,22 +47,20 @@
                         <p class="text" style="font-size: 20px; text-align: center;"><b>上传讨论组论文</b></p>
                     </div>
                     <div class="horizontally_vertically_center">
-                        <div style="width: 360px; height: 450px;" class="horizontally_vertically_center comment_left">
-                            <div>
-                                <p class="text" style="font-size: 17px;">论文标题</p>
-                                <el-input v-model="paperTitle" style="width: 360px;"></el-input>
-                                <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
-                                <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
-                                    :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
-                                    :auto-upload="false" action="#">
-                                    点击选择文件或拖动文件到此处
-                                </el-upload>
-                                <br>
-                                <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-upload2"
-                                    @click="handleUpload()">上传</el-button>
-                                <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left"
-                                    onclick="history.back()">返回</el-button>
-                            </div>
+                        <div>
+                            <p class="text" style="font-size: 17px;">论文标题</p>
+                            <el-input v-model="paperTitle" style="width: 360px;"></el-input>
+                            <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
+                            <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
+                                :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
+                                :auto-upload="false" action="#">
+                                点击选择文件或拖动文件到此处
+                            </el-upload>
+                            <br>
+                            <el-button class="button" style="width: 100px; height: 40px; margin-left: 71px;" type="primary" icon="el-icon-upload2"
+                                @click="handleUpload()">上传</el-button>
+                            <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left"
+                                @click="back()">返回</el-button>
                         </div>
                     </div>
                 </el-main>

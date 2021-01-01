@@ -54,7 +54,7 @@
                                 <p class="text" style="font-size: 25px;"><b>{% verbatim %}{{paperInfo.title}}{%
                                         endverbatim %}</b></p>
                                 <el-button style="width: 100px; height: 40px;" v-bind:type="getStarAreaButtonType()" icon="el-icon-star-off" @click="handleStarArea()">收藏 {% verbatim %}{{area_star_number}}{% endverbatim %}</el-button>
-                                <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left" onclick="history.back()">返回</el-button>
+                                <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left" onclick="window.location.href='http://127.0.0.1:8000/commentarea/myCommentAreaList.html'">返回</el-button>
                             </div>
                         </el-tab-pane>
                         <!--短评-->

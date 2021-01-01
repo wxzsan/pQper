@@ -49,7 +49,7 @@
                             <el-container width=80%>
                                 <p class="title" style="font-size: 20px; text-align: center; width: 100%;"><b>搜索结果</b></p>
                             </el-container>
-                        <el-button type="primary" icon="el-icon-arrow-left" style="width: 120px; height: 40px; float: right; margin-top: 16px;" @click="handleBack()">返回主页</el-button>
+                        <el-button type="primary" icon="el-icon-arrow-left" style="width: 100px; height: 40px; float: right; margin-top: 16px;" @click="handleBack()">返回</el-button>
                         </el-container>
                     </div>
 
@@ -64,7 +64,7 @@
                           <el-avatar :size="40" :src="searchUserList[count-1].userAvatar" style="margin: 3px;">user</el-avatar>
                           <p class="text" style="font-size: 18px; align-self: center; margin-top: 5px;"><b>{% verbatim %}{{searchUserList[count - 1].userName}}{% endverbatim %}</b></span>
                         </el-container>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(searchUserList[count - 1].userId)">详情</el-button>
+                        <el-button type="primary" icon="el-icon-caret-right" style="width:100px; float: right;" @click="handleUserDetail(searchUserList[count - 1].userId)">详情</el-button>
                     </el-container>
                   </div>
                   <div v-else-if="searchMode===1">
@@ -72,7 +72,7 @@
                         <el-container width = 80%>
                           <p class="text" style="font-size: 18px; align-self: center;  margin-top: 12px"><b>{% verbatim %}{{searchCommmentAreaList[count - 1].title}}{% endverbatim %}</b></span>
                         </el-container>
-                        <el-button type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleCommentAreaDetail(searchCommmentAreaList[count - 1].id)">详情</el-button>
+                        <el-button type="primary" icon="el-icon-caret-right" style="width:100px; float: right;" @click="handleCommentAreaDetail(searchCommmentAreaList[count - 1].id)">详情</el-button>
                     </el-container>
                   </div>
                   <div v-else></div>
