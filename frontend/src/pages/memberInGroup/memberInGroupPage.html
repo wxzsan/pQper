@@ -56,10 +56,10 @@
                   <div class="comment_left" v-for="count in groupMemberList.length">
                       <el-container direction="horizontal">
                         <el-container width = 80%>
-                          <el-avatar :size="40" :src="groupMemberList[count-1].userAvatar" style="margin-top: 3px;">user</el-avatar>
-                          <p class="text" style="font-size: 18px; align-self: center; margin-left: 10px; margin-top: 12px;"><b>{% verbatim %}{{groupMemberList[count - 1].userName}}{% endverbatim %}</b></p>
+                          <el-avatar :size="40" :src="groupMemberList[count-1].userAvatar" style="margin-top: 7px;">user</el-avatar>
+                          <p class="text" style="font-size: 18px; align-self: center; margin-left: 16px; margin-top: 16px;"><b>{% verbatim %}{{groupMemberList[count - 1].userName}}{% endverbatim %}</b></p>
                         </el-container>
-                        <el-button v-if="myId!=groupMemberList[count - 1].userId" type="primary" icon="el-icon-caret-right" style="width:90px; float: right;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
+                        <el-button v-if="myId!=groupMemberList[count - 1].userId" type="primary" icon="el-icon-caret-right" style="width:100px; height:40px; float: right; margin-top: 8px;" @click="handleUserDetail(groupMemberList[count - 1].userId)">详情</el-button>
                       </el-container>
                   </div>
 

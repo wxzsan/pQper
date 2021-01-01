@@ -25,7 +25,7 @@ var vm = new Vue({
         getParams(key) {
             var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
             var r = window.location.search.substr(1).match(reg)
-            if (r != null) {
+            if (r !== null) {
                 return unescape(r[2])
             }
             return null
@@ -36,7 +36,7 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code != 200) {
+                        if (res.code !== 200) {
                             if (res.data.msg === 'cookie out of date') {
                                 alert('登录超时，请重新登录')
                                 window.location.href = 'http://127.0.0.1:8000/user/login.html'
@@ -51,7 +51,7 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code != 200) {
+                        if (res.code !== 200) {
                             console.log('failed to initialize')
                             return
                         }
@@ -61,7 +61,7 @@ var vm = new Vue({
                                 .then(
                                     (response) => {
                                         response = response.data
-                                        if (response.code != 200) {
+                                        if (response.code !== 200) {
                                             console.log('failed to initialize')
                                             return
                                         }
@@ -153,7 +153,7 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code != 200) {
+                        if (res.code !== 200) {
                             if (res.data.msg === 'cookie out of date') {
                                 alert('登录超时，请重新登录')
                                 window.location.href = 'http://127.0.0.1:8000/user/login.html'

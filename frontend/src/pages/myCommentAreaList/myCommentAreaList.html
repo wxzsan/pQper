@@ -56,8 +56,8 @@
                             <el-container width=80%>
                                 <p class="text" style="font-size: 18px;"><b>{% verbatim %}{{commentAreaInfoList[count - 1].title}}{% endverbatim %}</b></p>
                             </el-container>
-                            <el-button style="width: 100px; height: 40px; margin-top: 7px;" v-bind:type="getStarAreaButtonType(count)" icon="el-icon-star-off" @click="handleStarArea(count)">收藏 {% verbatim %}{{commentAreaInfoList[count - 1].star_number}}{% endverbatim %}</el-button>
-                            <el-button class="button" style="width: 100px; height: 40px; margin-top: 7px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">进入</el-button>
+                            <el-button style="width: 100px; height: 40px; margin-top: 9px;" v-bind:type="getStarAreaButtonType(count)" icon="el-icon-star-off" @click="handleStarArea(count)">收藏 {% verbatim %}{{commentAreaInfoList[count - 1].star_number}}{% endverbatim %}</el-button>
+                            <el-button class="button" style="width: 100px; height: 40px; margin-top: 9px;" type="primary" icon="el-icon-plus" @click="handleJump(count)">进入</el-button>
                         </el-container>
                     </div>
                 </el-main>
