@@ -58,7 +58,7 @@ var vm = new Vue({
         // 搜索处理
         handleSearch() {
             this.searchUserList = []
-            this.searchCommmentAreaLis = []
+            this.searchCommmentAreaList = []
             if (this.searchInput.length > 0) {
                 let data = {
                     "searchString": this.searchInput,
@@ -116,6 +116,23 @@ var vm = new Vue({
 
         handleCommentAreaDetail(id) {
             window.location.href = "http://127.0.0.1:8000/commentarea/commentArea.html?id=" + id
+        },
+        quit: function () {
+            this.$axios.post('http://127.0.0.1:8000/user/logout')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
+                            console.log('failed to initialize')
+                            return
+                        }
+                        window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                    }
+                )
         },
     }
 })

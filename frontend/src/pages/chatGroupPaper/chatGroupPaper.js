@@ -109,5 +109,22 @@ var vm = new Vue({
                     )
             }
         },
-    }
+        quit: function () {
+            this.$axios.post('http://127.0.0.1:8000/user/logout')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
+                            console.log('failed to initialize')
+                            return
+                        }
+                        window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                    }
+                )
+        },
+    },
 })

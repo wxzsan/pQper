@@ -11,6 +11,9 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
     el: '#app',
+    created: function() {
+        this.get_user_information()
+    },
     data: function () {
         return {
             email: '',
@@ -140,4 +143,3 @@ var vm = new Vue({
         }
     }
 })
-vm.get_user_information()

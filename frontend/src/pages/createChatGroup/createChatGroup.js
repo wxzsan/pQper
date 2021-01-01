@@ -10,6 +10,9 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
     el: '#app',
+    created: function() {
+        this.init()
+    },
     data: function () {
         return {
             email: '',
@@ -57,12 +60,6 @@ var vm = new Vue({
         },
         to_my_profile_page: function () {
             window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
-        },
-        quit: function () {
-            this.$axios.post('http://127.0.0.1:8000/user/logout')
-                .then((res) => {
-                    window.location.href = 'http://127.0.0.1:8000/user/login.html'
-                })
         },
         handle_command: function (command) {
             if (command === 'a') this.to_home_page()
@@ -138,7 +135,23 @@ var vm = new Vue({
                 .then((id) => {
                     this.get_both_star_list()
                 })
-        }
-    }
+        },
+        quit: function () {
+            this.$axios.post('http://127.0.0.1:8000/user/logout')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code != 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
+                            console.log('failed to initialize')
+                            return
+                        }
+                        window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                    }
+                )
+        },
+    },
 })
-vm.init()

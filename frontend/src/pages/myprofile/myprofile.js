@@ -10,6 +10,9 @@ Vue.prototype.$axios = axios
 
 var vm = new Vue({
     el: '#app',
+    created: function() {
+        this.get_user_information()
+    },
     data: function () {
         return {
             email: '',
@@ -50,6 +53,17 @@ var vm = new Vue({
         to_my_profile_page: function () {
             window.location.href = 'http://127.0.0.1:8000/user/myprofile.html'
         },
+        handle_command: function (command) {
+            if (command === 'a') this.to_home_page()
+            else if (command === 'b') this.to_my_profile_page()
+            else if (command === 'c') this.quit()
+        },
+        handleSearch() {
+            if (this.searchInput.length > 0) {
+                var searchContent = btoa(encodeURI(this.searchInput))
+                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
+            }
+        },
         quit: function () {
             this.$axios.post('http://127.0.0.1:8000/user/logout')
                 .then(
@@ -67,17 +81,5 @@ var vm = new Vue({
                     }
                 )
         },
-        handle_command: function (command) {
-            if (command === 'a') this.to_home_page()
-            else if (command === 'b') this.to_my_profile_page()
-            else if (command === 'c') this.quit()
-        },
-        handleSearch() {
-            if (this.searchInput.length > 0) {
-                var searchContent = btoa(encodeURI(this.searchInput))
-                window.location.href = 'http://127.0.0.1:8000/SearchAndResults/SearchResultPage.html?searchContent=' + searchContent
-            }
-        }
-    }
+    },
 })
-vm.get_user_information()
