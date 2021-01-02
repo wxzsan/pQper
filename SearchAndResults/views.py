@@ -7,7 +7,7 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from user.models import User
-from commentarea.models import Paper, ShortComment
+from commentarea.models import Paper, ShortComment, CommentArea
 import requests
 import json
 
@@ -24,41 +24,62 @@ def SearchForPapersAndUsers(request):
     response = {}
     if request.method == 'GET':
         try :
-            response = {
-                'code' : 200,
-                'msg' : "search success",
-                'data' : {
-                    'findCommentAreas' : [],
-                    'findUsers' : []
-                }
-            }
             searchString = request.GET.get('searchString')
 
             # 查找相关的论文
             # 使用全文索引获得可能的paper的id
-            paper_ids = list(
-                SearchQuerySet().
-                filter(content=searchString).
-                values("pk"))
+            # paper_ids = list(
+            #     SearchQuerySet().
+            #     filter(content=searchString).
+            #     values("pk"))
 
-            # 根据 paper_id 获得paper 的 id, title, path, commentareaid
-            for paper_id in paper_ids:
-                p = Paper.objects.get(id=paper_id['pk'])
+            # # 根据 paper_id 获得paper 的 id, title, path, commentareaid
+            # for paper_id in paper_ids:
+            #     p = Paper.objects.get(id=paper_id['pk'])
+            #     paper_data = dict()
+            #     paper_data["id"] = p.id
+            #     paper_data["title"] = p.title
+            #     paper_data["path"] = p.path
+            #     tmp_list = list(p.commentarea_set.values("id"))
+            #     if tmp_list:
+            #         paper_data["commentareaid"] = tmp_list[0]['id']
+            #         response['data']['findCommentAreas'].append(paper_data)
+
+            comArea_ids = list(SearchQuerySet().filter(content=searchString).values("pk"))
+            comAreaList = []
+
+            for comAreaid in comArea_ids:
+                caid = comAreaid['pk']
+                # print(caid)
+                comArea = CommentArea.objects.get(pk = caid)
+                p = comArea.paper
                 paper_data = dict()
                 paper_data["id"] = p.id
                 paper_data["title"] = p.title
                 paper_data["path"] = p.path
-                tmp_list = list(p.commentarea_set.values("id"))
-                if tmp_list:
-                    paper_data["commentareaid"] = tmp_list[0]['id']
-                    response['data']['findCommentAreas'].append(paper_data)
+                paper_data["commentareaid"] = CommentArea.objects.get(pk=caid).id
+                comAreaList.append(paper_data)
 
+            response['code'] = 200    
             # 查找相关的用户
             # 直接全字匹配
-            response['data']['findUsers'] = list(
-                User.objects.
-                filter(user_name=searchString).
-                values("id", "user_name", "user_photo"))
+            response['data'] = {
+                "findUsers" : list(
+                    User.objects.
+                    filter(user_name=searchString).
+                    values("id", "user_name", "user_photo")),
+                "findCommentAreas" : comAreaList,
+                "msg" : "success"
+            }
+
+            
+            # response['data'] = {
+            #     "msg" : "success",
+            #     "findUsers" : list(User.objects.
+            #                   filter(user_name=searchString).
+            #                     values("id", "user_name", "user_photo")),
+            #     "findCommentAreas" : comAreaList
+            # }
             return JsonResponse(response)
         except:
             # 多半是数据库挂了
