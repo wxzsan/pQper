@@ -3,7 +3,7 @@ pQper is an online collaborative paper reading webapp
 
 # 本地运行调试用服务器的方法
 1. git clone https://github.com/wxzsan/pQper.git
-2. 在front目录下运行 npm install npm
+2. 在front目录下运行 npm install
 3. 在front目录下运行 npm run build
 4. 创建python虚拟环境 conda create -n pQper python=3.8
 5. 激活虚拟环境 conda activate pQper
@@ -34,10 +34,14 @@ pQper is an online collaborative paper reading webapp
 
 # 测试用pQper账号
 无管理权限的：
+
 wangxz@pku.edu.cn
 密码: 123456
+
 makise.kurisu.a@gmail.com
 密码: 000302
+
 有管理权限的：
+
 7@qq.com
 密码: 000302
