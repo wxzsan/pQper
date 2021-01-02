@@ -65,7 +65,7 @@
                                 <div>
                                     <p class="text" style="font-size: 20px;"><b>{% verbatim %}{{updateInfoList[updateInfoList.length-count].title}}{% endverbatim %}</b></p>
                                     <!--<el-avatar :size="60" :src="circleUrl"></el-avatar>-->
-                                    <p class="text" style="font-size: 18px; align-self: center;">发布者：{% verbatim %}{{updateInfoList[updateInfoList.length-count].poster}}{% endverbatim %}</p>
+                                    <p class="text" style="font-size: 18px; align-self: center;">发布者：<a v-bind:href='"http://127.0.0.1:8000/user/UserProfilePage.html?userid=" + updateInfoList[updateInfoList.length-count].posterid'>{% verbatim %}{{updateInfoList[updateInfoList.length-count].poster}}{% endverbatim %}</a></p>
                                     <p class="text" style="font-size: 15px;">{% verbatim %}{{updateInfoList[updateInfoList.length-count].posttime}}{% endverbatim %}</p>
                                 </div>
                             </el-container>
