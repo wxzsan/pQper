@@ -14,12 +14,6 @@ pQper is an online collaborative paper reading webapp
 # 关于搜索引擎
 * clone 下来之后要执行 python manage.py rebuild_index 重新建立索引
 
-# 关于pdf渲染与markdown渲染
-* 在本地运行调试用服务器前
-1. pip install tools
-2. npm install pdfjs
-3. npm install showdown
-
 # 组员github账号
 王昕兆 wxzsan
 
@@ -36,3 +30,13 @@ pQper is an online collaborative paper reading webapp
 郑元昊 Harris-pku
 
 蒋康 JK7x2
+
+# 测试用pQper账号
+无管理权限的：
+wangxz@pku.edu.cn
+密码: 123456
+makise.kurisu.a@gmail.com
+密码: 000302
+有管理权限的：
+7@qq.com
+密码: 000302
