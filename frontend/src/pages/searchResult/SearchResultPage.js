@@ -85,7 +85,7 @@ var vm = new Vue({
                                     (key) => {
                                         this.searchCommmentAreaList.push(
                                             {
-                                                id: key.id,
+                                                id: key.commentareaid,
                                                 title: key.title,
                                                 address: key.path
                                             }
