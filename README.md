@@ -3,6 +3,11 @@ pQper is an online collaborative paper reading webapp
 
 # 本地运行调试用服务器的方法
 1. git clone https://github.com/wxzsan/pQper.git
+2. 安装npm https://nodejs.org/en/download/
+3. 安装postgresql app http://postgresapp.com/ 并将 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
+注意这里的路径不一定是这个，需要更改为安装Postgresql时候的路径，比如在mac上应该为'/Library/PostgreSQL/13/bin'
+
+完成之后，应该可以在命令行中执行psql命令
 2. 在frontend目录下运行 npm install
 3. 在frontend目录下运行 npm run build
 4. 创建python虚拟环境 conda create -n pQper python=3.8
