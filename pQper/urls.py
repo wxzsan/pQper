@@ -23,7 +23,7 @@ from django.views.static import serve
 from .settings import MEDIA_URL,MEDIA_ROOT
 from django.conf.urls.static import static
 from django.conf import settings
-
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +31,5 @@ urlpatterns = [
     path('commentarea/', include(commentarea.urls)),
     path('SearchAndResults/', include(SearchAndResults.urls)),
     path('chatgroup/', include(chatgroup.urls)),
+    path('', TemplateView.as_view(template_name = 'login.html'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
