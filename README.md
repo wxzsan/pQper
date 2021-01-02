@@ -19,3 +19,20 @@ pQper is an online collaborative paper reading webapp
 1. pip install tools
 2. npm install pdfjs
 3. npm install showdown
+
+# 组员github账号
+王昕兆 wxzsan
+
+张弋丰 FrankZhang2000
+
+龙晟 LgenHogns
+
+曹立升 Leeson63
+
+阎宇豪 infinityyyh
+
+钱博翀 NovemberJay
+
+郑元昊 Harris-pku
+
+蒋康 JK7x2
