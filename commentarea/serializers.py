@@ -15,7 +15,7 @@ class CommentAreaInListSerializer(serializers.ModelSerializer):
 class CreateRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateRequest
-        fields = ['id', 'requestor', 'paper']
+        fields = ['id', 'requestor', 'paper', 'paper_title']
 
 class LongCommentSerializer(serializers.ModelSerializer):
     class Meta:

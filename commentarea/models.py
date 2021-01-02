@@ -34,6 +34,7 @@ class LongComment(models.Model):
 class CreateRequest(models.Model):
     requestor = models.ForeignKey('user.User', on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+    paper_title = models.CharField(max_length=255)
 
 class CommentArea(models.Model):
     name = models.CharField(max_length=255)

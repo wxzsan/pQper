@@ -329,7 +329,7 @@ def request_create_comment_area(request):
             paper = Paper(title = paper_file.title, path = paper_file.paper.name)
             paper.save()
             user = User.objects.get(id = user_id)
-            create_request = CreateRequest(requestor=user, paper=paper)
+            create_request = CreateRequest(requestor=user, paper=paper, paper_title=paper.title)
             create_request.save()
             response['code'] = 200
             response['data'] = {'msg': "success"}
@@ -432,7 +432,7 @@ def reject_create_comment_area_request(request):
 def get_create_comment_area_request(request):
     response = {}
     # 这里应该需要使用cookie判断权限
-
+    '''
     user_id = check_cookie(request)
     if user_id == -1:
         response['code'] = 300
@@ -451,7 +451,7 @@ def get_create_comment_area_request(request):
         response['code'] = 300
         response['data'] = {'msg': "not administrator"}
         return JsonResponse(response)
-
+    '''
     response['code'] = 200
     serializer = CreateRequestSerializer(CreateRequest.objects.all(), many=True)
     response['data'] = {'msg': "success", "createRequestList": serializer.data}
