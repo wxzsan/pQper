@@ -8,6 +8,7 @@ pQper is an online collaborative paper reading webapp
 注意这里的路径不一定是这个，需要更改为安装Postgresql时候的路径，比如在mac上应该为'/Library/PostgreSQL/13/bin'
 
 完成之后，应该可以在命令行中执行psql命令
+
 2. 在frontend目录下运行 npm install
 3. 在frontend目录下运行 npm run build
 4. 创建python虚拟环境 conda create -n pQper python=3.8
