@@ -35,7 +35,7 @@ var vm = new Vue({
         getParams(key) {
             var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
             var r = window.location.search.substr(1).match(reg)
-            if (r != null) {
+            if (r !== null) {
                 return unescape(r[2])
             }
             return null
@@ -46,9 +46,11 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code != 200) {
-                            if (res.code === 300)
+                        if (res.code !== 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
                                 window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
                             console.log('failed to initialize')
                             return
                         }
@@ -59,7 +61,7 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if (res.code != 200) {
+                        if (res.code !== 200) {
                             console.log('failed to initialize')
                             return
                         }
@@ -69,7 +71,7 @@ var vm = new Vue({
                                 .then(
                                     (response) => {
                                         response = response.data
-                                        if (response.code != 200) {
+                                        if (response.code !== 200) {
                                             console.log('failed to initialize')
                                             return
                                         }
@@ -78,7 +80,7 @@ var vm = new Vue({
                                             .then(
                                                 (resp) => {
                                                     resp = resp.data
-                                                    if (resp.code != 200) {
+                                                    if (resp.code !== 200) {
                                                         console.log('failed to get name')
                                                         return
                                                     }
@@ -130,8 +132,10 @@ var vm = new Vue({
                                 })
                             }
                             else {
-                                if (res.code === 300)
+                                if (res.data.msg === 'cookie out of date') {
+                                    alert('登录超时，请重新登录')
                                     window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                                }
                                 this.$message({
                                     type: "error",
                                     message: "收藏失败",
@@ -154,8 +158,10 @@ var vm = new Vue({
                                 })
                             }
                             else {
-                                if (res.code === 300)
+                                if (res.data.msg === 'cookie out of date') {
+                                    alert('登录超时，请重新登录')
                                     window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                                }
                                 this.$message({
                                     type: "error",
                                     message: "取消收藏失败",
@@ -165,6 +171,7 @@ var vm = new Vue({
                     )
             }
         },
+        // 删除长评事件处理
         handleDelete(count) {
             if (this.longCommentList[count - 1].is_owner) {
                 this.$axios.get('http://127.0.0.1:8000/commentarea/delete_long_comment?longCommentId=' + this.longCommentList[count - 1].id)
@@ -179,8 +186,10 @@ var vm = new Vue({
                                 })
                             }
                             else {
-                                if (res.code === 300)
+                                if (res.data.msg === 'cookie out of date') {
+                                    alert('登录超时，请重新登录')
                                     window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                                }
                                 this.$message({
                                     type: "error",
                                     message: "删除失败",
@@ -218,5 +227,22 @@ var vm = new Vue({
                 });
             }
         },
-    }
+        quit: function () {
+            this.$axios.post('http://127.0.0.1:8000/user/logout')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code !== 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
+                            console.log('failed to initialize')
+                            return
+                        }
+                        window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                    }
+                )
+        },
+    },
 })

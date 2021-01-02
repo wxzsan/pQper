@@ -19,13 +19,13 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
                         <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
                 <el-button class="button_outside" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 18px; margin-left: 15px" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 18px; width: 180px;">
-                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="searchInput" placeholder="论文/用户"></el-input>
                 </el-col>
             </el-header>
             <el-container>
@@ -33,9 +33,6 @@
                 <el-aside width="120px">
                     <div class="mySimpleInfo">
                         <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                        <!--
-                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
-                        -->
                     </div>
                     <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>
@@ -46,23 +43,25 @@
                 </el-aside>
                 <!--上传文件区域-->
                 <el-main>
-                    <div class="comment_left">
-                        <p class="text" style="font-size: 20px;"><b>上传讨论组论文</b></p>
+                    <div class="comment_left" style="background-color: #EBEEF5;">
+                        <p class="text" style="font-size: 20px; text-align: center;"><b>上传讨论组论文</b></p>
                     </div>
-                    <div class="comment_left">
-                        <p class="text" style="font-size: 17px;">论文标题</p>
-                        <el-input v-model="paperTitle" style="width: 360px;"></el-input>
-                        <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
-                        <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
-                            :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
-                            :auto-upload="false" action="#">
-                            点击选择文件或拖动文件到此处
-                        </el-upload>
-                        <br>
-                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-upload2"
-                            @click="handleUpload()">上传</el-button>
-                        <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left"
-                            onclick="history.back()">返回</el-button>
+                    <div class="horizontally_vertically_center">
+                        <div>
+                            <p class="text" style="font-size: 17px;">论文标题</p>
+                            <el-input v-model="paperTitle" style="width: 360px;"></el-input>
+                            <p class="text" style="font-size: 17px;">选择文件（仅限PDF格式）</p>
+                            <el-upload class="upload-file" drag accept=".pdf" ref="upload" :multiple="false"
+                                :http-request="uploadHttpRequest" :file-list="fileList" :on-change="handleChange"
+                                :auto-upload="false" action="#">
+                                点击选择文件或拖动文件到此处
+                            </el-upload>
+                            <br>
+                            <el-button class="button" style="width: 100px; height: 40px; margin-left: 71px;" type="primary" icon="el-icon-upload2"
+                                @click="handleUpload()">上传</el-button>
+                            <el-button class="button" style="width: 100px; height: 40px;" type="primary" icon="el-icon-arrow-left"
+                                @click="back()">返回</el-button>
+                        </div>
                     </div>
                 </el-main>
             </el-container>
@@ -145,6 +144,11 @@
     }
     a:hover {
         text-decoration: none;
+    }
+    .horizontally_vertically_center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 

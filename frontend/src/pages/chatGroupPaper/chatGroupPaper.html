@@ -19,13 +19,13 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">个人主页</el-dropdown-item>
                         <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/myprofile.html'">个人信息</el-dropdown-item>
-                        <el-dropdown-item onclick="window.location.href='http://127.0.0.1:8000/user/login.html'">退出登录</el-dropdown-item>
+                        <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!--搜索框-->
                 <el-button class="button_outside" type="primary" icon="el-icon-search" style="width: 80px; float: right; margin-top: 18px; margin-left: 15px" @click="handleSearch()">搜索</el-button>
                 <el-col :span="3" style="float: right; margin-top: 18px; width: 180px;">
-                    <el-input v-model="searchInput" placeholder="论文题目/作者"></el-input>
+                    <el-input v-model="searchInput" placeholder="论文/用户"></el-input>
                 </el-col>
             </el-header>
             <el-container>
@@ -33,9 +33,6 @@
                 <el-aside width="120px">
                     <div class="mySimpleInfo">
                         <el-avatar :size="100" :src="userAvatar">user</el-avatar>
-                        <!--
-                        <p style="text-align: center;">{% verbatim %}{{userName}}{% endverbatim %}</p>
-                        -->
                     </div>
                     <el-button class="button_outside" type="primary" icon="el-icon-menu" onclick="window.location.href='http://127.0.0.1:8000/SearchAndResults/HomePage.html'">首页</el-button><br>
                     <el-button class="button_outside" type="primary" icon="el-icon-s-custom" onclick="window.location.href='http://127.0.0.1:8000/user/starUserList.html'">关注列表</el-button><br>

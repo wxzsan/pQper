@@ -20,14 +20,14 @@ var vm = new Vue({
         searchInput: "",
         myName: "",
         myId: "",
-        myAvatar: "",
+        userAvatar: "",
     },
     methods: {
         // 正则表达式匹配
         getParams(key) {
             var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
             var r = window.location.search.substr(1).match(reg)
-            if (r != null) {
+            if (r !== null) {
                 return unescape(r[2])
             }
             return null
@@ -38,16 +38,19 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        if(res.code != 200){
+                        if (res.code !== 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
                             console.log('failed to initialize')
                             return
                         }
                         this.myId = res.data.information.id
                         this.myName = res.data.information.user_name
-                        this.myAvatar = res.data.information.user_photo
+                        this.userAvatar = res.data.information.user_photo
                     }
                 )
-
             let data = {
                 "id": this.myId,
             }
@@ -60,14 +63,15 @@ var vm = new Vue({
                 .then(
                     (res) => {
                         res = res.data
-                        console.log(res)
-                        if (res.code != 200) {
+                        if (res.code !== 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
                             console.log('failed to initialize')
                             return
                         }
-
                         res = res.data
-                        console.log(res)
                         res.MyChatGroupList.forEach(
                           (chatGroupId) => {
                             this.chatGroupInfoList.push({
@@ -89,5 +93,22 @@ var vm = new Vue({
         handleJump(count){
             window.location.href = 'http://127.0.0.1:8000/chatgroup/singleGroupPage.html?id=' + this.chatGroupInfoList[count - 1].id
         },
-    }
+        quit: function () {
+            this.$axios.post('http://127.0.0.1:8000/user/logout')
+                .then(
+                    (res) => {
+                        res = res.data
+                        if (res.code !== 200) {
+                            if (res.data.msg === 'cookie out of date') {
+                                alert('登录超时，请重新登录')
+                                window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                            }
+                            console.log('failed to initialize')
+                            return
+                        }
+                        window.location.href = 'http://127.0.0.1:8000/user/login.html'
+                    }
+                )
+        },
+    },
 })
