@@ -70,6 +70,7 @@ var vm = new Vue({
                                             requestorId: element.requestor,
                                             requestor: response.data.username,
                                             paperId: element.paper,
+                                            paper_title: element.paper_title,
                                         })
                                         this.paperDir = 'http://127.0.0.1:8000/commentarea/showpdf.html?handleClick=0&id=' + this.createRequestList[0].paperId
                                     }
