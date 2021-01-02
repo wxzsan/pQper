@@ -378,6 +378,7 @@ def approve_create_comment_area_request(request):
             # 创建者默认收藏
             comment_area.save()
             comment_area.star_user_list.add(requestor)
+            comment_area.star_number = 1
             comment_area.save()
             # 删除已经审批的请求
             create_request.delete()
@@ -553,6 +554,9 @@ def post_long_comment(request):
                 response['data'] = {'msg': "user id does not exist"}
                 return JsonResponse(response)
             long_comment = LongComment(poster=user, title=title, content=content)
+            long_comment.save()
+            long_comment.star_user_list.add(user)
+            long_comment.star_number = 1
             long_comment.save()
             # 建立长评短评之间的关联
             comment_area.long_comment_list.add(long_comment)
