@@ -21,22 +21,6 @@ pQper is an online collaborative paper reading webapp
 # 关于搜索引擎
 * 每次 clone 下来之后要重新执行 python manage.py rebuild_index 重新建立索引
 
-# 组员github账号
-王昕兆 wxzsan
-
-张弋丰 FrankZhang2000
-
-龙晟 LgenHogns
-
-曹立升 Leeson63
-
-阎宇豪 infinityyyh
-
-钱博翀 NovemberJay
-
-郑元昊 Harris-pku
-
-蒋康 JK7x2
 
 # 测试用pQper账号
 无管理权限的：
